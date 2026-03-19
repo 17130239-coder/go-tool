@@ -167,10 +167,12 @@
   border-radius: 2px;
   pointer-events: none;
   box-shadow: 0 0 10px rgba(226, 183, 20, 0.45);
+  will-change: left, top, opacity;
+  transform: translateZ(0);
 }
 
 .caretSmooth {
-  transition: left 0.1s linear, top 0.1s linear;
+  transition: left 0.14s cubic-bezier(0.22, 1, 0.36, 1), top 0.14s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .slotProbe {
@@ -180,7 +182,7 @@
 }
 
 .caretBlink {
-  animation: caret-blink 1s steps(1, end) infinite, caret-pulse 0.3s ease-out;
+  animation: caret-blink 1s steps(1, end) infinite;
 }
 
 .metrics {
@@ -224,16 +226,5 @@
   51%,
   100% {
     opacity: 0;
-  }
-}
-
-@keyframes caret-pulse {
-  0% {
-    transform: scaleY(0.82);
-    opacity: 0.75;
-  }
-  100% {
-    transform: scaleY(1);
-    opacity: 1;
   }
 }
