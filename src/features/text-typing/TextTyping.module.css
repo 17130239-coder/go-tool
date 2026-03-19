@@ -120,7 +120,8 @@
 }
 
 .char {
-  transition: color 0.1s ease;
+  transition: color 0.12s ease, transform 0.12s ease, text-shadow 0.12s ease;
+  will-change: transform, color;
 }
 
 .charUntyped {
@@ -143,6 +144,11 @@
   color: #8e3b3b;
 }
 
+.charActive {
+  transform: translateY(-1px);
+  text-shadow: 0 0 10px rgba(226, 183, 20, 0.22);
+}
+
 .wordEndAnchor {
   display: inline-block;
   width: 0;
@@ -159,7 +165,7 @@
   height: 1.08em;
   background: #e2b714;
   border-radius: 2px;
-  transition: left 0.06s ease-out;
+  transition: left 0.08s cubic-bezier(0.22, 1, 0.36, 1), top 0.08s ease-out;
   pointer-events: none;
   box-shadow: 0 0 10px rgba(226, 183, 20, 0.45);
 }
@@ -180,6 +186,10 @@
 
 .caretBlink {
   animation: caret-blink 1s steps(1, end) infinite;
+}
+
+.slotWrap {
+  transition: transform 0.08s ease-out;
 }
 
 .metrics {
