@@ -1,9 +1,6 @@
 import React from 'react';
 import {
-  DashboardOutlined,
   ToolOutlined,
-  SettingOutlined,
-  AppstoreOutlined,
 } from '@ant-design/icons';
 
 export interface MenuItemConfig {
