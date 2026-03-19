@@ -101,6 +101,7 @@ export function TypingTest() {
             const typedWord = typedWords[wordIndex] ?? '';
             const maxLength = Math.max(word.length, typedWord.length);
             const activeSlotIndex = Math.min(currentCharIndex, maxLength);
+            const anchorToLastChar = activeSlotIndex === word.length && typedWord.length <= word.length && word.length > 0;
             return (
               <span key={`${word}-${wordIndex}`} className={styles.word}>
                 {Array.from({ length: maxLength + 1 }, (_, slotIndex) => {
@@ -124,11 +125,16 @@ export function TypingTest() {
 
                   return (
                     <span key={`${wordIndex}-slot-wrap-${slotIndex}`} className={styles.slotWrap}>
-                      {status !== 'finished' && wordIndex === currentWordIndex && slotIndex === activeSlotIndex && (
-                        <span
-                          className={`${styles.caretInline} ${status === 'idle' ? styles.caretBlink : ''} ${slotIndex === word.length ? styles.caretInlineEnd : ''}`}
-                        />
-                      )}
+                      {status !== 'finished'
+                        && wordIndex === currentWordIndex
+                        && (
+                          (anchorToLastChar && slotIndex === word.length - 1)
+                          || (!anchorToLastChar && slotIndex === activeSlotIndex)
+                        ) && (
+                          <span
+                            className={`${styles.caretInline} ${status === 'idle' ? styles.caretBlink : ''} ${anchorToLastChar ? styles.caretInlineAfterChar : ''}`}
+                          />
+                        )}
                       {!charNode && <span className={styles.slotProbe} aria-hidden />}
                       {charNode}
                     </span>

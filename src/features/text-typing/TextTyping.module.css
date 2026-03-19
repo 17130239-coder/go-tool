@@ -168,6 +168,10 @@
   left: 0;
 }
 
+.caretInlineAfterChar {
+  left: calc(100% - 1px);
+}
+
 .slotProbe {
   display: inline-block;
   width: 0;
