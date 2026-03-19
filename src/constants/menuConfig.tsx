@@ -4,6 +4,7 @@ import {
   BgColorsOutlined,
   NumberOutlined,
   EditOutlined,
+  FileTextOutlined,
 } from '@ant-design/icons';
 
 export interface MenuItemConfig {
@@ -57,6 +58,12 @@ export const MENU_CONFIG: MenuItemConfig[] = [
         label: 'Text Typing',
         icon: <EditOutlined />,
         path: '/text-typing',
+      },
+      {
+        key: '/json-formatter',
+        label: 'JSON Formatter',
+        icon: <FileTextOutlined />,
+        path: '/json-formatter',
       },
     ],
   },

@@ -4,6 +4,7 @@ import { ConverterPage } from '../features/naming-converter';
 import { RandomColorPage } from '../features/random-color';
 import { RandomNumberPage } from '../features/random-number';
 import { TextTypingPage } from '../features/text-typing';
+import { JsonFormatterPage } from '../features/json-formatter';
 import { PageError } from '../components/ui/PageError';
 
 export const router = createBrowserRouter([
@@ -34,6 +35,10 @@ export const router = createBrowserRouter([
       {
         path: 'text-typing',
         element: <TextTypingPage />,
+      },
+      {
+        path: 'json-formatter',
+        element: <JsonFormatterPage />,
       },
       {
         path: 'categories',
