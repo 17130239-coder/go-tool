@@ -116,6 +116,7 @@
   position: relative;
   display: inline-flex;
   align-items: baseline;
+  min-width: 1px;
 }
 
 .char {
@@ -161,6 +162,16 @@
   transition: left 0.06s ease-out;
   pointer-events: none;
   box-shadow: 0 0 10px rgba(226, 183, 20, 0.45);
+}
+
+.caretInlineEnd {
+  left: 0;
+}
+
+.slotProbe {
+  display: inline-block;
+  width: 0;
+  height: 1.2em;
 }
 
 .caretBlink {
