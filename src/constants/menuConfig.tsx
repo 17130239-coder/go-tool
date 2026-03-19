@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   ToolOutlined,
+  NumberOutlined,
 } from '@ant-design/icons';
 
 export interface MenuItemConfig {
@@ -36,6 +37,12 @@ export const MENU_CONFIG: MenuItemConfig[] = [
         label: 'Naming Converter',
         icon: <ToolOutlined />,
         path: '/naming-converter',
+      },
+      {
+        key: '/random-number',
+        label: 'Random Number',
+        icon: <NumberOutlined />,
+        path: '/random-number',
       },
     ],
   },
