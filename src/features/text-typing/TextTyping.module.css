@@ -1,0 +1,121 @@
+.card {
+  background: #2c2e31;
+  border: 1px solid #3a3d42;
+  color: #d1d0c5;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modeGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modeLabel {
+  color: #7a7f87;
+  text-transform: lowercase;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.restartArmed {
+  color: #e2b714;
+}
+
+.wordsContainer {
+  position: relative;
+  min-height: 170px;
+  max-height: 220px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #323437;
+  border: 1px solid #3f4349;
+  padding: 20px 18px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  row-gap: 12px;
+  column-gap: 10px;
+  font-size: 30px;
+  line-height: 1.1;
+  letter-spacing: 0.2px;
+  user-select: none;
+}
+
+.word {
+  display: inline-flex;
+  position: relative;
+}
+
+.char {
+  transition: color 0.1s ease;
+}
+
+.charUntyped {
+  color: #646669;
+}
+
+.charCorrect {
+  color: #f7f7f5;
+}
+
+.charWrong {
+  color: #ff6b6b;
+}
+
+.charSkipped {
+  color: #9a5d5d;
+}
+
+.charExtra {
+  color: #8e3b3b;
+}
+
+.wordEndAnchor {
+  display: inline-block;
+  width: 2px;
+  opacity: 0;
+}
+
+.caret {
+  position: absolute;
+  width: 2px;
+  background: #e2b714;
+  border-radius: 2px;
+  transition: transform 0.08s linear;
+  pointer-events: none;
+}
+
+.caretBlink {
+  animation: caret-blink 1s steps(1, end) infinite;
+}
+
+.metrics {
+  border-radius: 10px;
+  border: 1px solid #3f4349;
+  background: #323437;
+  padding: 16px;
+}
+
+@keyframes caret-blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
