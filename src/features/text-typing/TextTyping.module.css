@@ -88,7 +88,7 @@
 .wordsContainer {
   position: relative;
   min-height: 170px;
-  max-height: 220px;
+  max-height: 330px;
   overflow: hidden;
   border-radius: 12px;
   background: #323437;
