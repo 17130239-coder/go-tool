@@ -60,15 +60,18 @@ export function TypingTest() {
     if (!targetNode || !container) return;
 
     const targetRect = targetNode.getBoundingClientRect();
+    const slotWrapRect = targetNode.parentElement?.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
     const leftBase = targetRect.left - containerRect.left;
-    const x = anchorToLastChar ? leftBase + targetRect.width - 1 : leftBase - 1;
-    const y = targetRect.top - containerRect.top + targetRect.height * 0.08;
+    const targetWidth = slotWrapRect?.width ?? targetRect.width;
+    const targetHeight = slotWrapRect?.height ?? targetRect.height;
+    const x = anchorToLastChar ? leftBase + targetWidth - 1 : leftBase - 1;
+    const y = targetRect.top - containerRect.top + targetHeight * 0.08;
 
     setCaret({
       x,
       y,
-      height: targetRect.height * 0.84,
+      height: targetHeight * 0.84,
     });
   }, [currentCharIndex, currentWordIndex, status, typedWords, visibleWords]);
 
