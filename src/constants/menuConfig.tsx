@@ -3,6 +3,7 @@ import {
   ToolOutlined,
   BgColorsOutlined,
   NumberOutlined,
+  EditOutlined,
 } from '@ant-design/icons';
 
 export interface MenuItemConfig {
@@ -50,6 +51,12 @@ export const MENU_CONFIG: MenuItemConfig[] = [
         label: 'Random Color',
         icon: <BgColorsOutlined />,
         path: '/random-color',
+      },
+      {
+        key: '/text-typing',
+        label: 'Text Typing',
+        icon: <EditOutlined />,
+        path: '/text-typing',
       },
     ],
   },

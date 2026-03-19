@@ -3,6 +3,7 @@ import { MainLayout } from '../components/layout/MainLayout';
 import { ConverterPage } from '../features/naming-converter';
 import { RandomColorPage } from '../features/random-color';
 import { RandomNumberPage } from '../features/random-number';
+import { TextTypingPage } from '../features/text-typing';
 import { PageError } from '../components/ui/PageError';
 
 export const router = createBrowserRouter([
@@ -29,6 +30,10 @@ export const router = createBrowserRouter([
       {
         path: 'random-color',
         element: <RandomColorPage />,
+      },
+      {
+        path: 'text-typing',
+        element: <TextTypingPage />,
       },
       {
         path: 'categories',
