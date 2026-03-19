@@ -111,17 +111,35 @@ export function TypingTest() {
 
                   let charNode: ReactNode = null;
                   if (isWithinWord) {
-                    let className = styles.charUntyped;
-                    if (typedChar !== undefined) {
-                      className = typedChar === sourceChar ? styles.charCorrect : styles.charWrong;
-                    } else if (wordIndex < currentWordIndex || status === 'finished') {
-                      className = styles.charSkipped;
-                    }
+                      let className = styles.charUntyped;
+                      const isCurrentTarget = status !== 'finished'
+                        && wordIndex === currentWordIndex
+                        && (
+                          (anchorToLastChar && slotIndex === word.length - 1)
+                          || (!anchorToLastChar && slotIndex === activeSlotIndex)
+                        );
+                      if (typedChar !== undefined) {
+                        className = typedChar === sourceChar ? styles.charCorrect : styles.charWrong;
+                      } else if (wordIndex < currentWordIndex || status === 'finished') {
+                        className = styles.charSkipped;
+                      }
 
-                    charNode = <span className={`${styles.char} ${className}`}>{sourceChar}</span>;
-                  } else if (typedChar !== undefined) {
-                    charNode = <span className={`${styles.char} ${styles.charExtra}`}>{typedChar}</span>;
-                  }
+                      charNode = (
+                        <span className={`${styles.char} ${className} ${isCurrentTarget ? styles.charActive : ''}`}>
+                          {sourceChar}
+                        </span>
+                      );
+                    } else if (typedChar !== undefined) {
+                      const isCurrentTarget = status !== 'finished'
+                        && wordIndex === currentWordIndex
+                        && !anchorToLastChar
+                        && slotIndex === activeSlotIndex;
+                      charNode = (
+                        <span className={`${styles.char} ${styles.charExtra} ${isCurrentTarget ? styles.charActive : ''}`}>
+                          {typedChar}
+                        </span>
+                      );
+                    }
 
                   return (
                     <span key={`${wordIndex}-slot-wrap-${slotIndex}`} className={styles.slotWrap}>
