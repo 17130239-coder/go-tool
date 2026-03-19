@@ -1,8 +1,8 @@
-import { useMemo } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { Button, Card, Space, Statistic, Typography } from 'antd';
 import { useTypingTest } from '../hooks/useTypingTest';
-import type { ModeOption } from '../types';
+import type { CaretPosition, ModeOption } from '../types';
 import styles from '../TextTyping.module.css';
 
 const { Text, Title } = Typography;
@@ -38,6 +38,39 @@ export function TypingTest() {
 
   const wordLimit = mode.type === 'words' ? mode.value : words.length;
   const visibleWords = useMemo(() => words.slice(0, wordLimit), [wordLimit, words]);
+  const wordsContainerRef = useRef<HTMLDivElement | null>(null);
+  const slotRefs = useRef<Record<string, HTMLSpanElement | null>>({});
+  const [caret, setCaret] = useState<CaretPosition>({ x: 0, y: 0, height: 32 });
+
+  useLayoutEffect(() => {
+    if (status === 'finished') return;
+
+    const currentWord = visibleWords[currentWordIndex];
+    if (!currentWord) return;
+
+    const typedWord = typedWords[currentWordIndex] ?? '';
+    const maxLength = Math.max(currentWord.length, typedWord.length);
+    const activeSlotIndex = Math.min(currentCharIndex, maxLength);
+    const anchorToLastChar = activeSlotIndex === currentWord.length
+      && typedWord.length <= currentWord.length
+      && currentWord.length > 0;
+    const targetSlot = anchorToLastChar ? currentWord.length - 1 : activeSlotIndex;
+    const targetNode = slotRefs.current[`${currentWordIndex}-slot-${targetSlot}`];
+    const container = wordsContainerRef.current;
+    if (!targetNode || !container) return;
+
+    const targetRect = targetNode.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+    const leftBase = targetRect.left - containerRect.left;
+    const x = anchorToLastChar ? leftBase + targetRect.width - 1 : leftBase - 1;
+    const y = targetRect.top - containerRect.top + targetRect.height * 0.08;
+
+    setCaret({
+      x,
+      y,
+      height: targetRect.height * 0.84,
+    });
+  }, [currentCharIndex, currentWordIndex, status, typedWords, visibleWords]);
 
   const remainingSeconds = Math.max(0, Math.ceil(remainingTimeMs / 1000));
   const wordProgress = Math.min(currentWordIndex + (typedWords[currentWordIndex] ? 1 : 0), wordLimit);
@@ -96,12 +129,21 @@ export function TypingTest() {
           <Statistic title="Accuracy" value={metrics.accuracy} precision={1} suffix="%" />
         </div>
 
-        <div className={styles.wordsContainer}>
+        <div className={styles.wordsContainer} ref={wordsContainerRef}>
+          {status !== 'finished' && (
+            <span
+              className={`${styles.caretFloating} ${styles.caretSmooth} ${status === 'idle' ? styles.caretBlink : ''}`}
+              style={{
+                left: `${caret.x}px`,
+                top: `${caret.y}px`,
+                height: `${caret.height}px`,
+              }}
+            />
+          )}
+
           {visibleWords.map((word, wordIndex) => {
             const typedWord = typedWords[wordIndex] ?? '';
             const maxLength = Math.max(word.length, typedWord.length);
-            const activeSlotIndex = Math.min(currentCharIndex, maxLength);
-            const anchorToLastChar = activeSlotIndex === word.length && typedWord.length <= word.length && word.length > 0;
             return (
               <span key={`${word}-${wordIndex}`} className={styles.word}>
                 {Array.from({ length: maxLength + 1 }, (_, slotIndex) => {
@@ -125,17 +167,13 @@ export function TypingTest() {
 
                   return (
                     <span key={`${wordIndex}-slot-wrap-${slotIndex}`} className={styles.slotWrap}>
-                      {status !== 'finished'
-                        && wordIndex === currentWordIndex
-                        && (
-                          (anchorToLastChar && slotIndex === word.length - 1)
-                          || (!anchorToLastChar && slotIndex === activeSlotIndex)
-                        ) && (
-                          <span
-                            className={`${styles.caretInline} ${status === 'idle' ? styles.caretBlink : ''} ${anchorToLastChar ? styles.caretInlineAfterChar : ''}`}
-                          />
-                        )}
-                      {!charNode && <span className={styles.slotProbe} aria-hidden />}
+                      <span
+                        ref={(node) => {
+                          slotRefs.current[`${wordIndex}-slot-${slotIndex}`] = node;
+                        }}
+                        className={styles.caretSlot}
+                        aria-hidden
+                      />
                       {charNode}
                     </span>
                   );
