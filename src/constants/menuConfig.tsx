@@ -5,6 +5,7 @@ import {
   NumberOutlined,
   EditOutlined,
   FileTextOutlined,
+  DatabaseOutlined,
 } from '@ant-design/icons';
 
 export interface MenuItemConfig {
@@ -64,6 +65,12 @@ export const MENU_CONFIG: MenuItemConfig[] = [
         label: 'JSON Formatter',
         icon: <FileTextOutlined />,
         path: '/json-formatter',
+      },
+      {
+        key: '/sql-formatter',
+        label: 'SQL Formatter',
+        icon: <DatabaseOutlined />,
+        path: '/sql-formatter',
       },
     ],
   },
