@@ -5,6 +5,7 @@ import { ColorConverterPage } from '../features/random-color';
 import { RandomNumberPage } from '../features/random-number';
 import { TextTypingPage } from '../features/text-typing';
 import { JsonFormatterPage } from '../features/json-formatter';
+import { SqlFormatterPage } from '../features/sql-formatter';
 import { PageError } from '../components/ui/PageError';
 
 export const router = createBrowserRouter([
@@ -39,6 +40,10 @@ export const router = createBrowserRouter([
       {
         path: 'json-formatter',
         element: <JsonFormatterPage />,
+      },
+      {
+        path: 'sql-formatter',
+        element: <SqlFormatterPage />,
       },
       {
         path: 'categories',
