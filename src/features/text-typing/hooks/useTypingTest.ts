@@ -168,7 +168,18 @@ export function useTypingTest(initialMode: ModeOption = { type: 'time', value: 3
     const nextTyped = `${currentTyped}${char}`;
     setTypedValueAtIndex(currentWordIndex, nextTyped);
     setCurrentCharIndex(nextTyped.length);
-  }, [currentWordIndex, ensureStarted, setTypedValueAtIndex]);
+
+    const currentMode = modeRef.current;
+    if (currentMode.type !== 'words') return;
+
+    const isLastRequiredWord = currentWordIndex === currentMode.value - 1;
+    if (!isLastRequiredWord) return;
+
+    const sourceWord = wordsRef.current[currentWordIndex] ?? '';
+    if (sourceWord.length > 0 && nextTyped.length >= sourceWord.length) {
+      finishGame();
+    }
+  }, [currentWordIndex, ensureStarted, finishGame, setTypedValueAtIndex]);
 
   const handleKeyDown = useCallback((event: KeyboardEvent) => {
     if (event.key === 'Tab') {
