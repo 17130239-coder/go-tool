@@ -2,31 +2,45 @@
 
 ## Purpose
 
-The text-typing feature helps users measure their current typing speed in words per minute (WPM) while they type free-form text.
+The text-typing feature provides a reusable Monkeytype-like typing core with custom rendering (no visible `<input>` UI), caret tracking, and real-time typing metrics.
 
 ## User flow
 
 1. Open the **Text Typing** page from the sidebar.
-2. Start typing in the text area.
-3. View real-time stats for:
-   - total word count
-   - elapsed time in minutes
-   - current WPM
-4. Click **Reset** to clear the session and start over.
+2. Select mode:
+   - time mode: `15s` or `30s`
+   - words mode: `10` or `25` words
+3. Start typing directly on the keyboard:
+   - first key starts the game (`idle` -> `typing`)
+   - `Space` commits current word and moves to next
+   - `Backspace` supports deleting backward, including moving back to previous unfinished/incorrect word
+4. View live character feedback and moving caret.
+5. On finish, view results:
+   - WPM
+   - Raw WPM
+   - Accuracy
+6. Restart with button or keyboard shortcut `Tab + Enter`.
 
 Behavior details:
 
-- Typing timer starts at the first non-empty input.
-- Word count is computed by splitting trimmed text on whitespace.
-- WPM uses the formula `wordCount / elapsedMinutes` and updates every second.
+- Game status flow: `idle` -> `typing` -> `finished`.
+- In time mode, game ends when countdown reaches `0`.
+- In words mode, game ends when target word count is reached.
+- Extra characters beyond original word length are marked as darker red.
 
 ## Key technical notes
 
 - Main page component: `pages/TextTypingPage.tsx`
-- Public feature export: `index.ts`
+- Reusable typing component: `components/TypingTest.tsx`
+- Logic hook: `hooks/useTypingTest.ts`
+- Feature exports: `index.ts` (page + component + hook + types)
 - Route registration: `src/router/index.tsx` at path `/text-typing`
 - Sidebar navigation item: `src/constants/menuConfig.tsx`
-- State and calculations:
-  - local React state stores `text`, `startTime`, and `now`
-  - `setInterval` updates `now` every second once typing has started
-  - derived values (`wordCount`, `elapsedMinutes`, `wpm`) use `useMemo`
+- Word generation: `words.ts` using internal dictionary and randomized list.
+- Metrics formulas:
+  - `WPM = (correctChars / 5) / elapsedMinutes`
+  - `Raw WPM = (totalTypedChars / 5) / elapsedMinutes`
+  - `Accuracy = (correctChars / totalTypedChars) * 100`
+- Styling:
+  - `TextTyping.module.css` uses monkeytype-inspired neutral/dark palette
+  - blinking caret in `idle`, smooth caret movement via transform transition
