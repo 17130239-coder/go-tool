@@ -104,7 +104,7 @@ export function TypingTest() {
 
   return (
     <Card className={styles.card}>
-      <Space direction="vertical" size="large" style={{ width: '100%' }}>
+      <Space orientation="vertical" size="large" style={{ width: '100%' }}>
         <div className={styles.toolbar}>
           <div className={styles.modeGroup}>
             <Text className={styles.modeLabel}>time</Text>

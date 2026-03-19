@@ -87,7 +87,7 @@ export function ColorConverterPage() {
             }}
           />
 
-          <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+          <Space orientation="vertical" size="middle" style={{ width: '100%' }}>
             <PageSectionTitle>Converted Formats</PageSectionTitle>
 
             {(Object.entries(converted) as [keyof ColorFormats, string][]).map(([format, value]) => (

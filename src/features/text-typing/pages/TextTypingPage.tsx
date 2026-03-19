@@ -4,7 +4,7 @@ import { TypingTest } from '../components/TypingTest';
 
 export function TextTypingPage() {
   return (
-    <Space direction="vertical" size="large" style={{ width: '100%' }}>
+    <Space orientation="vertical" size="large" style={{ width: '100%' }}>
       <PageHeader
         title="Text Typing Speed"
         description="Monkeytype-like typing core with custom key handling and live metrics."
