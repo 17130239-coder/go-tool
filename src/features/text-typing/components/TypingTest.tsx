@@ -125,8 +125,11 @@ export function TypingTest() {
                   return (
                     <span key={`${wordIndex}-slot-wrap-${slotIndex}`} className={styles.slotWrap}>
                       {status !== 'finished' && wordIndex === currentWordIndex && slotIndex === activeSlotIndex && (
-                        <span className={`${styles.caretInline} ${status === 'idle' ? styles.caretBlink : ''}`} />
+                        <span
+                          className={`${styles.caretInline} ${status === 'idle' ? styles.caretBlink : ''} ${slotIndex === word.length ? styles.caretInlineEnd : ''}`}
+                        />
                       )}
+                      {!charNode && <span className={styles.slotProbe} aria-hidden />}
                       {charNode}
                     </span>
                   );
