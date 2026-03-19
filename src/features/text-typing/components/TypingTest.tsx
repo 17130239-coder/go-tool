@@ -1,4 +1,5 @@
 import { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
 import { Button, Card, Space, Statistic, Typography } from 'antd';
 import { useTypingTest } from '../hooks/useTypingTest';
 import type { CaretPosition, ModeOption } from '../types';
@@ -36,7 +37,7 @@ export function TypingTest() {
   } = useTypingTest();
 
   const wordsContainerRef = useRef<HTMLDivElement | null>(null);
-  const charRefs = useRef<Record<string, HTMLSpanElement | null>>({});
+  const slotRefs = useRef<Record<string, HTMLSpanElement | null>>({});
   const [caret, setCaret] = useState<CaretPosition>({ x: 0, y: 0, height: 32 });
 
   const wordLimit = mode.type === 'words' ? mode.value : words.length;
@@ -52,13 +53,10 @@ export function TypingTest() {
     if (!currentWord) return;
 
     const typedWord = typedWords[currentWordIndex] ?? '';
-    const hasExtraChars = typedWord.length > currentWord.length;
-    const targetKey = currentCharIndex < currentWord.length
-      ? `${currentWordIndex}-${currentCharIndex}`
-      : hasExtraChars
-        ? `${currentWordIndex}-typed-end`
-        : `${currentWordIndex}-end`;
-    const targetNode = charRefs.current[targetKey];
+    const maxSlotIndex = Math.max(currentWord.length, typedWord.length);
+    const slotIndex = Math.min(currentCharIndex, maxSlotIndex);
+    const targetKey = `${currentWordIndex}-slot-${slotIndex}`;
+    const targetNode = slotRefs.current[targetKey];
     if (!targetNode) return;
 
     const containerRect = container.getBoundingClientRect();
@@ -140,50 +138,40 @@ export function TypingTest() {
 
           {visibleWords.map((word, wordIndex) => {
             const typedWord = typedWords[wordIndex] ?? '';
+            const maxLength = Math.max(word.length, typedWord.length);
             return (
               <span key={`${word}-${wordIndex}`} className={styles.word}>
-                {word.split('').map((sourceChar, charIndex) => {
-                  const typedChar = typedWord[charIndex];
-                  let className = styles.charUntyped;
+                {Array.from({ length: maxLength + 1 }, (_, slotIndex) => {
+                  const sourceChar = word[slotIndex];
+                  const typedChar = typedWord[slotIndex];
+                  const isWithinWord = slotIndex < word.length;
 
-                  if (typedChar !== undefined) {
-                    className = typedChar === sourceChar ? styles.charCorrect : styles.charWrong;
-                  } else if (wordIndex < currentWordIndex || status === 'finished') {
-                    className = styles.charSkipped;
+                  let charNode: ReactNode = null;
+                  if (isWithinWord) {
+                    let className = styles.charUntyped;
+                    if (typedChar !== undefined) {
+                      className = typedChar === sourceChar ? styles.charCorrect : styles.charWrong;
+                    } else if (wordIndex < currentWordIndex || status === 'finished') {
+                      className = styles.charSkipped;
+                    }
+
+                    charNode = <span className={`${styles.char} ${className}`}>{sourceChar}</span>;
+                  } else if (typedChar !== undefined) {
+                    charNode = <span className={`${styles.char} ${styles.charExtra}`}>{typedChar}</span>;
                   }
 
                   return (
-                    <span
-                      key={`${wordIndex}-${charIndex}`}
-                      ref={(node) => {
-                        charRefs.current[`${wordIndex}-${charIndex}`] = node;
-                      }}
-                      className={`${styles.char} ${className}`}
-                    >
-                      {sourceChar}
+                    <span key={`${wordIndex}-slot-wrap-${slotIndex}`} className={styles.slotWrap}>
+                      <span
+                        ref={(node) => {
+                          slotRefs.current[`${wordIndex}-slot-${slotIndex}`] = node;
+                        }}
+                        className={styles.caretSlot}
+                      />
+                      {charNode}
                     </span>
                   );
                 })}
-
-                {typedWord.slice(word.length).split('').map((extraChar, extraIndex) => (
-                  <span key={`${wordIndex}-extra-${extraIndex}`} className={`${styles.char} ${styles.charExtra}`}>
-                    {extraChar}
-                  </span>
-                ))}
-
-                <span
-                  ref={(node) => {
-                    charRefs.current[`${wordIndex}-typed-end`] = node;
-                  }}
-                  className={styles.wordEndAnchor}
-                />
-
-                <span
-                  ref={(node) => {
-                    charRefs.current[`${wordIndex}-end`] = node;
-                  }}
-                  className={styles.wordEndAnchor}
-                />
               </span>
             );
           })}
