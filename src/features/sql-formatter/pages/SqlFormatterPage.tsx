@@ -1,18 +1,21 @@
 import { useState } from 'react';
-import { Card, Input, Button, Space, Radio, Alert, Typography, Select } from 'antd';
-import {
-  CopyOutlined,
-  ClearOutlined,
-  CompressOutlined,
-  FormatPainterOutlined,
-} from '@ant-design/icons';
+import { Space, Radio, Typography, Select } from 'antd';
 import { formatSQL, minifySQL, validateSQL } from '../../../utils/sqlFormatter';
-import type { FormatterOptions, KeywordCase } from '../types';
+import { useInputOutput, useCopyToClipboard } from '../../../hooks';
+import {
+  FeatureCard,
+  PageHeader,
+  ErrorAlert,
+  PageSectionTitle,
+  InputSection,
+  OutputSection,
+  FormatterActions,
+} from '../../../components/shared';
+import type { KeywordCase, IndentSize, SqlLanguage } from '../../../types';
 
-const { TextArea } = Input;
 const { Text } = Typography;
 
-const LANGUAGES = [
+const LANGUAGES: { value: SqlLanguage; label: string }[] = [
   { value: 'sql', label: 'Standard SQL' },
   { value: 'mysql', label: 'MySQL' },
   { value: 'postgresql', label: 'PostgreSQL' },
@@ -21,13 +24,11 @@ const LANGUAGES = [
 ];
 
 export function SqlFormatterPage() {
-  const [input, setInput] = useState('');
-  const [output, setOutput] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [copied, setCopied] = useState(false);
+  const { input, setInput, output, setOutput, error, setError, clear } = useInputOutput();
+  const { copied, copy } = useCopyToClipboard();
 
-  const [language, setLanguage] = useState<FormatterOptions['language']>('sql');
-  const [indent, setIndent] = useState<number>(2);
+  const [language, setLanguage] = useState<SqlLanguage>('sql');
+  const [indent, setIndent] = useState<IndentSize>(2);
   const [keywordCase, setKeywordCase] = useState<KeywordCase>('upper');
   const [linesBetweenQueries, setLinesBetweenQueries] = useState<number>(2);
 
@@ -60,24 +61,6 @@ export function SqlFormatterPage() {
     }
   };
 
-  const handleCopy = async () => {
-    if (output) {
-      try {
-        await navigator.clipboard.writeText(output);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      } catch {
-        // Silent fail
-      }
-    }
-  };
-
-  const handleClear = () => {
-    setInput('');
-    setOutput('');
-    setError(null);
-  };
-
   const handleInputChange = (value: string) => {
     setInput(value);
 
@@ -94,135 +77,90 @@ export function SqlFormatterPage() {
     }
   };
 
+  const handleCopy = () => {
+    if (output) {
+      copy(output);
+    }
+  };
+
   return (
-    <div>
-      <Card className="mb-24">
-        <Space direction="vertical" size="large" style={{ width: '100%' }}>
-          {/* Input Section */}
+    <FeatureCard>
+      <PageHeader
+        title="SQL Formatter"
+        description="Format and minify SQL across supported dialects with configurable style options."
+      />
+
+      <InputSection
+        value={input}
+        onChange={handleInputChange}
+        label="Input SQL"
+        placeholder="SELECT * FROM users WHERE id = 1;"
+        hasError={!!error}
+      />
+
+      <ErrorAlert error={error} title="SQL Error" />
+
+      <div>
+        <PageSectionTitle>Format Options</PageSectionTitle>
+        <Space wrap size="middle">
           <div>
-            <Text strong className="mb-24" style={{ display: 'block' }}>
-              Input SQL
+            <Text type="secondary" style={{ fontSize: 12, display: 'block', marginBottom: 4 }}>
+              SQL Dialect
             </Text>
-            <TextArea
-              value={input}
-              onChange={(e) => handleInputChange(e.target.value)}
-              placeholder="SELECT * FROM users WHERE id = 1;"
-              autoSize={{ minRows: 8, maxRows: 20 }}
-              status={error ? 'error' : undefined}
+            <Select
+              value={language}
+              onChange={setLanguage}
+              options={LANGUAGES}
+              style={{ width: 160 }}
             />
           </div>
 
-          {/* Error Display */}
-          {error && (
-            <Alert message="SQL Error" description={error} type="error" showIcon />
-          )}
-
-          {/* Format Options */}
           <div>
-            <Text strong className="mb-8" style={{ display: 'block' }}>
-              Format Options
+            <Text type="secondary" style={{ fontSize: 12, display: 'block', marginBottom: 4 }}>
+              Indentation
             </Text>
-            <Space wrap size="middle">
-              <div>
-                <Text type="secondary" style={{ fontSize: 12, display: 'block', marginBottom: 4 }}>
-                  SQL Dialect
-                </Text>
-                <Select
-                  value={language}
-                  onChange={setLanguage}
-                  options={LANGUAGES}
-                  style={{ width: 160 }}
-                />
-              </div>
-
-              <div>
-                <Text type="secondary" style={{ fontSize: 12, display: 'block', marginBottom: 4 }}>
-                  Indentation
-                </Text>
-                <Radio.Group value={indent} onChange={(e) => setIndent(e.target.value)}>
-                  <Radio.Button value={2}>2 Spaces</Radio.Button>
-                  <Radio.Button value={4}>4 Spaces</Radio.Button>
-                </Radio.Group>
-              </div>
-
-              <div>
-                <Text type="secondary" style={{ fontSize: 12, display: 'block', marginBottom: 4 }}>
-                  Keyword Case
-                </Text>
-                <Radio.Group
-                  value={keywordCase}
-                  onChange={(e) => setKeywordCase(e.target.value)}
-                >
-                  <Radio.Button value="upper">UPPER</Radio.Button>
-                  <Radio.Button value="lower">lower</Radio.Button>
-                  <Radio.Button value="preserve">Preserve</Radio.Button>
-                </Radio.Group>
-              </div>
-
-              <div>
-                <Text type="secondary" style={{ fontSize: 12, display: 'block', marginBottom: 4 }}>
-                  Lines Between Queries
-                </Text>
-                <Radio.Group
-                  value={linesBetweenQueries}
-                  onChange={(e) => setLinesBetweenQueries(e.target.value)}
-                >
-                  <Radio.Button value={1}>1</Radio.Button>
-                  <Radio.Button value={2}>2</Radio.Button>
-                  <Radio.Button value={3}>3</Radio.Button>
-                </Radio.Group>
-              </div>
-            </Space>
+            <Radio.Group value={indent} onChange={(e) => setIndent(e.target.value)}>
+              <Radio.Button value={2}>2 Spaces</Radio.Button>
+              <Radio.Button value={4}>4 Spaces</Radio.Button>
+            </Radio.Group>
           </div>
 
-          {/* Action Buttons */}
-          <Space wrap>
-            <Button
-              type="primary"
-              icon={<FormatPainterOutlined />}
-              onClick={handleFormat}
-              disabled={!input.trim() || !!error}
+          <div>
+            <Text type="secondary" style={{ fontSize: 12, display: 'block', marginBottom: 4 }}>
+              Keyword Case
+            </Text>
+            <Radio.Group value={keywordCase} onChange={(e) => setKeywordCase(e.target.value)}>
+              <Radio.Button value="upper">UPPER</Radio.Button>
+              <Radio.Button value="lower">lower</Radio.Button>
+              <Radio.Button value="preserve">Preserve</Radio.Button>
+            </Radio.Group>
+          </div>
+
+          <div>
+            <Text type="secondary" style={{ fontSize: 12, display: 'block', marginBottom: 4 }}>
+              Lines Between Queries
+            </Text>
+            <Radio.Group
+              value={linesBetweenQueries}
+              onChange={(e) => setLinesBetweenQueries(e.target.value)}
             >
-              Format
-            </Button>
-
-            <Button
-              icon={<CompressOutlined />}
-              onClick={handleMinify}
-              disabled={!input.trim()}
-            >
-              Minify
-            </Button>
-
-            <Button icon={<ClearOutlined />} onClick={handleClear}>
-              Clear
-            </Button>
-          </Space>
-
-          {/* Output Section */}
-          {output && (
-            <div>
-              <Space style={{ marginBottom: 8 }}>
-                <Text strong>Output</Text>
-                <Button
-                  size="small"
-                  icon={<CopyOutlined />}
-                  onClick={handleCopy}
-                  type={copied ? 'primary' : 'default'}
-                >
-                  {copied ? 'Copied!' : 'Copy'}
-                </Button>
-              </Space>
-              <TextArea
-                value={output}
-                readOnly
-                autoSize={{ minRows: 8, maxRows: 20 }}
-                style={{ fontFamily: 'monospace' }}
-              />
-            </div>
-          )}
+              <Radio.Button value={1}>1</Radio.Button>
+              <Radio.Button value={2}>2</Radio.Button>
+              <Radio.Button value={3}>3</Radio.Button>
+            </Radio.Group>
+          </div>
         </Space>
-      </Card>
-    </div>
+      </div>
+
+      <FormatterActions
+        onFormat={handleFormat}
+        onMinify={handleMinify}
+        onClear={clear}
+        formatDisabled={!input.trim() || !!error}
+        minifyDisabled={!input.trim()}
+      />
+
+      <OutputSection value={output} copied={copied} onCopy={handleCopy} />
+    </FeatureCard>
   );
 }

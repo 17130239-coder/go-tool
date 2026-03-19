@@ -36,6 +36,7 @@ Behavior details:
 - Feature exports: `index.ts` (page + component + hook + types)
 - Route registration: `src/router/index.tsx` at path `/text-typing`
 - Sidebar navigation item: `src/constants/menuConfig.tsx`
+- Page shell uses shared `PageHeader` for consistent feature-page structure
 - Word generation: `words.ts` using internal dictionary and randomized list.
 - Metrics formulas:
   - `WPM = (correctChars / 5) / elapsedMinutes`

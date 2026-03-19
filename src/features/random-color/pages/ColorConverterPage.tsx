@@ -1,20 +1,32 @@
-import { useState } from 'react';
-import { Card, Input, Space, Typography, Alert, Button } from 'antd';
-import { CopyOutlined } from '@ant-design/icons';
+import { useState, useEffect } from 'react';
+import { Input, Space } from 'antd';
 import { convertColor, isValidColor } from '../../../utils/colorConverter';
+import { useCopyToClipboard } from '../../../hooks';
+import {
+  FeatureCard,
+  PageHeader,
+  ErrorAlert,
+  ResultField,
+  PageSectionTitle,
+} from '../../../components/shared';
 import type { ColorFormats } from '../../../utils/colorConverter';
-
-const { Title, Text } = Typography;
 
 export function ColorConverterPage() {
   const [input, setInput] = useState<string>('#3B82F6');
   const [converted, setConverted] = useState<ColorFormats | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [copiedFormat, setCopiedFormat] = useState<string | null>(null);
+  const [copiedFormat, setCopiedFormat] = useState<keyof ColorFormats | null>(null);
+  const { copy } = useCopyToClipboard();
+
+  // Initialize with default color
+  useEffect(() => {
+    handleInputChange(input);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleInputChange = (value: string) => {
     setInput(value);
-    
+
     if (!value.trim()) {
       setConverted(null);
       setError(null);
@@ -31,29 +43,25 @@ export function ColorConverterPage() {
     }
   };
 
-  const handleCopy = async (format: string, value: string) => {
-    try {
-      await navigator.clipboard.writeText(value);
+  const handleCopy = async (format: keyof ColorFormats, value: string) => {
+    const result = await copy(value);
+    if (result.success) {
       setCopiedFormat(format);
       setTimeout(() => setCopiedFormat(null), 2000);
-    } catch {
-      // Silent fail
     }
   };
 
   const currentColor = converted?.hex || '#CCCCCC';
 
   return (
-    <Card>
-      <Title level={4}>Color Converter</Title>
-      <Text type="secondary">
-        Enter a color in any format (HEX, RGB, RGBA, HSL, HSLA) to convert it to all other formats.
-      </Text>
+    <FeatureCard>
+      <PageHeader
+        title="Color Converter"
+        description="Enter a color in any supported format and convert it into HEX, RGB(A), and HSL(A)."
+      />
 
-      <div className="mt-16 mb-24">
-        <Text strong className="mb-8" style={{ display: 'block' }}>
-          Input Color
-        </Text>
+      <div>
+        <PageSectionTitle>Input Color</PageSectionTitle>
         <Input
           size="large"
           value={input}
@@ -63,19 +71,10 @@ export function ColorConverterPage() {
         />
       </div>
 
-      {error && (
-        <Alert
-          message="Invalid Color"
-          description={error}
-          type="error"
-          showIcon
-          className="mb-24"
-        />
-      )}
+      <ErrorAlert error={error} title="Invalid Color" />
 
       {converted && (
         <>
-          {/* Color Preview */}
           <div
             className="mb-24"
             style={{
@@ -88,37 +87,23 @@ export function ColorConverterPage() {
             }}
           />
 
-          {/* Converted Formats */}
           <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-            <Text strong>Converted Formats</Text>
+            <PageSectionTitle>Converted Formats</PageSectionTitle>
 
-            {Object.entries(converted).map(([format, value]) => (
-              <div key={format}>
-                <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-                  <Text type="secondary" style={{ textTransform: 'uppercase', minWidth: 60 }}>
-                    {format}
-                  </Text>
-                  <Space>
-                    <Input
-                      value={value}
-                      readOnly
-                      style={{ fontFamily: 'monospace', minWidth: 280 }}
-                    />
-                    <Button
-                      size="small"
-                      icon={<CopyOutlined />}
-                      onClick={() => handleCopy(format, value)}
-                      type={copiedFormat === format ? 'primary' : 'default'}
-                    >
-                      {copiedFormat === format ? 'Copied!' : 'Copy'}
-                    </Button>
-                  </Space>
-                </Space>
-              </div>
+            {(Object.entries(converted) as [keyof ColorFormats, string][]).map(([format, value]) => (
+              <ResultField
+                key={format}
+                label={format}
+                value={value}
+                copied={copiedFormat === format}
+                onCopy={() => {
+                  void handleCopy(format, value);
+                }}
+              />
             ))}
           </Space>
         </>
       )}
-    </Card>
+    </FeatureCard>
   );
 }

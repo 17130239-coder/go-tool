@@ -1,9 +1,9 @@
-import type { FormatterOptions, FormatterResult } from '../features/json-formatter/types';
+import type { JsonFormatterOptions, FormatterResult } from '../types';
 
 /**
  * Validates and formats JSON with specified indentation
  */
-export function formatJSON(input: string, options: FormatterOptions): FormatterResult {
+export function formatJSON(input: string, options: JsonFormatterOptions): FormatterResult {
   if (!input.trim()) {
     return {
       success: false,

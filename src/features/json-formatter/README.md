@@ -28,16 +28,20 @@ The JSON Formatter feature provides a simple, intuitive interface for validating
 ### Architecture
 - **Utilities**: JSON operations (format, minify, validate) in `src/utils/jsonFormatter.ts`
 - **Page Component**: `JsonFormatterPage.tsx` manages UI state and user interactions
-- **Types**: Type definitions in `types.ts` for formatter options and results
+- **Types**: shared formatter types from `src/types/formatter.ts` (re-exported by feature `types.ts`)
+- **Shared UI primitives**:
+  - `FeatureCard` and `PageHeader` for consistent page shell
+  - `ErrorAlert` for standardized error rendering
 
 ### Error Handling
 - Uses try/catch around `JSON.parse()` to capture syntax errors
 - Extracts error messages from native Error objects
-- Displays errors in an Ant Design Alert component with "error" status
+- Displays errors through shared `ErrorAlert` component with consistent style
 - Disables action buttons when validation fails
 
 ### State Management
 - Local React state for input, output, error, indentSize, and copied status
+- Copy behavior uses shared `useCopyToClipboard` hook
 - No server state or global state needed (pure client-side transformation)
 
 ### Dependencies

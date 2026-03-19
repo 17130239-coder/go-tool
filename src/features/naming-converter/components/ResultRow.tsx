@@ -1,5 +1,5 @@
-import { Button, Input, message, Tooltip, Typography } from 'antd';
-import { CopyOutlined } from '@ant-design/icons';
+import { Input, Typography } from 'antd';
+import { CopyButton } from '../../../components/shared';
 import styles from '../NamingConverter.module.css';
 import type { ConventionType } from '../types';
 
@@ -8,16 +8,11 @@ const { Text } = Typography;
 interface ResultRowProps {
   label: ConventionType;
   value: string;
+  copied: boolean;
+  onCopy: () => void;
 }
 
-export function ResultRow({ label, value }: ResultRowProps) {
-  const handleCopy = () => {
-    if (!value) return;
-    navigator.clipboard.writeText(value).then(() => {
-      message.success('Copied!');
-    });
-  };
-
+export function ResultRow({ label, value, copied, onCopy }: ResultRowProps) {
   const getLabel = (type: ConventionType) => {
     switch (type) {
       case 'camelCase': return 'camelCase';
@@ -38,9 +33,7 @@ export function ResultRow({ label, value }: ResultRowProps) {
         <Input value={value} readOnly variant="borderless" style={{ fontWeight: 500 }} />
       </div>
       <div>
-        <Tooltip title="Copy">
-          <Button icon={<CopyOutlined />} onClick={handleCopy} disabled={!value} />
-        </Tooltip>
+        <CopyButton copied={copied} onCopy={onCopy} disabled={!value} />
       </div>
     </div>
   );

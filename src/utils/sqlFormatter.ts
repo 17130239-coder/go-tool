@@ -1,10 +1,10 @@
 import { format } from 'sql-formatter';
-import type { FormatterOptions, FormatterResult } from '../features/sql-formatter/types';
+import type { SqlFormatterOptions, FormatterResult } from '../types';
 
 /**
  * Format SQL with specified options
  */
-export function formatSQL(input: string, options: FormatterOptions): FormatterResult {
+export function formatSQL(input: string, options: SqlFormatterOptions): FormatterResult {
   if (!input.trim()) {
     return {
       success: false,

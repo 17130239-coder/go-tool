@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
-import { Button, Card, InputNumber, Space, Typography } from 'antd';
+import { Button, InputNumber, Space, Typography } from 'antd';
+import { FeatureCard, PageHeader, ErrorAlert } from '../../../components/shared';
 
 const { Title, Text } = Typography;
 
@@ -20,45 +21,41 @@ export function RandomNumberPage() {
   };
 
   return (
-    <Card>
-      <Title level={4}>Random Number Generator</Title>
-      <Text type="secondary">Set a range and click the button to get a random number.</Text>
+    <FeatureCard>
+      <PageHeader
+        title="Random Number Generator"
+        description="Set an inclusive min/max range and generate a random integer."
+      />
 
-      <div className="mt-16 mb-24">
-        <Space size="middle" wrap>
-          <div>
-            <Text>Min (0 or greater)</Text>
-            <div className="mt-8">
-              <InputNumber
-                min={0}
-                value={min}
-                onChange={(value) => setMin(Math.max(0, value ?? 0))}
-                precision={0}
-              />
-            </div>
+      <Space size="middle" wrap>
+        <div>
+          <Text>Min (0 or greater)</Text>
+          <div className="mt-8">
+            <InputNumber
+              min={0}
+              value={min}
+              onChange={(value) => setMin(Math.max(0, value ?? 0))}
+              precision={0}
+            />
           </div>
+        </div>
 
-          <div>
-            <Text>Max</Text>
-            <div className="mt-8">
-              <InputNumber
-                min={0}
-                value={max}
-                onChange={(value) => setMax(Math.max(0, value ?? 0))}
-                precision={0}
-              />
-            </div>
+        <div>
+          <Text>Max</Text>
+          <div className="mt-8">
+            <InputNumber
+              min={0}
+              value={max}
+              onChange={(value) => setMax(Math.max(0, value ?? 0))}
+              precision={0}
+            />
           </div>
-        </Space>
-      </div>
+        </div>
+      </Space>
 
-      {!isRangeValid && (
-        <Text type="danger" className="mb-16">
-          Max must be greater than or equal to Min.
-        </Text>
-      )}
+      <ErrorAlert error={!isRangeValid ? 'Max must be greater than or equal to Min.' : null} />
 
-      <div className="mb-24">
+      <div>
         <Button type="primary" onClick={onGenerate} disabled={!isRangeValid}>
           Random Number
         </Button>
@@ -67,6 +64,6 @@ export function RandomNumberPage() {
       <Title level={5} className="m-0">
         Result: {result ?? '-'}
       </Title>
-    </Card>
+    </FeatureCard>
   );
 }
