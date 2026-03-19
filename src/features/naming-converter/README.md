@@ -1,0 +1,40 @@
+# Naming Converter Feature
+
+## Purpose
+
+The naming-converter feature lets users paste or type a string and instantly transform it into multiple naming conventions used in source code:
+
+- `camelCase`
+- `kebab-case`
+- `snake_case`
+- `PascalCase`
+- `CONSTANT_CASE`
+
+It is intended as a quick utility page for developers working with variable names, file names, or API field mappings.
+
+## User flow
+
+1. Open the **Naming Converter** page from the sidebar.
+2. Enter text in the input area.
+3. View converted outputs rendered in result rows.
+4. Copy any output format with the row copy button.
+
+Behavior details:
+
+- Empty input returns empty outputs.
+- Copy action is disabled when a row value is empty.
+- Copy success shows an Ant Design success message.
+
+## Key technical notes
+
+- Main page component: `pages/ConverterPage.tsx`
+- Result row UI and copy behavior: `components/ResultRow.tsx`
+- Public feature export: `index.ts`
+- Conversion logic is centralized in shared utility: `src/utils/stringConverter.ts`
+- Conversion pipeline in utility:
+  - normalize diacritics (including Vietnamese `đ`/`Đ`)
+  - parse mixed input into lowercase word tokens
+  - map tokens to each target naming convention
+- Styling:
+  - feature-specific styles in `NamingConverter.module.css`
+  - shared spacing utility classes from global spacing system (e.g. `mb-24`)
