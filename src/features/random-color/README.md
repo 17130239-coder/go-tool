@@ -34,6 +34,10 @@ The Color Converter feature provides a powerful utility to convert colors betwee
 - Public export: `index.ts`
 - Route path: `/random-color` (maintained for backward compatibility)
 - Sidebar menu integration: `src/constants/menuConfig.tsx`
+- Shared UI primitives:
+  - `FeatureCard` and `PageHeader` for consistent page shell
+  - `ErrorAlert` for standardized error rendering
+  - `ResultField` for read-only copyable output rows
 
 ### Color Conversion Logic
 - **Parsing**: Regex-based parsing for all input formats
@@ -56,8 +60,9 @@ isValidColor(input: string): boolean
 ```
 
 ### State Management
-- Local React state for input, converted formats, error, and copied status
+- Local React state for input, converted formats, error, and copied format key
 - Real-time validation on input change
+- Copy behavior uses shared `useCopyToClipboard` hook
 - No server state needed (pure client-side transformation)
 
 ## Future Enhancements

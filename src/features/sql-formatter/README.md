@@ -34,8 +34,12 @@ The SQL Formatter feature provides a powerful tool for formatting, beautifying, 
 ### Architecture
 - **Utilities**: SQL operations (format, minify, validate) in `src/utils/sqlFormatter.ts`
 - **Page Component**: `SqlFormatterPage.tsx` manages UI state and user interactions
-- **Types**: Type definitions in `types.ts` for formatter options and results
+- **Types**: shared formatter types from `src/types/formatter.ts` (re-exported by feature `types.ts`)
 - **External Library**: Uses `sql-formatter` npm package for robust SQL parsing and formatting
+- **Shared UI primitives**:
+  - `FeatureCard` and `PageHeader` for consistent page shell
+  - `PageSectionTitle` for consistent section labels
+  - `ErrorAlert` for standardized error rendering
 
 ### SQL Formatter Library
 - **Package**: `sql-formatter` v15.7.2
@@ -66,7 +70,7 @@ The SQL Formatter feature provides a powerful tool for formatting, beautifying, 
 ### Error Handling
 - Uses try/catch around sql-formatter library calls
 - Extracts error messages from library exceptions
-- Displays errors in Ant Design Alert component with "error" status
+- Displays errors through shared `ErrorAlert` component with consistent style
 - Disables action buttons when validation fails
 
 ### State Management
@@ -76,9 +80,9 @@ The SQL Formatter feature provides a powerful tool for formatting, beautifying, 
 
 ### Dependencies
 - **sql-formatter**: Core SQL parsing and formatting library
-- **Ant Design components**: Card, Input.TextArea, Button, Space, Radio, Alert, Typography, Select
+- **Ant Design components**: Input.TextArea, Button, Space, Radio, Typography, Select
 - **Icons**: @ant-design/icons (FormatPainterOutlined, CompressOutlined, CopyOutlined, ClearOutlined, DatabaseOutlined)
-- **Browser API**: navigator.clipboard for copy functionality
+- **Browser API**: navigator.clipboard via shared copy hook
 
 ### Utilities API
 

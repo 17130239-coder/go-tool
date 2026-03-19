@@ -23,12 +23,16 @@ Behavior details:
 
 - Empty input returns empty outputs.
 - Copy action is disabled when a row value is empty.
-- Copy success shows an Ant Design success message.
+- Copy behavior uses shared clipboard hook with temporary "Copied!" button state.
 
 ## Key technical notes
 
 - Main page component: `pages/ConverterPage.tsx`
 - Result row UI and copy behavior: `components/ResultRow.tsx`
+- Shared UI primitives:
+  - `FeatureCard` and `PageHeader` for consistent page structure
+  - shared `CopyButton` in result rows
+- Shared behavior hook: `useCopyToClipboard` for consistent copy feedback handling
 - Public feature export: `index.ts`
 - Conversion logic is centralized in shared utility: `src/utils/stringConverter.ts`
 - Conversion pipeline in utility:

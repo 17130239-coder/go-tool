@@ -26,8 +26,11 @@ Behavior details:
 - Public feature export: `index.ts`
 - Route registration: `src/router/index.tsx` at path `/random-number`
 - Sidebar navigation item: `src/constants/menuConfig.tsx`
+- Shared UI primitives:
+  - `FeatureCard` and `PageHeader` for consistent page shell
+  - `ErrorAlert` for standardized validation error display
 - Implementation details:
   - local React state holds `min`, `max`, and `result`
   - range validation uses `max >= min`
   - random generator formula: `Math.floor(Math.random() * (max - min + 1)) + min`
-- UI stack uses Ant Design components (`Card`, `InputNumber`, `Button`, `Typography`, `Space`) and shared spacing utility classes.
+- UI stack uses Ant Design components (`InputNumber`, `Button`, `Typography`, `Space`) and shared spacing utility classes.
