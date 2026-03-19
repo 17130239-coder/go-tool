@@ -10,7 +10,7 @@ interface FeatureCardProps {
 export function FeatureCard({ children, size = 'large', className }: FeatureCardProps) {
   return (
     <Card className={className}>
-      <Space direction="vertical" size={size} style={{ width: '100%' }}>
+      <Space orientation="vertical" size={size} style={{ width: '100%' }}>
         {children}
       </Space>
     </Card>
