@@ -1,8 +1,8 @@
-import { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useLayoutEffect, useMemo, useRef } from 'react';
 import type { ReactNode } from 'react';
 import { Button, Card, Space, Statistic, Typography } from 'antd';
 import { useTypingTest } from '../hooks/useTypingTest';
-import type { CaretPosition, ModeOption } from '../types';
+import type { ModeOption } from '../types';
 import styles from '../TextTyping.module.css';
 
 const { Text, Title } = Typography;
@@ -19,6 +19,20 @@ const WORD_OPTIONS: ModeOption[] = [
 
 function isSameMode(left: ModeOption, right: ModeOption) {
   return left.type === right.type && left.value === right.value;
+}
+
+function getOffsetWithinAncestor(node: HTMLElement, ancestor: HTMLElement) {
+  let x = 0;
+  let y = 0;
+  let current: HTMLElement | null = node;
+
+  while (current && current !== ancestor) {
+    x += current.offsetLeft;
+    y += current.offsetTop;
+    current = current.offsetParent as HTMLElement | null;
+  }
+
+  return { x, y };
 }
 
 export function TypingTest() {
@@ -40,7 +54,7 @@ export function TypingTest() {
   const visibleWords = useMemo(() => words.slice(0, wordLimit), [wordLimit, words]);
   const wordsContainerRef = useRef<HTMLDivElement | null>(null);
   const slotRefs = useRef<Record<string, HTMLSpanElement | null>>({});
-  const [caret, setCaret] = useState<CaretPosition>({ x: 0, y: 0, height: 32 });
+  const caretRef = useRef<HTMLSpanElement | null>(null);
 
   useLayoutEffect(() => {
     if (status === 'finished') return;
@@ -59,20 +73,30 @@ export function TypingTest() {
     const container = wordsContainerRef.current;
     if (!targetNode || !container) return;
 
-    const targetRect = targetNode.getBoundingClientRect();
-    const slotWrapRect = targetNode.parentElement?.getBoundingClientRect();
-    const containerRect = container.getBoundingClientRect();
-    const leftBase = targetRect.left - containerRect.left;
-    const targetWidth = slotWrapRect?.width ?? targetRect.width;
-    const targetHeight = slotWrapRect?.height ?? targetRect.height;
-    const x = anchorToLastChar ? leftBase + targetWidth - 1 : leftBase - 1;
-    const y = targetRect.top - containerRect.top + targetHeight * 0.08;
+    const slotWrapNode = targetNode.parentElement as HTMLSpanElement | null;
+    if (!slotWrapNode) return;
 
-    setCaret({
-      x,
-      y,
-      height: targetHeight * 0.84,
-    });
+    const { x: xBase, y: yBase } = getOffsetWithinAncestor(slotWrapNode, container);
+    const targetWidth = slotWrapNode.offsetWidth;
+    const targetHeight = slotWrapNode.offsetHeight || targetNode.getBoundingClientRect().height || 32;
+    const x = anchorToLastChar ? xBase + targetWidth - 1 : xBase - 1;
+    const y = yBase + targetHeight * 0.08;
+
+    const revealTop = y - targetHeight * 0.65;
+    const revealBottom = y + targetHeight * 1.35;
+    const viewportTop = container.scrollTop;
+    const viewportBottom = viewportTop + container.clientHeight;
+    if (revealBottom > viewportBottom) {
+      container.scrollTop = revealBottom - container.clientHeight;
+    } else if (revealTop < viewportTop) {
+      container.scrollTop = Math.max(0, revealTop);
+    }
+
+    const caretNode = caretRef.current;
+    if (!caretNode) return;
+    caretNode.style.left = `${Math.round(x)}px`;
+    caretNode.style.top = `${Math.round(y)}px`;
+    caretNode.style.height = `${Math.max(20, targetHeight * 0.84)}px`;
   }, [currentCharIndex, currentWordIndex, status, typedWords, visibleWords]);
 
   const remainingSeconds = Math.max(0, Math.ceil(remainingTimeMs / 1000));
@@ -135,12 +159,8 @@ export function TypingTest() {
         <div className={styles.wordsContainer} ref={wordsContainerRef}>
           {status !== 'finished' && (
             <span
+              ref={caretRef}
               className={`${styles.caretFloating} ${styles.caretSmooth} ${status === 'idle' ? styles.caretBlink : ''}`}
-              style={{
-                left: `${caret.x}px`,
-                top: `${caret.y}px`,
-                height: `${caret.height}px`,
-              }}
             />
           )}
 
