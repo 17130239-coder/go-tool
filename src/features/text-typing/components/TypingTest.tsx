@@ -80,6 +80,7 @@ export function TypingTest() {
                 <Button
                   key={`${option.type}-${option.value}`}
                   type={isSameMode(mode, option) ? 'primary' : 'text'}
+                  className={!isSameMode(mode, option) ? styles.modeButton : undefined}
                   size="small"
                   onClick={() => setModeAndRestart(option)}
                 >
@@ -96,6 +97,7 @@ export function TypingTest() {
                 <Button
                   key={`${option.type}-${option.value}`}
                   type={isSameMode(mode, option) ? 'primary' : 'text'}
+                  className={!isSameMode(mode, option) ? styles.modeButton : undefined}
                   size="small"
                   onClick={() => setModeAndRestart(option)}
                 >
@@ -104,16 +106,21 @@ export function TypingTest() {
               ))}
             </Space>
           </div>
-
-          <Button onClick={() => restart()}>Restart</Button>
+          <Button className={styles.restartButton} onClick={() => restart()}>Restart</Button>
         </div>
 
         <div className={styles.meta}>
-          <Text type="secondary">
+          <Text className={styles.metaText}>
             {mode.type === 'time' ? `Time left: ${remainingSeconds}s` : `Words: ${wordProgress}/${wordLimit}`}
           </Text>
-          <Text type="secondary">Shortcut: Tab + Enter to restart</Text>
+          <Text className={styles.metaText}>Shortcut: Tab + Enter to restart</Text>
           {restartArmed && <Text className={styles.restartArmed}>Restart armed. Press Enter.</Text>}
+        </div>
+
+        <div className={styles.liveMetrics}>
+          <Statistic title="WPM" value={metrics.wpm} precision={1} />
+          <Statistic title="Raw WPM" value={metrics.rawWpm} precision={1} />
+          <Statistic title="Accuracy" value={metrics.accuracy} precision={1} suffix="%" />
         </div>
 
         <div className={styles.wordsContainer} ref={wordsContainerRef}>
