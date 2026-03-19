@@ -51,20 +51,24 @@ export function TypingTest() {
     const currentWord = visibleWords[currentWordIndex];
     if (!currentWord) return;
 
+    const typedWord = typedWords[currentWordIndex] ?? '';
+    const hasExtraChars = typedWord.length > currentWord.length;
     const targetKey = currentCharIndex < currentWord.length
       ? `${currentWordIndex}-${currentCharIndex}`
-      : `${currentWordIndex}-end`;
+      : hasExtraChars
+        ? `${currentWordIndex}-typed-end`
+        : `${currentWordIndex}-end`;
     const targetNode = charRefs.current[targetKey];
     if (!targetNode) return;
 
     const containerRect = container.getBoundingClientRect();
     const targetRect = targetNode.getBoundingClientRect();
     setCaret({
-      x: targetRect.left - containerRect.left,
-      y: targetRect.top - containerRect.top,
+      x: targetRect.left - containerRect.left - container.clientLeft,
+      y: targetRect.top - containerRect.top - container.clientTop,
       height: targetRect.height || 32,
     });
-  }, [currentCharIndex, currentWordIndex, status, visibleWords]);
+  }, [currentCharIndex, currentWordIndex, status, typedWords, visibleWords]);
 
   const remainingSeconds = Math.max(0, Math.ceil(remainingTimeMs / 1000));
   const wordProgress = Math.min(currentWordIndex + (typedWords[currentWordIndex] ? 1 : 0), wordLimit);
@@ -166,6 +170,13 @@ export function TypingTest() {
                     {extraChar}
                   </span>
                 ))}
+
+                <span
+                  ref={(node) => {
+                    charRefs.current[`${wordIndex}-typed-end`] = node;
+                  }}
+                  className={styles.wordEndAnchor}
+                />
 
                 <span
                   ref={(node) => {
