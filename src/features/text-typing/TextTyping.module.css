@@ -88,8 +88,10 @@
 .wordsContainer {
   position: relative;
   min-height: 170px;
-  max-height: 330px;
-  overflow: hidden;
+  max-height: 180px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
   border-radius: 12px;
   background: #323437;
   border: 1px solid #3f4349;
@@ -104,6 +106,10 @@
   line-height: 1.35;
   letter-spacing: 0.2px;
   user-select: none;
+}
+
+.wordsContainer::-webkit-scrollbar {
+  display: none;
 }
 
 .word {
