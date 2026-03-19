@@ -38,6 +38,7 @@ This repo currently has no `test` script and no test files, so there is no singl
 
 - Follow feature-first organization from `GUIDE.md`: keep domain logic in `src/features/<feature>`, and keep shared cross-feature code in shared folders (`components`, `hooks`, `utils`, etc.).
 - Export feature public API through feature `index.ts` files (example: `src/features/naming-converter/index.ts`).
+- Feature documentation is required: for every new feature (or significant feature update), add/update a feature doc in that feature folder (e.g., `src/features/<feature>/README.md`) that covers purpose, user flow, and key technical notes.
 - Naming rules from `GUIDE.md`:
   - folders: kebab-case
   - React component files: PascalCase
@@ -57,3 +58,39 @@ This repo currently has no `test` script and no test files, so there is no singl
   - pre-commit runs `pnpm lint-staged`
   - commit-msg runs commitlint (`conventional` config), so use Conventional Commits.
 - A helper script exists at `bin/complete.sh` and is exposed as `pnpm complete`; it runs lint + typecheck, stages all changes, commits, then pushes current branch.
+
+## Branch, MR, and deployment workflow (mandatory)
+
+For each new user request:
+
+1. Create a dedicated branch from `main` (one branch per request).
+2. Implement and validate changes on that branch.
+3. Open an MR/PR targeting `main`.
+4. Merge the MR/PR into `main`.
+5. Confirm deployment is completed successfully (for this repo: Vercel deployment status) before marking the task done.
+
+Do not treat a task as complete immediately after code changes or merge; completion requires successful post-merge deployment.
+
+## Definition of Done (for each task)
+
+A task is considered done only when all applicable checks below are satisfied:
+
+1. Scope completion
+   - Requested behavior is fully implemented (not partial), and related routing/navigation wiring is included when needed.
+2. Conventions alignment
+   - Changes follow feature-first structure and naming rules from `GUIDE.md`.
+   - Feature exports are updated via feature `index.ts` where applicable.
+3. Documentation completion
+   - For a new feature or significant feature change, update/create `src/features/<feature>/README.md` with purpose, user flow, and key technical notes.
+4. Quality gates
+   - `pnpm lint --quiet` passes.
+   - `pnpm typecheck` passes.
+5. Change safety
+   - No unrelated files are modified unintentionally.
+   - Existing behavior outside task scope is preserved.
+6. Delivery readiness
+   - If user requests delivery, commit message follows Conventional Commits and push is completed (can use `pnpm complete`).
+7. Integration completion
+   - Work is done on a dedicated request branch.
+   - MR/PR to `main` is created and merged.
+   - Deployment completion is verified before closing the task.

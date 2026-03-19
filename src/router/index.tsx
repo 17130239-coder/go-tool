@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { MainLayout } from '../components/layout/MainLayout';
 import { ConverterPage } from '../features/naming-converter';
+import { RandomColorPage } from '../features/random-color';
 import { RandomNumberPage } from '../features/random-number';
 import { PageError } from '../components/ui/PageError';
 
@@ -24,6 +25,10 @@ export const router = createBrowserRouter([
       {
         path: 'random-number',
         element: <RandomNumberPage />,
+      },
+      {
+        path: 'random-color',
+        element: <RandomColorPage />,
       },
       {
         path: 'categories',

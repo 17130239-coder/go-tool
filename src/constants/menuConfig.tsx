@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   ToolOutlined,
+  BgColorsOutlined,
   NumberOutlined,
 } from '@ant-design/icons';
 
@@ -43,6 +44,12 @@ export const MENU_CONFIG: MenuItemConfig[] = [
         label: 'Random Number',
         icon: <NumberOutlined />,
         path: '/random-number',
+      },
+      {
+        key: '/random-color',
+        label: 'Random Color',
+        icon: <BgColorsOutlined />,
+        path: '/random-color',
       },
     ],
   },
