@@ -210,9 +210,12 @@ export function useTypingTest(initialMode: ModeOption = { type: 'time', value: 3
     window.addEventListener('keydown', handleKeyDown);
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
-      stopTicker();
     };
-  }, [handleKeyDown, stopTicker]);
+  }, [handleKeyDown]);
+
+  useEffect(() => () => {
+    stopTicker();
+  }, [stopTicker]);
 
   const metrics: TypingMetrics = useMemo(() => {
     let correctChars = 0;
