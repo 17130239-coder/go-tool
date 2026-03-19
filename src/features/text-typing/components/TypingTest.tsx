@@ -1,8 +1,8 @@
-import { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useMemo } from 'react';
 import type { ReactNode } from 'react';
 import { Button, Card, Space, Statistic, Typography } from 'antd';
 import { useTypingTest } from '../hooks/useTypingTest';
-import type { CaretPosition, ModeOption } from '../types';
+import type { ModeOption } from '../types';
 import styles from '../TextTyping.module.css';
 
 const { Text, Title } = Typography;
@@ -36,37 +36,8 @@ export function TypingTest() {
     setModeAndRestart,
   } = useTypingTest();
 
-  const wordsContainerRef = useRef<HTMLDivElement | null>(null);
-  const slotRefs = useRef<Record<string, HTMLSpanElement | null>>({});
-  const [caret, setCaret] = useState<CaretPosition>({ x: 0, y: 0, height: 32 });
-
   const wordLimit = mode.type === 'words' ? mode.value : words.length;
   const visibleWords = useMemo(() => words.slice(0, wordLimit), [wordLimit, words]);
-
-  useLayoutEffect(() => {
-    if (status === 'finished') return;
-
-    const container = wordsContainerRef.current;
-    if (!container) return;
-
-    const currentWord = visibleWords[currentWordIndex];
-    if (!currentWord) return;
-
-    const typedWord = typedWords[currentWordIndex] ?? '';
-    const maxSlotIndex = Math.max(currentWord.length, typedWord.length);
-    const slotIndex = Math.min(currentCharIndex, maxSlotIndex);
-    const targetKey = `${currentWordIndex}-slot-${slotIndex}`;
-    const targetNode = slotRefs.current[targetKey];
-    if (!targetNode) return;
-
-    const containerRect = container.getBoundingClientRect();
-    const targetRect = targetNode.getBoundingClientRect();
-    setCaret({
-      x: targetRect.left - containerRect.left - container.clientLeft,
-      y: targetRect.top - containerRect.top - container.clientTop,
-      height: targetRect.height || 32,
-    });
-  }, [currentCharIndex, currentWordIndex, status, typedWords, visibleWords]);
 
   const remainingSeconds = Math.max(0, Math.ceil(remainingTimeMs / 1000));
   const wordProgress = Math.min(currentWordIndex + (typedWords[currentWordIndex] ? 1 : 0), wordLimit);
@@ -125,20 +96,11 @@ export function TypingTest() {
           <Statistic title="Accuracy" value={metrics.accuracy} precision={1} suffix="%" />
         </div>
 
-        <div className={styles.wordsContainer} ref={wordsContainerRef}>
-          {status !== 'finished' && (
-            <span
-              className={`${styles.caret} ${status === 'idle' ? styles.caretBlink : ''}`}
-              style={{
-                transform: `translate(${caret.x}px, ${caret.y}px)`,
-                height: `${caret.height}px`,
-              }}
-            />
-          )}
-
+        <div className={styles.wordsContainer}>
           {visibleWords.map((word, wordIndex) => {
             const typedWord = typedWords[wordIndex] ?? '';
             const maxLength = Math.max(word.length, typedWord.length);
+            const activeSlotIndex = Math.min(currentCharIndex, maxLength);
             return (
               <span key={`${word}-${wordIndex}`} className={styles.word}>
                 {Array.from({ length: maxLength + 1 }, (_, slotIndex) => {
@@ -162,12 +124,9 @@ export function TypingTest() {
 
                   return (
                     <span key={`${wordIndex}-slot-wrap-${slotIndex}`} className={styles.slotWrap}>
-                      <span
-                        ref={(node) => {
-                          slotRefs.current[`${wordIndex}-slot-${slotIndex}`] = node;
-                        }}
-                        className={styles.caretSlot}
-                      />
+                      {status !== 'finished' && wordIndex === currentWordIndex && slotIndex === activeSlotIndex && (
+                        <span className={`${styles.caretInline} ${status === 'idle' ? styles.caretBlink : ''}`} />
+                      )}
                       {charNode}
                     </span>
                   );

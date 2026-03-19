@@ -115,15 +115,7 @@
 .slotWrap {
   position: relative;
   display: inline-flex;
-}
-
-.caretSlot {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 0;
-  height: 100%;
-  pointer-events: none;
+  align-items: baseline;
 }
 
 .char {
@@ -158,12 +150,15 @@
   opacity: 0;
 }
 
-.caret {
+.caretInline {
   position: absolute;
+  left: -1px;
+  top: 0;
   width: 2px;
+  height: 1.2em;
   background: #e2b714;
   border-radius: 2px;
-  transition: transform 0.06s ease-out;
+  transition: left 0.06s ease-out;
   pointer-events: none;
   box-shadow: 0 0 10px rgba(226, 183, 20, 0.45);
 }
