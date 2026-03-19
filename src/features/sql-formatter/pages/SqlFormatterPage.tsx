@@ -18,7 +18,7 @@ const LANGUAGES = [
   { value: 'postgresql', label: 'PostgreSQL' },
   { value: 'tsql', label: 'T-SQL (SQL Server)' },
   { value: 'plsql', label: 'PL/SQL (Oracle)' },
-] as const;
+];
 
 export function SqlFormatterPage() {
   const [input, setInput] = useState('');
