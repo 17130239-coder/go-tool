@@ -49,7 +49,7 @@ export const MENU_CONFIG: MenuItemConfig[] = [
       },
       {
         key: '/random-color',
-        label: 'Random Color',
+        label: 'Color Converter',
         icon: <BgColorsOutlined />,
         path: '/random-color',
       },

@@ -1,1 +1,1 @@
-export * from './pages/RandomColorPage';
+export * from './pages/ColorConverterPage';
