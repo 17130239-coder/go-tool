@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Card, Space } from 'antd';
+import { Card, Flex } from 'antd';
 
 interface FeatureCardProps {
   children: ReactNode;
@@ -10,9 +10,9 @@ interface FeatureCardProps {
 export function FeatureCard({ children, size = 'large', className }: FeatureCardProps) {
   return (
     <Card className={className}>
-      <Space orientation="vertical" size={size} style={{ width: '100%' }}>
+      <Flex vertical gap={size} style={{ width: '100%' }}>
         {children}
-      </Space>
+      </Flex>
     </Card>
   );
 }

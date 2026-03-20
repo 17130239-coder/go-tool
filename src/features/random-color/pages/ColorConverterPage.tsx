@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Input, Space } from 'antd';
+import { Card, Flex, Input } from 'antd';
 import { convertColor, isValidColor } from '../../../utils/colorConverter';
 import { useCopyToClipboard } from '../../../hooks';
 import {
@@ -60,7 +60,8 @@ export function ColorConverterPage() {
         description="Enter a color in any supported format and convert it into HEX, RGB(A), and HSL(A)."
       />
 
-      <div>
+      <Card size="small">
+        <Flex vertical gap={8}>
         <PageSectionTitle>Input Color</PageSectionTitle>
         <Input
           size="large"
@@ -69,25 +70,25 @@ export function ColorConverterPage() {
           placeholder="e.g., #3B82F6, rgb(59, 130, 246), hsl(217, 91%, 60%)"
           status={error ? 'error' : undefined}
         />
-      </div>
+        </Flex>
+      </Card>
 
       <ErrorAlert error={error} title="Invalid Color" />
 
       {converted && (
-        <>
-          <div
-            className="mb-24"
+        <Flex vertical gap={16}>
+          <Card
+            size="small"
             style={{
               width: '100%',
               height: 160,
               borderRadius: 'var(--ant-border-radius)',
-              border: '1px solid var(--ant-color-border-secondary)',
               background: currentColor,
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
             }}
           />
 
-          <Space orientation="vertical" size="middle" style={{ width: '100%' }}>
+          <Card size="small">
+            <Flex vertical gap={8}>
             <PageSectionTitle>Converted Formats</PageSectionTitle>
 
             {(Object.entries(converted) as [keyof ColorFormats, string][]).map(([format, value]) => (
@@ -101,8 +102,9 @@ export function ColorConverterPage() {
                 }}
               />
             ))}
-          </Space>
-        </>
+            </Flex>
+          </Card>
+        </Flex>
       )}
     </FeatureCard>
   );

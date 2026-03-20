@@ -34,6 +34,7 @@ The page now prioritizes Ant Design components over custom markup:
 
 - Input area: `Form`, `InputNumber`, `Radio.Group`, `Button`, `Alert`, `Card`
 - Result rendering: three AntD `Table` components with typed column definitions
+- Result sections are grouped in AntD `Card` blocks with `Flex` layout wrappers
 - PIT total row: AntD `Table.Summary`
 - Gross-up diagnostics: AntD `Alert`
 - Status indicators: `Typography.Text` (`success` / `danger`) and `Tag`

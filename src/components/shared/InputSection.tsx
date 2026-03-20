@@ -1,4 +1,4 @@
-import { Input, Typography } from 'antd';
+import { Card, Flex, Input, Typography } from 'antd';
 
 const { TextArea } = Input;
 const { Text } = Typography;
@@ -23,7 +23,8 @@ export function InputSection({
   hasError = false,
 }: InputSectionProps) {
   return (
-    <div>
+    <Card size="small">
+      <Flex vertical gap={8}>
       <Text strong className="mb-8" style={{ display: 'block' }}>
         {label}
       </Text>
@@ -34,6 +35,7 @@ export function InputSection({
         autoSize={{ minRows, maxRows }}
         status={hasError ? 'error' : undefined}
       />
-    </div>
+      </Flex>
+    </Card>
   );
 }

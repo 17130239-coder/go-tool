@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Space, Radio } from 'antd';
+import { Card, Flex, Radio } from 'antd';
 import { formatJSON, minifyJSON, validateJSON } from '../../../utils/jsonFormatter';
 import { useInputOutput, useCopyToClipboard } from '../../../hooks';
 import {
@@ -80,20 +80,22 @@ export function JsonFormatterPage() {
 
       <ErrorAlert error={error} title="JSON Error" />
 
-      <Space wrap>
-        <Radio.Group value={indentSize} onChange={(e) => setIndentSize(e.target.value)}>
-          <Radio.Button value={2}>2 Spaces</Radio.Button>
-          <Radio.Button value={4}>4 Spaces</Radio.Button>
-        </Radio.Group>
+      <Card size="small">
+        <Flex gap={16} wrap align="center">
+          <Radio.Group value={indentSize} onChange={(e) => setIndentSize(e.target.value)}>
+            <Radio.Button value={2}>2 Spaces</Radio.Button>
+            <Radio.Button value={4}>4 Spaces</Radio.Button>
+          </Radio.Group>
 
-        <FormatterActions
-          onFormat={handleFormat}
-          onMinify={handleMinify}
-          onClear={clear}
-          formatDisabled={!input.trim() || !!error}
-          minifyDisabled={!input.trim() || !!error}
-        />
-      </Space>
+          <FormatterActions
+            onFormat={handleFormat}
+            onMinify={handleMinify}
+            onClear={clear}
+            formatDisabled={!input.trim() || !!error}
+            minifyDisabled={!input.trim() || !!error}
+          />
+        </Flex>
+      </Card>
 
       <OutputSection value={output} copied={copied} onCopy={handleCopy} />
     </FeatureCard>

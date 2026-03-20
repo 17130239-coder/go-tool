@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { Input } from 'antd';
+import { Flex, Input } from 'antd';
 import { useCopyToClipboard } from '../../../hooks';
 import { FeatureCard, PageHeader } from '../../../components/shared';
 import { convertAll } from '../../../utils/stringConverter';
 import { ResultRow } from '../components/ResultRow';
 import type { ConventionType } from '../types';
-import styles from '../NamingConverter.module.css';
 
 const CONVENTION_KEYS: ConventionType[] = [
   'camelCase',
@@ -48,10 +47,9 @@ export function ConverterPage() {
         onChange={(e) => setInput(e.target.value)}
         placeholder="Enter a string to convert..."
         autoSize={{ minRows: 2, maxRows: 6 }}
-        className="mb-24"
       />
 
-      <div className={styles.resultContainer}>
+      <Flex vertical gap={8}>
         {CONVENTION_KEYS.map((key) => (
           <ResultRow
             key={key}
@@ -63,7 +61,7 @@ export function ConverterPage() {
             }}
           />
         ))}
-      </div>
+      </Flex>
     </FeatureCard>
   );
 }

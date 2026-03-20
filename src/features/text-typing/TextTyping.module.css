@@ -192,10 +192,8 @@
 }
 
 .metrics {
-  border-radius: 10px;
-  border: 1px solid #3f4349;
-  background: #323437;
-  padding: 16px;
+  border: 1px solid #3f4349 !important;
+  background: #323437 !important;
 }
 
 .metrics :global(.ant-typography),

@@ -4,6 +4,7 @@ import {
   Button,
   Card,
   Col,
+  Flex,
   Form,
   InputNumber,
   Radio,
@@ -267,7 +268,7 @@ export function GrossNetSalaryPage() {
       />
 
       <Card size="small">
-        <Space orientation="vertical" size="middle" style={{ width: '100%' }}>
+        <Flex vertical gap={16} style={{ width: '100%' }}>
           <PageSectionTitle>Thông tin đầu vào</PageSectionTitle>
 
           <Radio.Group
@@ -335,14 +336,15 @@ export function GrossNetSalaryPage() {
             showIcon
             message={`Giảm trừ gia cảnh: bản thân ${formatVnd(VIETNAM_2026_FAMILY_DEDUCTION.self)}; người phụ thuộc ${formatVnd(VIETNAM_2026_FAMILY_DEDUCTION.dependent)}/người.`}
           />
-        </Space>
+        </Flex>
       </Card>
 
       <ErrorAlert error={error} title="Lỗi dữ liệu đầu vào" />
 
       {result && (
-        <Space orientation="vertical" size="large" style={{ width: '100%' }}>
-          <div>
+        <Flex vertical gap={24} style={{ width: '100%' }}>
+          <Card size="small">
+            <Flex vertical gap={8}>
             <PageSectionTitle>Bảng Diễn giải chi tiết (VNĐ)</PageSectionTitle>
             <Table
               rowKey="key"
@@ -352,9 +354,11 @@ export function GrossNetSalaryPage() {
               className={styles.resultTable}
               rowClassName={(record) => (record.isSummary ? styles.summaryRow : '')}
             />
-          </div>
+            </Flex>
+          </Card>
 
-          <div>
+          <Card size="small">
+            <Flex vertical gap={8}>
             <PageSectionTitle>Bảng Chi tiết Thuế TNCN (*)</PageSectionTitle>
             <Table
               rowKey="key"
@@ -375,9 +379,11 @@ export function GrossNetSalaryPage() {
                 </Table.Summary.Row>
               )}
             />
-          </div>
+            </Flex>
+          </Card>
 
-          <div>
+          <Card size="small">
+            <Flex vertical gap={8}>
             <PageSectionTitle>Bảng Người sử dụng lao động trả (VNĐ)</PageSectionTitle>
             <Table
               rowKey="key"
@@ -387,7 +393,8 @@ export function GrossNetSalaryPage() {
               className={styles.resultTable}
               rowClassName={(record) => (record.isSummary ? styles.summaryRow : '')}
             />
-          </div>
+            </Flex>
+          </Card>
 
           {result.grossUpDetails && (
             <Alert
@@ -412,9 +419,8 @@ export function GrossNetSalaryPage() {
               }
             />
           )}
-        </Space>
+        </Flex>
       )}
     </FeatureCard>
   );
 }
-

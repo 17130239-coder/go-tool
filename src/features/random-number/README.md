@@ -29,8 +29,9 @@ Behavior details:
 - Shared UI primitives:
   - `FeatureCard` and `PageHeader` for consistent page shell
   - `ErrorAlert` for standardized validation error display
+  - AntD `Card` + `Statistic` for structured input/result sections
 - Implementation details:
   - local React state holds `min`, `max`, and `result`
   - range validation uses `max >= min`
   - random generator formula: `Math.floor(Math.random() * (max - min + 1)) + min`
-- UI stack uses Ant Design components (`InputNumber`, `Button`, `Typography`, `Space`) and shared spacing utility classes.
+- UI stack uses Ant Design components (`InputNumber`, `Button`, `Typography`, `Space`, `Card`, `Flex`, `Statistic`) with AntD-first section composition.

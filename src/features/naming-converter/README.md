@@ -31,6 +31,7 @@ Behavior details:
 - Result row UI and copy behavior: `components/ResultRow.tsx`
 - Shared UI primitives:
   - `FeatureCard` and `PageHeader` for consistent page structure
+  - AntD `Card` + `Flex` layout for each result row
   - shared `CopyButton` in result rows
 - Shared behavior hook: `useCopyToClipboard` for consistent copy feedback handling
 - Public feature export: `index.ts`
@@ -39,6 +40,6 @@ Behavior details:
   - normalize diacritics (including Vietnamese `đ`/`Đ`)
   - parse mixed input into lowercase word tokens
   - map tokens to each target naming convention
-- Styling:
-  - feature-specific styles in `NamingConverter.module.css`
-  - shared spacing utility classes from global spacing system (e.g. `mb-24`)
+- UI implementation:
+  - Ant Design-first structure (`Input.TextArea`, `Card`, `Flex`, `Typography`)
+  - no feature-specific CSS module needed for row layout

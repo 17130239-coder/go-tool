@@ -45,6 +45,7 @@ The SQL Formatter feature provides a powerful tool for formatting, beautifying, 
   - `FeatureCard` and `PageHeader` for consistent page shell
   - `PageSectionTitle` for consistent section labels
   - `ErrorAlert` for standardized error rendering
+  - AntD `Card` + `Flex` wrappers for format options and AI assistant panels
 
 ### AI Helper behavior
 - Input is normalized before prompt generation.

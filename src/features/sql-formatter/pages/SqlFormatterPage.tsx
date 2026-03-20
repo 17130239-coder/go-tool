@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Space, Radio, Typography, Select, Alert, Divider } from 'antd';
+import { Alert, Card, Divider, Flex, Radio, Select, Space, Typography } from 'antd';
 import { formatSQL, minifySQL, validateSQL } from '../../../utils/sqlFormatter';
 import { useInputOutput, useCopyToClipboard } from '../../../hooks';
 import {
@@ -127,10 +127,11 @@ export function SqlFormatterPage() {
 
       <ErrorAlert error={error} title="SQL Error" />
 
-      <div>
+      <Card size="small">
+        <Flex vertical gap={12}>
         <PageSectionTitle>Format Options</PageSectionTitle>
         <Space wrap size="middle">
-          <div>
+            <Flex vertical gap={4}>
             <Text type="secondary" style={{ fontSize: 12, display: 'block', marginBottom: 4 }}>
               SQL Dialect
             </Text>
@@ -140,9 +141,9 @@ export function SqlFormatterPage() {
               options={LANGUAGES}
               style={{ width: 160 }}
             />
-          </div>
+            </Flex>
 
-          <div>
+            <Flex vertical gap={4}>
             <Text type="secondary" style={{ fontSize: 12, display: 'block', marginBottom: 4 }}>
               Indentation
             </Text>
@@ -150,9 +151,9 @@ export function SqlFormatterPage() {
               <Radio.Button value={2}>2 Spaces</Radio.Button>
               <Radio.Button value={4}>4 Spaces</Radio.Button>
             </Radio.Group>
-          </div>
+            </Flex>
 
-          <div>
+            <Flex vertical gap={4}>
             <Text type="secondary" style={{ fontSize: 12, display: 'block', marginBottom: 4 }}>
               Keyword Case
             </Text>
@@ -161,9 +162,9 @@ export function SqlFormatterPage() {
               <Radio.Button value="lower">lower</Radio.Button>
               <Radio.Button value="preserve">Preserve</Radio.Button>
             </Radio.Group>
-          </div>
+            </Flex>
 
-          <div>
+            <Flex vertical gap={4}>
             <Text type="secondary" style={{ fontSize: 12, display: 'block', marginBottom: 4 }}>
               Lines Between Queries
             </Text>
@@ -175,9 +176,10 @@ export function SqlFormatterPage() {
               <Radio.Button value={2}>2</Radio.Button>
               <Radio.Button value={3}>3</Radio.Button>
             </Radio.Group>
-          </div>
+            </Flex>
         </Space>
-      </div>
+        </Flex>
+      </Card>
 
       <FormatterActions
         onFormat={handleFormat}
@@ -191,10 +193,11 @@ export function SqlFormatterPage() {
 
       <Divider className="m-0" />
 
-      <div>
+      <Card size="small">
+        <Flex vertical gap={12}>
         <PageSectionTitle>AI SQL Assistant</PageSectionTitle>
 
-        <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+          <Space direction="vertical" size="middle" style={{ width: '100%' }}>
           <Text type="secondary">
             Generate a ready-to-use AI prompt to review and improve your SQL query with context-aware
             suggestions.
@@ -246,7 +249,8 @@ export function SqlFormatterPage() {
             showCopyButton={false}
           />
         </Space>
-      </div>
+        </Flex>
+      </Card>
     </FeatureCard>
   );
 }
