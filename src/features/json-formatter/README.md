@@ -26,9 +26,9 @@ The JSON Formatter feature provides a simple, intuitive interface for validating
 ## Technical Notes
 
 ### Architecture
-- **Utilities**: JSON operations (format, minify, validate) in `src/utils/jsonFormatter.ts`
+- **Utilities**: JSON operations (format, minify, validate) in `src/features/json-formatter/utils/jsonFormatter.ts`
 - **Page Component**: `JsonFormatterPage.tsx` manages UI state and user interactions
-- **Types**: shared formatter types from `src/types/formatter.ts` (re-exported by feature `types.ts`)
+- **Types**: formatter types from `src/features/formatter/types.ts` (re-exported by feature `types.ts`)
 - **Shared UI primitives**:
   - `FeatureCard` and `PageHeader` for consistent page shell
   - `ErrorAlert` for standardized error rendering

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Card, Flex, Input } from 'antd';
-import { convertColor, isValidColor } from '../../../utils/colorConverter';
 import { useCopyToClipboard } from '../../../hooks';
 import {
   FeatureCard,
@@ -9,7 +8,8 @@ import {
   ResultField,
   PageSectionTitle,
 } from '../../../components/shared';
-import type { ColorFormats } from '../../../utils/colorConverter';
+import { convertColor, isValidColor } from '../utils/colorConverter';
+import type { ColorFormats } from '../utils/colorConverter';
 
 export function ColorConverterPage() {
   const [input, setInput] = useState<string>('#3B82F6');

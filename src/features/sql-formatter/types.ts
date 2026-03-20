@@ -3,7 +3,8 @@ export type {
   FormatterResult,
   KeywordCase,
   SqlLanguage,
-} from '../../types';
+  IndentSize,
+} from '../formatter/types';
 
 export interface SqlAiPromptResult {
   success: boolean;

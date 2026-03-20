@@ -36,10 +36,10 @@ The SQL Formatter feature provides a powerful tool for formatting, beautifying, 
 ## Technical Notes
 
 ### Architecture
-- **Utilities**: SQL operations (format, minify, validate) in `src/utils/sqlFormatter.ts`
+- **Utilities**: SQL operations (format, minify, validate) in `src/features/sql-formatter/utils/sqlFormatter.ts`
 - **AI helper**: Prompt + heuristic suggestions in `src/features/sql-formatter/aiHelper.ts`
 - **Page Component**: `SqlFormatterPage.tsx` manages UI state and user interactions
-- **Types**: shared formatter types from `src/types/formatter.ts`; feature-level AI result type in `src/features/sql-formatter/types.ts`
+- **Types**: formatter types from `src/features/formatter/types.ts`; feature-level AI result type in `src/features/sql-formatter/types.ts`
 - **External Library**: Uses `sql-formatter` npm package for robust SQL parsing and formatting
 - **Shared UI primitives**:
   - `FeatureCard` and `PageHeader` for consistent page shell

@@ -21,5 +21,3 @@ export interface ToolUsageEntry {
   path: string;
   usedAt: number;
 }
-
-export * from './formatter';
