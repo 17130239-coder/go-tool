@@ -1,4 +1,4 @@
-import { Input, Typography, Space } from 'antd';
+import { Card, Flex, Input, Typography } from 'antd';
 import { CopyButton } from './CopyButton';
 
 const { TextArea } = Input;
@@ -26,17 +26,19 @@ export function OutputSection({
   if (!value) return null;
 
   return (
-    <div>
-      <Space className="mb-8">
+    <Card size="small">
+      <Flex vertical gap={8}>
+        <Flex align="center" gap={8} wrap>
         <Text strong>{label}</Text>
         {showCopyButton && <CopyButton copied={copied} onCopy={onCopy} />}
-      </Space>
+        </Flex>
       <TextArea
         value={value}
         readOnly
         autoSize={{ minRows, maxRows }}
         style={{ fontFamily: 'monospace' }}
       />
-    </div>
+      </Flex>
+    </Card>
   );
 }

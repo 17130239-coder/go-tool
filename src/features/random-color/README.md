@@ -38,6 +38,7 @@ The Color Converter feature provides a powerful utility to convert colors betwee
   - `FeatureCard` and `PageHeader` for consistent page shell
   - `ErrorAlert` for standardized error rendering
   - `ResultField` for read-only copyable output rows
+  - AntD `Card` + `Flex` for input, preview, and output sections
 
 ### Color Conversion Logic
 - **Parsing**: Regex-based parsing for all input formats

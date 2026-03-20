@@ -32,6 +32,8 @@ The JSON Formatter feature provides a simple, intuitive interface for validating
 - **Shared UI primitives**:
   - `FeatureCard` and `PageHeader` for consistent page shell
   - `ErrorAlert` for standardized error rendering
+  - `InputSection` and `OutputSection` rendered as AntD `Card` sections
+  - AntD `Card` + `Flex` for formatter option/actions grouping
 
 ### Error Handling
 - Uses try/catch around `JSON.parse()` to capture syntax errors

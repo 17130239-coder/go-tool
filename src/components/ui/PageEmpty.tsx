@@ -1,4 +1,4 @@
-import { Empty } from 'antd';
+import { Card, Empty, Flex } from 'antd';
 
 interface PageEmptyProps {
   description?: string;
@@ -7,8 +7,10 @@ interface PageEmptyProps {
 
 export function PageEmpty({ description, children }: PageEmptyProps) {
   return (
-    <div style={{ padding: '40px 0' }}>
-      <Empty description={description || 'No data to display'}>{children}</Empty>
-    </div>
+    <Card>
+      <Flex justify="center" className="py-32">
+        <Empty description={description || 'No data to display'}>{children}</Empty>
+      </Flex>
+    </Card>
   );
 }

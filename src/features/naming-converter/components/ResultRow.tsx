@@ -1,6 +1,5 @@
-import { Input, Typography } from 'antd';
+import { Card, Flex, Input, Typography } from 'antd';
 import { CopyButton } from '../../../components/shared';
-import styles from '../NamingConverter.module.css';
 import type { ConventionType } from '../types';
 
 const { Text } = Typography;
@@ -25,16 +24,16 @@ export function ResultRow({ label, value, copied, onCopy }: ResultRowProps) {
   };
 
   return (
-    <div className={styles.resultRow}>
-      <div className={styles.resultLabel}>
+    <Card size="small">
+      <Flex align="center" gap={12} wrap>
+        <Flex style={{ minWidth: 160 }}>
         <Text type="secondary">{getLabel(label)}</Text>
-      </div>
-      <div className={styles.resultValue}>
-        <Input value={value} readOnly variant="borderless" style={{ fontWeight: 500 }} />
-      </div>
-      <div>
+        </Flex>
+        <Flex flex={1}>
+          <Input value={value} readOnly style={{ fontWeight: 500 }} />
+        </Flex>
         <CopyButton copied={copied} onCopy={onCopy} disabled={!value} />
-      </div>
-    </div>
+      </Flex>
+    </Card>
   );
 }

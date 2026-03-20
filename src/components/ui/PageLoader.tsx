@@ -1,4 +1,4 @@
-import { Spin } from 'antd';
+import { Card, Flex, Spin } from 'antd';
 import { useState, useEffect } from 'react';
 
 interface PageLoaderProps {
@@ -23,17 +23,10 @@ export function PageLoader({ timeoutMs = 15000, onTimeout }: PageLoaderProps) {
   }
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100%',
-        minHeight: '200px',
-        width: '100%',
-      }}
-    >
-      <Spin size="large" />
-    </div>
+    <Card>
+      <Flex justify="center" align="center" style={{ minHeight: 200, width: '100%' }}>
+        <Spin size="large" />
+      </Flex>
+    </Card>
   );
 }

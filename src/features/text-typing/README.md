@@ -37,6 +37,7 @@ Behavior details:
 - Route registration: `src/router/index.tsx` at path `/text-typing`
 - Sidebar navigation item: `src/constants/menuConfig.tsx`
 - Page shell uses shared `PageHeader` for consistent feature-page structure
+- Page shell is composed with shared `FeatureCard` and AntD-first section composition
 - Word generation: `words.ts` using internal dictionary and randomized list.
 - Metrics formulas:
   - `WPM = (correctChars / 5) / elapsedMinutes`
@@ -45,3 +46,4 @@ Behavior details:
 - Styling:
   - `TextTyping.module.css` uses monkeytype-inspired neutral/dark palette
   - blinking caret in `idle`, smooth caret movement via transform transition
+  - AntD `Card` wrappers are used for test shell and final result panel

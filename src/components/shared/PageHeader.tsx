@@ -1,4 +1,4 @@
-import { Typography } from 'antd';
+import { Flex, Typography } from 'antd';
 
 const { Title, Text } = Typography;
 
@@ -9,15 +9,15 @@ interface PageHeaderProps {
 
 export function PageHeader({ title, description }: PageHeaderProps) {
   return (
-    <div>
+    <Flex vertical gap={8}>
       <Title level={4} className="m-0">
         {title}
       </Title>
       {description && (
-        <Text type="secondary" className="mt-8" style={{ display: 'block' }}>
+        <Text type="secondary" style={{ display: 'block' }}>
           {description}
         </Text>
       )}
-    </div>
+    </Flex>
   );
 }

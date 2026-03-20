@@ -1,6 +1,6 @@
 import { useLayoutEffect, useMemo, useRef } from 'react';
 import type { ReactNode } from 'react';
-import { Button, Card, Space, Statistic, Typography } from 'antd';
+import { Button, Card, Flex, Space, Statistic, Typography } from 'antd';
 import { useTypingTest } from '../hooks/useTypingTest';
 import type { ModeOption } from '../types';
 import styles from '../TextTyping.module.css';
@@ -103,10 +103,10 @@ export function TypingTest() {
   const wordProgress = Math.min(currentWordIndex + (typedWords[currentWordIndex] ? 1 : 0), wordLimit);
 
   return (
-    <Card className={styles.card}>
+    <Card className={styles.card} size="small">
       <Space orientation="vertical" size="large" style={{ width: '100%' }}>
-        <div className={styles.toolbar}>
-          <div className={styles.modeGroup}>
+        <Flex className={styles.toolbar}>
+          <Flex className={styles.modeGroup}>
             <Text className={styles.modeLabel}>time</Text>
             <Space size={8}>
               {TIME_OPTIONS.map((option) => (
@@ -121,9 +121,9 @@ export function TypingTest() {
                 </Button>
               ))}
             </Space>
-          </div>
+          </Flex>
 
-          <div className={styles.modeGroup}>
+          <Flex className={styles.modeGroup}>
             <Text className={styles.modeLabel}>words</Text>
             <Space size={8}>
               {WORD_OPTIONS.map((option) => (
@@ -138,17 +138,17 @@ export function TypingTest() {
                 </Button>
               ))}
             </Space>
-          </div>
+          </Flex>
           <Button className={styles.restartButton} onClick={() => restart()}>Restart</Button>
-        </div>
+        </Flex>
 
-        <div className={styles.meta}>
+        <Flex className={styles.meta}>
           <Text className={styles.metaText}>
             {mode.type === 'time' ? `Time left: ${remainingSeconds}s` : `Words: ${wordProgress}/${wordLimit}`}
           </Text>
           <Text className={styles.metaText}>Shortcut: Tab + Enter to restart</Text>
           {restartArmed && <Text className={styles.restartArmed}>Restart armed. Press Enter.</Text>}
-        </div>
+        </Flex>
 
         <div className={styles.liveMetrics}>
           <Statistic title="WPM" value={metrics.wpm} precision={1} />
@@ -207,14 +207,14 @@ export function TypingTest() {
         </div>
 
         {status === 'finished' && (
-          <div className={styles.metrics}>
+          <Card className={styles.metrics} size="small">
             <Title level={5}>Result</Title>
             <Space size="large" wrap>
               <Statistic title="WPM" value={metrics.wpm} precision={2} />
               <Statistic title="Raw WPM" value={metrics.rawWpm} precision={2} />
               <Statistic title="Accuracy (%)" value={metrics.accuracy} precision={2} />
             </Space>
-          </div>
+          </Card>
         )}
       </Space>
     </Card>

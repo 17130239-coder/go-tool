@@ -1,4 +1,4 @@
-import { Typography } from 'antd';
+import { Flex, Typography } from 'antd';
 
 const { Text } = Typography;
 
@@ -8,8 +8,10 @@ interface PageSectionTitleProps {
 
 export function PageSectionTitle({ children }: PageSectionTitleProps) {
   return (
-    <Text strong className="mb-8" style={{ display: 'block' }}>
-      {children}
-    </Text>
+    <Flex>
+      <Text strong style={{ display: 'block' }}>
+        {children}
+      </Text>
+    </Flex>
   );
 }

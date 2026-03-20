@@ -8,6 +8,17 @@ import { JsonFormatterPage } from '../features/json-formatter';
 import { SqlFormatterPage } from '../features/sql-formatter';
 import { GrossNetSalaryPage } from '../features/gross-net-salary';
 import { PageError } from '../components/ui/PageError';
+import { Card, Empty, Flex } from 'antd';
+
+function renderPlaceholder(description: string) {
+  return (
+    <Card>
+      <Flex justify="center" className="py-32">
+        <Empty description={description} />
+      </Flex>
+    </Card>
+  );
+}
 
 export const router = createBrowserRouter([
   {
@@ -20,7 +31,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'dashboard',
-        element: <div>Dashboard Content Placeholder</div>,
+        element: renderPlaceholder('Dashboard is coming soon.'),
       },
       {
         path: 'naming-converter',
@@ -52,11 +63,11 @@ export const router = createBrowserRouter([
       },
       {
         path: 'categories',
-        element: <div>Categories Placeholder</div>,
+        element: renderPlaceholder('Categories module is coming soon.'),
       },
       {
         path: 'permissions',
-        element: <div>Permissions Placeholder</div>,
+        element: renderPlaceholder('Permissions module is coming soon.'),
       },
       {
         path: '*',

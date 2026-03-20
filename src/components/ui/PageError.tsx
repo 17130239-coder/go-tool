@@ -1,4 +1,4 @@
-import { Button, Result } from 'antd';
+import { Button, Card, Flex, Result } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
 interface PageErrorProps {
@@ -10,22 +10,25 @@ export function PageError({ message, onRetry }: PageErrorProps) {
   const navigate = useNavigate();
 
   return (
-    <div style={{ padding: '40px 0' }}>
-      <Result
-        status="error"
-        title="Something went wrong"
-        subTitle={message || 'Something went wrong'}
-        extra={[
-          onRetry && (
-            <Button type="primary" key="retry" onClick={onRetry}>
-              Retry
-            </Button>
-          ),
-          <Button key="back" onClick={() => navigate(-1)}>
-            Back
-          </Button>,
-        ].filter(Boolean)}
-      />
-    </div>
+    <Card>
+      <Flex className="py-32">
+        <Result
+          status="error"
+          title="Something went wrong"
+          subTitle={message || 'Something went wrong'}
+          extra={[
+            onRetry && (
+              <Button type="primary" key="retry" onClick={onRetry}>
+                Retry
+              </Button>
+            ),
+            <Button key="back" onClick={() => navigate(-1)}>
+              Back
+            </Button>,
+          ].filter(Boolean)}
+          style={{ width: '100%' }}
+        />
+      </Flex>
+    </Card>
   );
 }
