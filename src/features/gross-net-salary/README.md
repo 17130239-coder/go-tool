@@ -28,6 +28,18 @@ This feature converts **Gross ↔ Net** salary using Vietnam payroll assumptions
 - Constants source: `constants.ts`
 - Types: `types.ts`
 
+### UI implementation (Ant Design-first)
+
+The page now prioritizes Ant Design components over custom markup:
+
+- Input area: `Form`, `InputNumber`, `Radio.Group`, `Button`, `Alert`, `Card`
+- Result rendering: three AntD `Table` components with typed column definitions
+- PIT total row: AntD `Table.Summary`
+- Gross-up diagnostics: AntD `Alert`
+- Status indicators: `Typography.Text` (`success` / `danger`) and `Tag`
+
+Only minimal CSS module styling remains for table summary-row background and small typography adjustments.
+
 ### 2026 constants implemented
 
 - Base salary: `2,340,000`
