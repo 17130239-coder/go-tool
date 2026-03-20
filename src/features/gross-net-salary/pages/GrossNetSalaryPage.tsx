@@ -1,5 +1,19 @@
 import { useMemo, useState } from 'react';
-import { Button, InputNumber, Radio, Space, Typography } from 'antd';
+import {
+  Alert,
+  Button,
+  Card,
+  Col,
+  Form,
+  InputNumber,
+  Radio,
+  Row,
+  Space,
+  Table,
+  Tag,
+  Typography,
+} from 'antd';
+import type { ColumnsType } from 'antd/es/table';
 import { ErrorAlert, FeatureCard, PageHeader, PageSectionTitle } from '../../../components/shared';
 import {
   VIETNAM_2026_DEFAULT_REGION_I_MINIMUM_WAGE,
@@ -12,67 +26,154 @@ import styles from '../GrossNetSalary.module.css';
 const { Text } = Typography;
 
 const vndFormatter = new Intl.NumberFormat('vi-VN');
-
 const formatVnd = (value: number) => `${vndFormatter.format(Math.round(value))} VNĐ`;
 
+interface FormValues {
+  amount: number;
+  dependentCount: number;
+  regionalMinimumWage: number;
+}
+
 interface BreakdownRow {
+  key: string;
   label: string;
   value: number;
   isNegative?: boolean;
   isSummary?: boolean;
 }
 
+interface TaxRow {
+  key: string;
+  bracket: string;
+  rate: string;
+  taxableAmount: number;
+  taxAmount: number;
+}
+
+const breakdownColumns: ColumnsType<BreakdownRow> = [
+  {
+    title: 'Khoản mục',
+    dataIndex: 'label',
+    key: 'label',
+  },
+  {
+    title: 'Giá trị',
+    dataIndex: 'value',
+    key: 'value',
+    align: 'right',
+    render: (value: number, record) => (
+      <Text
+        strong={record.isSummary}
+        type={record.isNegative ? 'danger' : 'success'}
+        className={record.isSummary ? styles.summaryText : undefined}
+      >
+        {record.isNegative ? '-' : ''}
+        {formatVnd(value)}
+      </Text>
+    ),
+  },
+];
+
+const employerColumns: ColumnsType<BreakdownRow> = [
+  {
+    title: 'Khoản mục',
+    dataIndex: 'label',
+    key: 'label',
+  },
+  {
+    title: 'Giá trị',
+    dataIndex: 'value',
+    key: 'value',
+    align: 'right',
+    render: (value: number, record) => (
+      <Text strong={record.isSummary} className={record.isSummary ? styles.summaryText : undefined}>
+        {formatVnd(value)}
+      </Text>
+    ),
+  },
+];
+
+const taxColumns: ColumnsType<TaxRow> = [
+  {
+    title: 'Bậc thuế',
+    dataIndex: 'bracket',
+    key: 'bracket',
+  },
+  {
+    title: 'Thuế suất',
+    dataIndex: 'rate',
+    key: 'rate',
+    align: 'center',
+    render: (value: string) => <Tag color="blue">{value}</Tag>,
+  },
+  {
+    title: 'Lương chịu thuế ở bậc',
+    dataIndex: 'taxableAmount',
+    key: 'taxableAmount',
+    align: 'right',
+    render: (value: number) => formatVnd(value),
+  },
+  {
+    title: 'Số tiền nộp',
+    dataIndex: 'taxAmount',
+    key: 'taxAmount',
+    align: 'right',
+    render: (value: number) => <Text type="danger">-{formatVnd(value)}</Text>,
+  },
+];
+
 export function GrossNetSalaryPage() {
   const [mode, setMode] = useState<SalaryConversionMode>('gross-to-net');
-  const [amount, setAmount] = useState<number>(20_000_000);
-  const [dependentCount, setDependentCount] = useState<number>(0);
-  const [regionalMinimumWage, setRegionalMinimumWage] = useState<number>(
-    VIETNAM_2026_DEFAULT_REGION_I_MINIMUM_WAGE,
-  );
   const [result, setResult] = useState<SalaryCalculationResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [form] = Form.useForm<FormValues>();
 
   const amountLabel = mode === 'gross-to-net' ? 'Lương Gross (VNĐ)' : 'Lương Net mục tiêu (VNĐ)';
 
   const breakdownRows = useMemo<BreakdownRow[]>(() => {
-    if (!result) {
-      return [];
-    }
+    if (!result) return [];
 
     return [
-      { label: 'Lương Gross', value: result.grossSalary },
+      { key: 'gross', label: 'Lương Gross', value: result.grossSalary },
       {
+        key: 'si-emp',
         label: 'BHXH người lao động',
         value: result.employeeInsurance.socialInsurance,
         isNegative: true,
       },
       {
+        key: 'hi-emp',
         label: 'BHYT người lao động',
         value: result.employeeInsurance.healthInsurance,
         isNegative: true,
       },
       {
+        key: 'ui-emp',
         label: 'BHTN người lao động',
         value: result.employeeInsurance.unemploymentInsurance,
         isNegative: true,
       },
       {
+        key: 'self-deduction',
         label: 'Giảm trừ bản thân',
         value: result.familyDeduction.selfDeduction,
         isNegative: true,
       },
       {
+        key: 'dependent-deduction',
         label: `Giảm trừ người phụ thuộc (${result.familyDeduction.dependentCount})`,
         value: result.familyDeduction.dependentDeduction,
         isNegative: true,
       },
-      { label: 'Thu nhập chịu thuế', value: result.taxableIncome },
+      { key: 'taxable-income', label: 'Thu nhập chịu thuế', value: result.taxableIncome },
       {
+        key: 'pit',
         label: 'Thuế TNCN',
         value: result.personalIncomeTax,
         isNegative: true,
       },
       {
+        key: 'net',
         label: 'Lương Net',
         value: result.netSalary,
         isSummary: true,
@@ -81,29 +182,32 @@ export function GrossNetSalaryPage() {
   }, [result]);
 
   const employerRows = useMemo<BreakdownRow[]>(() => {
-    if (!result) {
-      return [];
-    }
+    if (!result) return [];
 
     return [
-      { label: 'Lương Gross', value: result.grossSalary },
+      { key: 'gross', label: 'Lương Gross', value: result.grossSalary },
       {
+        key: 'si-company',
         label: 'BHXH NSDLĐ đóng',
         value: result.employerInsurance.socialInsurance,
       },
       {
+        key: 'acc-company',
         label: 'BH Tai nạn NSDLĐ đóng',
         value: result.employerInsurance.accidentInsurance,
       },
       {
+        key: 'hi-company',
         label: 'BHYT NSDLĐ đóng',
         value: result.employerInsurance.healthInsurance,
       },
       {
+        key: 'ui-company',
         label: 'BHTN NSDLĐ đóng',
         value: result.employerInsurance.unemploymentInsurance,
       },
       {
+        key: 'total-company',
         label: 'Tổng chi phí doanh nghiệp',
         value: result.employerTotalCost,
         isSummary: true,
@@ -111,29 +215,41 @@ export function GrossNetSalaryPage() {
     ];
   }, [result]);
 
-  const handleConvert = () => {
-    if (amount <= 0) {
+  const taxRows = useMemo<TaxRow[]>(() => {
+    if (!result) return [];
+
+    return result.taxBreakdown.map((detail) => ({
+      key: `tax-bracket-${detail.bracket}`,
+      bracket: `Bậc ${detail.bracket}`,
+      rate: `${(detail.taxRate * 100).toFixed(0)}%`,
+      taxableAmount: detail.taxableIncomeInBracket,
+      taxAmount: detail.taxInBracket,
+    }));
+  }, [result]);
+
+  const handleSubmit = (values: FormValues) => {
+    if (values.amount <= 0) {
       setError('Số tiền lương phải lớn hơn 0.');
       setResult(null);
       return;
     }
 
-    if (regionalMinimumWage <= 0) {
+    if (values.regionalMinimumWage <= 0) {
       setError('Lương tối thiểu vùng phải lớn hơn 0.');
       setResult(null);
       return;
     }
 
-    if (dependentCount < 0) {
+    if (values.dependentCount < 0) {
       setError('Số người phụ thuộc không được âm.');
       setResult(null);
       return;
     }
 
     const payload = {
-      amount,
-      dependentCount,
-      regionalMinimumWage,
+      amount: values.amount,
+      dependentCount: values.dependentCount,
+      regionalMinimumWage: values.regionalMinimumWage,
     };
 
     const calculationResult =
@@ -150,9 +266,10 @@ export function GrossNetSalaryPage() {
         description="Tính lương theo chuẩn 2026: bảo hiểm, giảm trừ gia cảnh, thuế TNCN 5 bậc và chi phí doanh nghiệp."
       />
 
-      <div>
-        <PageSectionTitle>Thông tin đầu vào</PageSectionTitle>
-        <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+      <Card size="small">
+        <Space orientation="vertical" size="middle" style={{ width: '100%' }}>
+          <PageSectionTitle>Thông tin đầu vào</PageSectionTitle>
+
           <Radio.Group
             value={mode}
             onChange={(event) => setMode(event.target.value)}
@@ -163,153 +280,137 @@ export function GrossNetSalaryPage() {
             <Radio.Button value="net-to-gross">Net → Gross</Radio.Button>
           </Radio.Group>
 
-          <div className={styles.formGrid}>
-            <div>
-              <Text type="secondary">{amountLabel}</Text>
-              <div className="mt-8">
-                <InputNumber
-                  style={{ width: '100%' }}
-                  min={0}
-                  precision={0}
-                  value={amount}
-                  onChange={(value) => setAmount(Math.max(0, value ?? 0))}
-                />
-              </div>
-            </div>
+          <Form<FormValues>
+            form={form}
+            layout="vertical"
+            initialValues={{
+              amount: 20_000_000,
+              dependentCount: 0,
+              regionalMinimumWage: VIETNAM_2026_DEFAULT_REGION_I_MINIMUM_WAGE,
+            }}
+            onFinish={handleSubmit}
+          >
+            <Row gutter={[16, 0]}>
+              <Col xs={24} md={8}>
+                <Form.Item<FormValues> name="amount" label={amountLabel} required>
+                  <InputNumber style={{ width: '100%' }} min={0} precision={0} />
+                </Form.Item>
+              </Col>
 
-            <div>
-              <Text type="secondary">Số người phụ thuộc</Text>
-              <div className="mt-8">
-                <InputNumber
-                  style={{ width: '100%' }}
-                  min={0}
-                  precision={0}
-                  value={dependentCount}
-                  onChange={(value) => setDependentCount(Math.max(0, Math.floor(value ?? 0)))}
-                />
-              </div>
-            </div>
+              <Col xs={24} md={8}>
+                <Form.Item<FormValues> name="dependentCount" label="Số người phụ thuộc" required>
+                  <InputNumber style={{ width: '100%' }} min={0} precision={0} />
+                </Form.Item>
+              </Col>
 
-            <div>
-              <Text type="secondary">Lương tối thiểu vùng (dùng cho trần BHTN)</Text>
-              <div className="mt-8">
-                <InputNumber
-                  style={{ width: '100%' }}
-                  min={0}
-                  precision={0}
-                  value={regionalMinimumWage}
-                  onChange={(value) => setRegionalMinimumWage(Math.max(0, value ?? 0))}
-                />
-              </div>
-            </div>
-          </div>
+              <Col xs={24} md={8}>
+                <Form.Item<FormValues>
+                  name="regionalMinimumWage"
+                  label="Lương tối thiểu vùng (cho trần BHTN)"
+                  required
+                >
+                  <InputNumber style={{ width: '100%' }} min={0} precision={0} />
+                </Form.Item>
+              </Col>
+            </Row>
 
-          <div>
-            <Button type="primary" onClick={handleConvert}>
-              Chuyển đổi
-            </Button>
-          </div>
+            <Space>
+              <Button type="primary" htmlType="submit">
+                Chuyển đổi
+              </Button>
+              <Button
+                onClick={() => {
+                  form.resetFields();
+                  setResult(null);
+                  setError(null);
+                }}
+              >
+                Reset
+              </Button>
+            </Space>
+          </Form>
 
-          <Text className={styles.hint}>
-            Giảm trừ gia cảnh đang áp dụng: bản thân {formatVnd(VIETNAM_2026_FAMILY_DEDUCTION.self)},
-            người phụ thuộc {formatVnd(VIETNAM_2026_FAMILY_DEDUCTION.dependent)}/người.
-          </Text>
+          <Alert
+            type="info"
+            showIcon
+            message={`Giảm trừ gia cảnh: bản thân ${formatVnd(VIETNAM_2026_FAMILY_DEDUCTION.self)}; người phụ thuộc ${formatVnd(VIETNAM_2026_FAMILY_DEDUCTION.dependent)}/người.`}
+          />
         </Space>
-      </div>
+      </Card>
 
       <ErrorAlert error={error} title="Lỗi dữ liệu đầu vào" />
 
       {result && (
-        <Space direction="vertical" size="large" style={{ width: '100%' }}>
+        <Space orientation="vertical" size="large" style={{ width: '100%' }}>
           <div>
             <PageSectionTitle>Bảng Diễn giải chi tiết (VNĐ)</PageSectionTitle>
-            <div className={styles.tableCard}>
-              <div className={styles.tableWrapper}>
-                <table className={styles.table}>
-                  <thead>
-                    <tr>
-                      <th>Khoản mục</th>
-                      <th>Giá trị</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {breakdownRows.map((row) => (
-                      <tr key={row.label} className={row.isSummary ? styles.summaryRow : undefined}>
-                        <td>{row.label}</td>
-                        <td className={row.isNegative ? styles.negative : styles.positive}>
-                          {row.isNegative ? '-' : ''}
-                          {formatVnd(row.value)}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+            <Table
+              rowKey="key"
+              columns={breakdownColumns}
+              dataSource={breakdownRows}
+              pagination={false}
+              className={styles.resultTable}
+              rowClassName={(record) => (record.isSummary ? styles.summaryRow : '')}
+            />
           </div>
 
           <div>
             <PageSectionTitle>Bảng Chi tiết Thuế TNCN (*)</PageSectionTitle>
-            <div className={styles.tableCard}>
-              <div className={styles.tableWrapper}>
-                <table className={styles.table}>
-                  <thead>
-                    <tr>
-                      <th>Bậc thuế</th>
-                      <th>Thuế suất</th>
-                      <th>Lương chịu thuế ở bậc</th>
-                      <th>Số tiền nộp</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {result.taxBreakdown.map((detail) => (
-                      <tr key={detail.bracket}>
-                        <td>Bậc {detail.bracket}</td>
-                        <td>{(detail.taxRate * 100).toFixed(0)}%</td>
-                        <td>{formatVnd(detail.taxableIncomeInBracket)}</td>
-                        <td className={styles.negative}>-{formatVnd(detail.taxInBracket)}</td>
-                      </tr>
-                    ))}
-                    <tr className={styles.summaryRow}>
-                      <td colSpan={3}>Tổng Thuế TNCN</td>
-                      <td className={styles.negative}>-{formatVnd(result.personalIncomeTax)}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
+            <Table
+              rowKey="key"
+              columns={taxColumns}
+              dataSource={taxRows}
+              pagination={false}
+              className={styles.resultTable}
+              summary={() => (
+                <Table.Summary.Row>
+                  <Table.Summary.Cell index={0} colSpan={3}>
+                    <Text strong>Tổng Thuế TNCN</Text>
+                  </Table.Summary.Cell>
+                  <Table.Summary.Cell index={1} align="right">
+                    <Text strong type="danger">
+                      -{formatVnd(result.personalIncomeTax)}
+                    </Text>
+                  </Table.Summary.Cell>
+                </Table.Summary.Row>
+              )}
+            />
           </div>
 
           <div>
             <PageSectionTitle>Bảng Người sử dụng lao động trả (VNĐ)</PageSectionTitle>
-            <div className={styles.tableCard}>
-              <div className={styles.tableWrapper}>
-                <table className={styles.table}>
-                  <thead>
-                    <tr>
-                      <th>Khoản mục</th>
-                      <th>Giá trị</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {employerRows.map((row) => (
-                      <tr key={row.label} className={row.isSummary ? styles.summaryRow : undefined}>
-                        <td>{row.label}</td>
-                        <td>{formatVnd(row.value)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+            <Table
+              rowKey="key"
+              columns={employerColumns}
+              dataSource={employerRows}
+              pagination={false}
+              className={styles.resultTable}
+              rowClassName={(record) => (record.isSummary ? styles.summaryRow : '')}
+            />
           </div>
 
           {result.grossUpDetails && (
-            <Text className={styles.hint}>
-              Gross-up áp dụng theo phân đoạn bảo hiểm: {result.grossUpDetails.selectedInsuranceSegment}
-              ; bậc thuế chọn: {result.grossUpDetails.selectedTaxBracket || 'Không phát sinh thuế'}.
-              Sai số làm tròn Net: {formatVnd(result.grossUpDetails.netDifference)}.
-            </Text>
+            <Alert
+              type="warning"
+              showIcon
+              title="Thông tin Gross-up"
+              description={
+                <Space orientation="vertical" size={4}>
+                  <Text>
+                    Phân đoạn bảo hiểm: <Text strong>{result.grossUpDetails.selectedInsuranceSegment}</Text>
+                  </Text>
+                  <Text>
+                    Bậc thuế chọn:{' '}
+                    <Text strong>
+                      {result.grossUpDetails.selectedTaxBracket || 'Không phát sinh thuế'}
+                    </Text>
+                  </Text>
+                  <Text>
+                    Sai số làm tròn Net: <Text strong>{formatVnd(result.grossUpDetails.netDifference)}</Text>
+                  </Text>
+                </Space>
+              }
+            />
           )}
         </Space>
       )}

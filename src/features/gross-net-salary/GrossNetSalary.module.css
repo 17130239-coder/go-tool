@@ -1,62 +1,12 @@
-.formGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 16px;
-}
-
-.tableCard {
-  border: 1px solid var(--ant-color-border-secondary);
-  border-radius: var(--ant-border-radius);
-  overflow: hidden;
-}
-
-.tableWrapper {
-  overflow-x: auto;
-}
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 680px;
-}
-
-.table th,
-.table td {
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--ant-color-border-secondary);
-  text-align: right;
-  white-space: nowrap;
-}
-
-.table th:first-child,
-.table td:first-child {
-  text-align: left;
-}
-
-.table thead th {
-  background: var(--ant-color-fill-tertiary);
-  font-weight: 600;
-}
-
-.table tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.negative {
-  color: var(--ant-color-error);
-}
-
-.positive {
-  color: var(--ant-color-success);
-}
-
-.summaryRow td {
-  font-weight: 600;
+.resultTable :global(.ant-table-summary) {
   background: var(--ant-color-fill-quaternary);
 }
 
-.hint {
-  font-size: 12px;
-  color: var(--ant-color-text-tertiary);
+.summaryRow :global(td) {
+  background: var(--ant-color-fill-quaternary);
+}
+
+.summaryText {
+  font-size: 14px;
 }
 
