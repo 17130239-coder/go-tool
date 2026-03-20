@@ -18,7 +18,12 @@ The dashboard provides a central landing page for productivity:
 ## Key technical notes
 
 - Main page component: `pages/DashboardPage.tsx`
-- Public feature export: `index.ts`
+- Feature-owned command UI:
+  - `components/CommandPalette.tsx`
+  - `components/KeyboardShortcutsModal.tsx`
+- Feature-owned analytics hook:
+  - `hooks/useToolAnalytics.ts`
+- Public feature export: `index.ts` (page + overlays + analytics hook)
 - Route registration: `src/router/index.tsx` at path `/dashboard`
 - Data sources:
   - tool metadata from `src/constants/menuConfig.tsx`
