@@ -6,6 +6,7 @@ import {
   EditOutlined,
   FileTextOutlined,
   DatabaseOutlined,
+  CalculatorOutlined,
 } from '@ant-design/icons';
 
 export interface MenuItemConfig {
@@ -71,6 +72,12 @@ export const MENU_CONFIG: MenuItemConfig[] = [
         label: 'SQL Formatter',
         icon: <DatabaseOutlined />,
         path: '/sql-formatter',
+      },
+      {
+        key: '/gross-net-salary',
+        label: 'Gross ↔ Net Salary',
+        icon: <CalculatorOutlined />,
+        path: '/gross-net-salary',
       },
     ],
   },
