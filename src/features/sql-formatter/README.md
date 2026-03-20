@@ -91,6 +91,7 @@ The SQL Formatter feature provides a powerful tool for formatting, beautifying, 
 - Local React state for input, output, error, format options, and AI prompt state
 - No server state or global state needed (pure client-side transformation)
 - Real-time validation on input change
+- Tool route visits are tracked globally for dashboard history/favorites UX
 
 ### Dependencies
 - **sql-formatter**: Core SQL parsing and formatting library

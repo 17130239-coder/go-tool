@@ -17,4 +17,9 @@ export type ThemeMode = 'light' | 'dark' | 'system';
 
 export type Language = 'en' | 'vi';
 
+export interface ToolUsageEntry {
+  path: string;
+  usedAt: number;
+}
+
 export * from './formatter';

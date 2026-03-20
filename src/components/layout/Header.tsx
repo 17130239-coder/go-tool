@@ -4,13 +4,20 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   BgColorsOutlined,
+  SearchOutlined,
+  QuestionCircleOutlined,
 } from '@ant-design/icons';
 import { useAppStore } from '../../store';
 import { useBreadcrumb } from '../../hooks/useBreadcrumb';
 
 const { Header: AntHeader } = Layout;
 
-export function Header() {
+interface HeaderProps {
+  onOpenCommandPalette: () => void;
+  onOpenShortcuts: () => void;
+}
+
+export function Header({ onOpenCommandPalette, onOpenShortcuts }: HeaderProps) {
   const collapsed = useAppStore((state) => state.sidebarCollapsed);
   const toggleSidebar = useAppStore((state) => state.toggleSidebar);
   const setThemeMode = useAppStore((state) => state.setThemeMode);
@@ -46,6 +53,18 @@ export function Header() {
       </Space>
 
       <Space size="middle">
+        <Button
+          type="text"
+          icon={<SearchOutlined />}
+          onClick={onOpenCommandPalette}
+          title="Command Palette (Cmd/Ctrl+K)"
+        />
+        <Button
+          type="text"
+          icon={<QuestionCircleOutlined />}
+          onClick={onOpenShortcuts}
+          title="Keyboard Shortcuts (?)"
+        />
         <Dropdown menu={{ items: themeMenuItems }} placement="bottomRight" arrow>
           <Button type="text" icon={<BgColorsOutlined />} />
         </Dropdown>

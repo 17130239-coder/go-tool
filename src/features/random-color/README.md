@@ -39,6 +39,7 @@ The Color Converter feature provides a powerful utility to convert colors betwee
   - `ErrorAlert` for standardized error rendering
   - `ResultField` for read-only copyable output rows
   - AntD `Card` + `Flex` for input, preview, and output sections
+- Route visits are tracked globally to power dashboard recent tools.
 
 ### Color Conversion Logic
 - **Parsing**: Regex-based parsing for all input formats
