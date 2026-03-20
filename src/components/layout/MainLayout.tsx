@@ -4,7 +4,7 @@ import { Layout } from 'antd';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import { CommandPalette, KeyboardShortcutsModal } from '../overlays';
-import { useToolAnalytics } from '../../hooks';
+import { usePageTitle, useToolAnalytics } from '../../hooks';
 import { PageLoader } from '../ui/PageLoader';
 
 const { Content } = Layout;
@@ -13,6 +13,7 @@ export function MainLayout() {
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
 
+  usePageTitle();
   useToolAnalytics();
 
   const openCommandPalette = useCallback(() => {
