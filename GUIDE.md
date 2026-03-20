@@ -366,3 +366,62 @@ Main layout must have 3 areas:
 - Provide visible focus states.
 - Use semantic landmarks for layout (nav, header, main).
 - Ensure text and icon contrast is accessible.
+
+## 16. Recommended Work Process (Project Workflow)
+
+Use this process for every request to keep delivery consistent and production-safe.
+
+### 16.1 Request Intake and Scope
+- Capture the user request and expected output clearly.
+- Break the request into concrete implementation tasks.
+- Prefer reasonable assumptions and proceed (no approval wait), unless truly blocked by ambiguity.
+
+### 16.2 Branch Strategy
+- Create one dedicated branch per request from `main`.
+- Suggested naming:
+  - feature: `feat/<short-topic>`
+  - fix: `fix/<short-topic>`
+  - docs: `docs/<short-topic>`
+- Keep unrelated changes out of the request branch.
+
+### 16.3 Implementation Standards
+- Follow feature-first architecture and naming rules in this guide.
+- Prefer Ant Design components for page structure and interactions.
+- Keep shared logic in shared folders (`hooks`, `utils`, `components`), and feature-specific logic inside each feature.
+- Export feature public API via feature `index.ts`.
+
+### 16.4 Local Validation Before PR
+Run these commands before opening a PR:
+
+```bash
+pnpm lint --quiet
+pnpm typecheck
+pnpm build
+```
+
+- Fix all lint/type/build errors before submission.
+- Ensure no unintended files are changed.
+
+### 16.5 Commit and PR Flow
+- Use Conventional Commits:
+  - `feat(scope): ...`
+  - `fix(scope): ...`
+  - `docs(scope): ...`
+- Push branch and open PR targeting `main`.
+- PR description should include:
+  - summary of changes
+  - validation commands run
+  - any UX or behavior impact
+
+### 16.6 Merge and Deployment Verification
+- Merge PR to `main` only after checks are green.
+- Verify production deployment status (Vercel) for the merged commit.
+- Treat task as complete only after successful deployment.
+
+### 16.7 Definition of Done (Execution Checklist)
+- Requested scope fully implemented.
+- Code follows repository conventions.
+- Required feature docs updated when behavior/UI changes significantly.
+- `pnpm lint --quiet`, `pnpm typecheck`, and `pnpm build` pass.
+- PR is merged to `main`.
+- Vercel deployment is verified successful.
