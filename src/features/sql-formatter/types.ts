@@ -4,3 +4,10 @@ export type {
   KeywordCase,
   SqlLanguage,
 } from '../../types';
+
+export interface SqlAiPromptResult {
+  success: boolean;
+  prompt?: string;
+  suggestions?: string[];
+  error?: string;
+}
