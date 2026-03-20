@@ -30,7 +30,7 @@ The Color Converter feature provides a powerful utility to convert colors betwee
 
 ### Architecture
 - Main page component: `pages/ColorConverterPage.tsx`
-- Color utilities: `src/utils/colorConverter.ts`
+- Color utilities: `src/features/random-color/utils/colorConverter.ts`
 - Public export: `index.ts`
 - Route path: `/random-color` (maintained for backward compatibility)
 - Sidebar menu integration: `src/constants/menuConfig.tsx`

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Card, Flex, Radio } from 'antd';
-import { formatJSON, minifyJSON, validateJSON } from '../../../utils/jsonFormatter';
 import { useInputOutput, useCopyToClipboard } from '../../../hooks';
 import {
   FeatureCard,
@@ -10,7 +9,8 @@ import {
   OutputSection,
   FormatterActions,
 } from '../../../components/shared';
-import type { IndentSize } from '../../../types';
+import { formatJSON, minifyJSON, validateJSON } from '../utils/jsonFormatter';
+import type { IndentSize } from '../types';
 
 export function JsonFormatterPage() {
   const { input, setInput, output, setOutput, error, setError, clear } = useInputOutput();

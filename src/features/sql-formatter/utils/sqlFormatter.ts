@@ -1,5 +1,5 @@
 import { format } from 'sql-formatter';
-import type { SqlFormatterOptions, FormatterResult } from '../types';
+import type { SqlFormatterOptions, FormatterResult } from '../../formatter/types';
 
 /**
  * Format SQL with specified options
