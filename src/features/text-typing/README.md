@@ -38,6 +38,7 @@ Behavior details:
 - Sidebar navigation item: `src/constants/menuConfig.tsx`
 - Page shell uses shared `PageHeader` for consistent feature-page structure
 - Page shell is composed with shared `FeatureCard` and AntD-first section composition
+- Route visits are tracked globally to power dashboard recent tools.
 - Word generation: `words.ts` using internal dictionary and randomized list.
 - Metrics formulas:
   - `WPM = (correctChars / 5) / elapsedMinutes`

@@ -27,6 +27,7 @@ This feature converts **Gross ↔ Net** salary using Vietnam payroll assumptions
 - Core calculator: `salaryCalculator.ts`
 - Constants source: `constants.ts`
 - Types: `types.ts`
+- Route visits are tracked globally to power dashboard recent tools.
 
 ### UI implementation (Ant Design-first)
 

@@ -1,14 +1,18 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { MainLayout } from '../components/layout/MainLayout';
-import { ConverterPage } from '../features/naming-converter';
-import { ColorConverterPage } from '../features/random-color';
-import { RandomNumberPage } from '../features/random-number';
-import { TextTypingPage } from '../features/text-typing';
-import { JsonFormatterPage } from '../features/json-formatter';
-import { SqlFormatterPage } from '../features/sql-formatter';
-import { GrossNetSalaryPage } from '../features/gross-net-salary';
 import { PageError } from '../components/ui/PageError';
 import { Card, Empty, Flex } from 'antd';
+import { PageLoader } from '../components/ui/PageLoader';
+import {
+  ColorConverterPage,
+  ConverterPage,
+  DashboardPage,
+  GrossNetSalaryPage,
+  JsonFormatterPage,
+  RandomNumberPage,
+  SqlFormatterPage,
+  TextTypingPage,
+} from './lazyPages';
 
 function renderPlaceholder(description: string) {
   return (
@@ -24,6 +28,7 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <MainLayout />,
+    hydrateFallbackElement: <PageLoader />,
     children: [
       {
         index: true,
@@ -31,7 +36,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'dashboard',
-        element: renderPlaceholder('Dashboard is coming soon.'),
+        element: <DashboardPage />,
       },
       {
         path: 'naming-converter',

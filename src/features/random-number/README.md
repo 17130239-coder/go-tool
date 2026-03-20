@@ -30,6 +30,7 @@ Behavior details:
   - `FeatureCard` and `PageHeader` for consistent page shell
   - `ErrorAlert` for standardized validation error display
   - AntD `Card` + `Statistic` for structured input/result sections
+- Route visits are tracked globally to power dashboard recent tools.
 - Implementation details:
   - local React state holds `min`, `max`, and `result`
   - range validation uses `max >= min`

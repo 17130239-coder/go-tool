@@ -1,4 +1,5 @@
-import { Layout, Menu } from 'antd';
+import { StarFilled } from '@ant-design/icons';
+import { Layout, Menu, Space } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { MENU_CONFIG } from '../../constants/menuConfig';
@@ -13,6 +14,8 @@ export function Sidebar() {
   const location = useLocation();
 
   const collapsed = useAppStore((state) => state.sidebarCollapsed);
+  const favoriteToolPaths = useAppStore((state) => state.favoriteToolPaths);
+  const favoritePathSet = new Set(favoriteToolPaths);
 
   const filterMenu = (items: MenuItemConfig[]): ItemType[] => {
     const result: ItemType[] = [];
@@ -31,9 +34,15 @@ export function Sidebar() {
           });
         }
       } else {
+        const isFavorite = !!item.path && favoritePathSet.has(item.path);
         result.push({
           key: item.path || item.key,
-          label: item.label,
+          label: isFavorite ? (
+            <Space size={6}>
+              <span>{item.label}</span>
+              <StarFilled style={{ color: '#faad14' }} />
+            </Space>
+          ) : item.label,
           icon: item.icon,
           onClick: () => {
             if (item.path) {

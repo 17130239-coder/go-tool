@@ -36,6 +36,7 @@ Behavior details:
 - Shared behavior hook: `useCopyToClipboard` for consistent copy feedback handling
 - Public feature export: `index.ts`
 - Conversion logic is centralized in shared utility: `src/utils/stringConverter.ts`
+- Route visits are tracked globally to power dashboard recent tools.
 - Conversion pipeline in utility:
   - normalize diacritics (including Vietnamese `đ`/`Đ`)
   - parse mixed input into lowercase word tokens

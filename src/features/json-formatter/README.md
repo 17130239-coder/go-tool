@@ -45,6 +45,7 @@ The JSON Formatter feature provides a simple, intuitive interface for validating
 - Local React state for input, output, error, indentSize, and copied status
 - Copy behavior uses shared `useCopyToClipboard` hook
 - No server state or global state needed (pure client-side transformation)
+- Tool usage is tracked globally for dashboard recent-history surfacing
 
 ### Dependencies
 - **Ant Design components**: Card, Input.TextArea, Button, Space, Radio, Alert, Typography
