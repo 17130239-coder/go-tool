@@ -1,5 +1,5 @@
 import { Suspense, useCallback, useEffect, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigation } from 'react-router-dom';
 import { Layout } from 'antd';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
@@ -14,6 +14,8 @@ const { Content } = Layout;
 export function MainLayout() {
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
+  const navigation = useNavigation();
+  const isNavigating = navigation.state === 'loading';
 
   usePageTitle();
   useToolAnalytics();
@@ -66,11 +68,15 @@ export function MainLayout() {
             overflow: 'auto',
           }}
         >
-          <Suspense fallback={<PageLoader />}>
-            <div className="mx-auto">
-              <Outlet />
-            </div>
-          </Suspense>
+          {isNavigating ? (
+            <PageLoader />
+          ) : (
+            <Suspense fallback={<PageLoader />}>
+              <div className="mx-auto">
+                <Outlet />
+              </div>
+            </Suspense>
+          )}
         </Content>
       </Layout>
       <CommandPalette open={commandPaletteOpen} onClose={closeCommandPalette} />
