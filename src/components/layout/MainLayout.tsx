@@ -1,4 +1,4 @@
-import { Suspense, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Outlet, useNavigation } from 'react-router-dom';
 import { Layout } from 'antd';
 import { Sidebar } from './Sidebar';
@@ -68,14 +68,13 @@ export function MainLayout() {
             overflow: 'auto',
           }}
         >
+          {/* Prevent blank content during route transitions before the next page finishes loading. */}
           {isNavigating ? (
             <PageLoader />
           ) : (
-            <Suspense fallback={<PageLoader />}>
-              <div className="mx-auto">
-                <Outlet />
-              </div>
-            </Suspense>
+            <div className="mx-auto">
+              <Outlet />
+            </div>
           )}
         </Content>
       </Layout>
