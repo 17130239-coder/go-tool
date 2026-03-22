@@ -1,6 +1,7 @@
 import { StarFilled } from '@ant-design/icons';
 import { Layout, Menu, Space } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useResolvedTheme } from '../../hooks';
 import { useAppStore } from '../../store';
 import { MENU_CONFIG } from '../../constants/menuConfig';
 import type { MenuItemConfig } from '../../constants/menuConfig';
@@ -16,6 +17,10 @@ export function Sidebar() {
   const collapsed = useAppStore((state) => state.sidebarCollapsed);
   const favoriteToolPaths = useAppStore((state) => state.favoriteToolPaths);
   const favoritePathSet = new Set(favoriteToolPaths);
+  const { resolvedTheme } = useResolvedTheme();
+
+  const logoSrc = resolvedTheme === 'dark' ? '/logo-dark.svg' : '/logo-light.svg';
+  const logoMarkSrc = resolvedTheme === 'dark' ? '/favicon-dark.svg' : '/favicon-light.svg';
 
   const filterMenu = (items: MenuItemConfig[]): ItemType[] => {
     const result: ItemType[] = [];
@@ -88,7 +93,15 @@ export function Sidebar() {
           borderBottom: '1px solid var(--ant-color-border-secondary)',
         }}
       >
-        {collapsed ? 'GT' : 'Go Tool'}
+        <img
+          src={collapsed ? logoMarkSrc : logoSrc}
+          alt="Go Tool"
+          style={{
+            display: 'block',
+            height: collapsed ? 28 : 24,
+            width: 'auto',
+          }}
+        />
       </div>
       <Menu
         mode="inline"

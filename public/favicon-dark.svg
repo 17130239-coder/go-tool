@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="favicon-dark-title">
+  <title id="favicon-dark-title">Go Tool Dark Favicon</title>
+  <defs>
+    <linearGradient id="favicon-dark-bg" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#b69dff" />
+      <stop offset="1" stop-color="#74dcff" />
+    </linearGradient>
+  </defs>
+  <rect x="6" y="6" width="52" height="52" rx="14" fill="#0f172a" />
+  <path
+    fill="url(#favicon-dark-bg)"
+    d="M20 23a5 5 0 0 1 5-5h14a5 5 0 1 1 0 10H31v8h8a5 5 0 1 1 0 10H25a5 5 0 1 1 0-10h8v-8h-8a5 5 0 0 1-5-5Z"
+  />
+</svg>
