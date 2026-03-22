@@ -2,17 +2,6 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { MainLayout } from '../components/layout/MainLayout';
 import { PageError } from '../components/ui/PageError';
 import { Card, Empty, Flex } from 'antd';
-import { PageLoader } from '../components/ui/PageLoader';
-import {
-  ColorConverterPage,
-  ConverterPage,
-  DashboardPage,
-  GrossNetSalaryPage,
-  JsonFormatterPage,
-  RandomNumberPage,
-  SqlFormatterPage,
-  TextTypingPage,
-} from './lazyPages';
 
 function renderPlaceholder(description: string) {
   return (
@@ -28,7 +17,6 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <MainLayout />,
-    hydrateFallbackElement: <PageLoader />,
     children: [
       {
         index: true,
@@ -36,35 +24,59 @@ export const router = createBrowserRouter([
       },
       {
         path: 'dashboard',
-        element: <DashboardPage />,
+        lazy: async () => {
+          const { DashboardPage } = await import('../features/dashboard');
+          return { Component: DashboardPage };
+        },
       },
       {
         path: 'naming-converter',
-        element: <ConverterPage />,
+        lazy: async () => {
+          const { ConverterPage } = await import('../features/naming-converter');
+          return { Component: ConverterPage };
+        },
       },
       {
         path: 'random-number',
-        element: <RandomNumberPage />,
+        lazy: async () => {
+          const { RandomNumberPage } = await import('../features/random-number');
+          return { Component: RandomNumberPage };
+        },
       },
       {
         path: 'random-color',
-        element: <ColorConverterPage />,
+        lazy: async () => {
+          const { ColorConverterPage } = await import('../features/random-color');
+          return { Component: ColorConverterPage };
+        },
       },
       {
         path: 'text-typing',
-        element: <TextTypingPage />,
+        lazy: async () => {
+          const { TextTypingPage } = await import('../features/text-typing');
+          return { Component: TextTypingPage };
+        },
       },
       {
         path: 'json-formatter',
-        element: <JsonFormatterPage />,
+        lazy: async () => {
+          const { JsonFormatterPage } = await import('../features/json-formatter');
+          return { Component: JsonFormatterPage };
+        },
       },
       {
         path: 'sql-formatter',
-        element: <SqlFormatterPage />,
+        lazy: async () => {
+          const { SqlFormatterPage } = await import('../features/sql-formatter');
+          return { Component: SqlFormatterPage };
+        },
       },
       {
         path: 'gross-net-salary',
-        element: <GrossNetSalaryPage />,
+        lazy: async () => {
+          const { GrossNetSalaryPage } = await import('../features/gross-net-salary');
+          return { Component: GrossNetSalaryPage };
+        },
       },
       {
         path: 'categories',
