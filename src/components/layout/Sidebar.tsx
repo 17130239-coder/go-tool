@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useResolvedTheme } from '../../hooks';
 import { useAppStore } from '../../store';
-import { MENU_CONFIG } from '../../constants/menuConfig';
+import { buildSidebarMenuConfig } from '../../constants/menuConfig';
 import type { MenuItemConfig } from '../../constants/menuConfig';
 
 const { Sider } = Layout;
@@ -62,15 +62,22 @@ export function Sidebar() {
 
   const collapsed = useAppStore((state) => state.sidebarCollapsed);
   const favoriteToolPaths = useAppStore((state) => state.favoriteToolPaths);
+  const hiddenToolPaths = useAppStore((state) => state.hiddenToolPaths);
+  const toolOrderPaths = useAppStore((state) => state.toolOrderPaths);
   const favoritePathSet = useMemo(() => new Set(favoriteToolPaths), [favoriteToolPaths]);
   const { resolvedTheme } = useResolvedTheme();
 
   const logoSrc = resolvedTheme === 'dark' ? '/logo-dark.svg' : '/logo-light.svg';
   const logoMarkSrc = resolvedTheme === 'dark' ? '/favicon-dark.svg' : '/favicon-light.svg';
 
+  const sidebarMenuConfig = useMemo(
+    () => buildSidebarMenuConfig(toolOrderPaths, hiddenToolPaths),
+    [hiddenToolPaths, toolOrderPaths],
+  );
+
   const menuItems = useMemo(
-    () => filterMenuItems(MENU_CONFIG, favoritePathSet, navigate),
-    [favoritePathSet, navigate],
+    () => filterMenuItems(sidebarMenuConfig, favoritePathSet, navigate),
+    [favoritePathSet, navigate, sidebarMenuConfig],
   );
 
   return (

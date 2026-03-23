@@ -88,6 +88,14 @@ export const router = createBrowserRouter([
         },
       },
       {
+        path: 'settings/sidebar',
+        errorElement: <PageError />,
+        lazy: async () => {
+          const { SidebarSettingsPage } = await import('../features/sidebar-settings');
+          return { Component: SidebarSettingsPage };
+        },
+      },
+      {
         path: 'categories',
         element: renderPlaceholder('Categories module is coming soon.'),
       },
