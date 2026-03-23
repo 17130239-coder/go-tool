@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Card, Flex, Input } from 'antd';
 import { useCopyToClipboard } from '../../../hooks';
 import {
@@ -13,16 +13,11 @@ import type { ColorFormats } from '../utils/colorConverter';
 
 export function ColorConverterPage() {
   const [input, setInput] = useState<string>('#3B82F6');
-  const [converted, setConverted] = useState<ColorFormats | null>(null);
+  const [converted, setConverted] = useState<ColorFormats | null>(() => convertColor('#3B82F6'));
   const [error, setError] = useState<string | null>(null);
   const [copiedFormat, setCopiedFormat] = useState<keyof ColorFormats | null>(null);
   const { copy } = useCopyToClipboard();
 
-  // Initialize with default color
-  useEffect(() => {
-    handleInputChange(input);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const handleInputChange = (value: string) => {
     setInput(value);

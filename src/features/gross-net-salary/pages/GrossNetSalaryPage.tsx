@@ -345,54 +345,54 @@ export function GrossNetSalaryPage() {
         <Flex vertical gap={24} style={{ width: '100%' }}>
           <Card size="small">
             <Flex vertical gap={8}>
-            <PageSectionTitle>Bảng Diễn giải chi tiết (VNĐ)</PageSectionTitle>
-            <Table
-              rowKey="key"
-              columns={breakdownColumns}
-              dataSource={breakdownRows}
-              pagination={false}
-              className={styles.resultTable}
-              rowClassName={(record) => (record.isSummary ? styles.summaryRow : '')}
-            />
+              <PageSectionTitle>Bảng Diễn giải chi tiết (VNĐ)</PageSectionTitle>
+              <Table
+                rowKey="key"
+                columns={breakdownColumns}
+                dataSource={breakdownRows}
+                pagination={false}
+                className={styles.resultTable}
+                rowClassName={(record) => (record.isSummary ? styles.summaryRow : '')}
+              />
             </Flex>
           </Card>
 
           <Card size="small">
             <Flex vertical gap={8}>
-            <PageSectionTitle>Bảng Chi tiết Thuế TNCN (*)</PageSectionTitle>
-            <Table
-              rowKey="key"
-              columns={taxColumns}
-              dataSource={taxRows}
-              pagination={false}
-              className={styles.resultTable}
-              summary={() => (
-                <Table.Summary.Row>
-                  <Table.Summary.Cell index={0} colSpan={3}>
-                    <Text strong>Tổng Thuế TNCN</Text>
-                  </Table.Summary.Cell>
-                  <Table.Summary.Cell index={1} align="right">
-                    <Text strong type="danger">
-                      -{formatVnd(result.personalIncomeTax)}
-                    </Text>
-                  </Table.Summary.Cell>
-                </Table.Summary.Row>
-              )}
-            />
+              <PageSectionTitle>Bảng Chi tiết Thuế TNCN (*)</PageSectionTitle>
+              <Table
+                rowKey="key"
+                columns={taxColumns}
+                dataSource={taxRows}
+                pagination={false}
+                className={styles.resultTable}
+                summary={() => (
+                  <Table.Summary.Row>
+                    <Table.Summary.Cell index={0} colSpan={3}>
+                      <Text strong>Tổng Thuế TNCN</Text>
+                    </Table.Summary.Cell>
+                    <Table.Summary.Cell index={1} align="right">
+                      <Text strong type="danger">
+                        -{formatVnd(result.personalIncomeTax)}
+                      </Text>
+                    </Table.Summary.Cell>
+                  </Table.Summary.Row>
+                )}
+              />
             </Flex>
           </Card>
 
           <Card size="small">
             <Flex vertical gap={8}>
-            <PageSectionTitle>Bảng Người sử dụng lao động trả (VNĐ)</PageSectionTitle>
-            <Table
-              rowKey="key"
-              columns={employerColumns}
-              dataSource={employerRows}
-              pagination={false}
-              className={styles.resultTable}
-              rowClassName={(record) => (record.isSummary ? styles.summaryRow : '')}
-            />
+              <PageSectionTitle>Bảng Người sử dụng lao động trả (VNĐ)</PageSectionTitle>
+              <Table
+                rowKey="key"
+                columns={employerColumns}
+                dataSource={employerRows}
+                pagination={false}
+                className={styles.resultTable}
+                rowClassName={(record) => (record.isSummary ? styles.summaryRow : '')}
+              />
             </Flex>
           </Card>
 
