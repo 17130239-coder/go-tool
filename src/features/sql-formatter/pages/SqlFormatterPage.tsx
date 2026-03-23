@@ -129,55 +129,55 @@ export function SqlFormatterPage() {
 
       <Card size="small">
         <Flex vertical gap={12}>
-        <PageSectionTitle>Format Options</PageSectionTitle>
-        <Space wrap size="middle">
+          <PageSectionTitle>Format Options</PageSectionTitle>
+          <Space wrap size="middle">
             <Flex vertical gap={4}>
-            <Text type="secondary" style={{ fontSize: 12, display: 'block', marginBottom: 4 }}>
-              SQL Dialect
-            </Text>
-            <Select
-              value={language}
-              onChange={setLanguage}
-              options={LANGUAGES}
-              style={{ width: 160 }}
-            />
+              <Text type="secondary" style={{ fontSize: 12, display: 'block', marginBottom: 4 }}>
+                SQL Dialect
+              </Text>
+              <Select
+                value={language}
+                onChange={setLanguage}
+                options={LANGUAGES}
+                style={{ width: 160 }}
+              />
             </Flex>
 
             <Flex vertical gap={4}>
-            <Text type="secondary" style={{ fontSize: 12, display: 'block', marginBottom: 4 }}>
-              Indentation
-            </Text>
-            <Radio.Group value={indent} onChange={(e) => setIndent(e.target.value)}>
-              <Radio.Button value={2}>2 Spaces</Radio.Button>
-              <Radio.Button value={4}>4 Spaces</Radio.Button>
-            </Radio.Group>
+              <Text type="secondary" style={{ fontSize: 12, display: 'block', marginBottom: 4 }}>
+                Indentation
+              </Text>
+              <Radio.Group value={indent} onChange={(e) => setIndent(e.target.value)}>
+                <Radio.Button value={2}>2 Spaces</Radio.Button>
+                <Radio.Button value={4}>4 Spaces</Radio.Button>
+              </Radio.Group>
             </Flex>
 
             <Flex vertical gap={4}>
-            <Text type="secondary" style={{ fontSize: 12, display: 'block', marginBottom: 4 }}>
-              Keyword Case
-            </Text>
-            <Radio.Group value={keywordCase} onChange={(e) => setKeywordCase(e.target.value)}>
-              <Radio.Button value="upper">UPPER</Radio.Button>
-              <Radio.Button value="lower">lower</Radio.Button>
-              <Radio.Button value="preserve">Preserve</Radio.Button>
-            </Radio.Group>
+              <Text type="secondary" style={{ fontSize: 12, display: 'block', marginBottom: 4 }}>
+                Keyword Case
+              </Text>
+              <Radio.Group value={keywordCase} onChange={(e) => setKeywordCase(e.target.value)}>
+                <Radio.Button value="upper">UPPER</Radio.Button>
+                <Radio.Button value="lower">lower</Radio.Button>
+                <Radio.Button value="preserve">Preserve</Radio.Button>
+              </Radio.Group>
             </Flex>
 
             <Flex vertical gap={4}>
-            <Text type="secondary" style={{ fontSize: 12, display: 'block', marginBottom: 4 }}>
-              Lines Between Queries
-            </Text>
-            <Radio.Group
-              value={linesBetweenQueries}
-              onChange={(e) => setLinesBetweenQueries(e.target.value)}
-            >
-              <Radio.Button value={1}>1</Radio.Button>
-              <Radio.Button value={2}>2</Radio.Button>
-              <Radio.Button value={3}>3</Radio.Button>
-            </Radio.Group>
+              <Text type="secondary" style={{ fontSize: 12, display: 'block', marginBottom: 4 }}>
+                Lines Between Queries
+              </Text>
+              <Radio.Group
+                value={linesBetweenQueries}
+                onChange={(e) => setLinesBetweenQueries(e.target.value)}
+              >
+                <Radio.Button value={1}>1</Radio.Button>
+                <Radio.Button value={2}>2</Radio.Button>
+                <Radio.Button value={3}>3</Radio.Button>
+              </Radio.Group>
             </Flex>
-        </Space>
+          </Space>
         </Flex>
       </Card>
 
@@ -195,60 +195,60 @@ export function SqlFormatterPage() {
 
       <Card size="small">
         <Flex vertical gap={12}>
-        <PageSectionTitle>AI SQL Assistant</PageSectionTitle>
+          <PageSectionTitle>AI SQL Assistant</PageSectionTitle>
 
           <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-          <Text type="secondary">
-            Generate a ready-to-use AI prompt to review and improve your SQL query with context-aware
-            suggestions.
-          </Text>
+            <Text type="secondary">
+              Generate a ready-to-use AI prompt to review and improve your SQL query with context-aware
+              suggestions.
+            </Text>
 
-          <Space wrap>
-            <FormatterActions
-              onFormat={handleGenerateAiPrompt}
-              onClear={() => {
-                setAiPrompt('');
-                setAiSuggestions([]);
-                setAiError(null);
-              }}
-              formatLabel="Generate AI Prompt"
-              clearLabel="Clear AI Output"
-              showMinify={false}
-              formatDisabled={!input.trim()}
-            />
+            <Space wrap>
+              <FormatterActions
+                onFormat={handleGenerateAiPrompt}
+                onClear={() => {
+                  setAiPrompt('');
+                  setAiSuggestions([]);
+                  setAiError(null);
+                }}
+                formatLabel="Generate AI Prompt"
+                clearLabel="Clear AI Output"
+                showMinify={false}
+                formatDisabled={!input.trim()}
+              />
 
-            {aiPrompt && (
-              <CopyButton copied={aiPromptCopied} onCopy={handleCopyAiPrompt} size="middle" />
+              {aiPrompt && (
+                <CopyButton copied={aiPromptCopied} onCopy={handleCopyAiPrompt} size="middle" />
+              )}
+            </Space>
+
+            <ErrorAlert error={aiError} title="AI Prompt Error" />
+
+            {aiSuggestions.length > 0 && (
+              <Alert
+                type="info"
+                showIcon
+                message="Detected SQL Suggestions"
+                description={
+                  <ul className="m-0 pl-16">
+                    {aiSuggestions.map((suggestion) => (
+                      <li key={suggestion}>{suggestion}</li>
+                    ))}
+                  </ul>
+                }
+              />
             )}
-          </Space>
 
-          <ErrorAlert error={aiError} title="AI Prompt Error" />
-
-          {aiSuggestions.length > 0 && (
-            <Alert
-              type="info"
-              showIcon
-              message="Detected SQL Suggestions"
-              description={
-                <ul className="m-0 pl-16">
-                  {aiSuggestions.map((suggestion) => (
-                    <li key={suggestion}>{suggestion}</li>
-                  ))}
-                </ul>
-              }
+            <OutputSection
+              value={aiPrompt}
+              copied={aiPromptCopied}
+              onCopy={handleCopyAiPrompt}
+              label="AI Prompt Output"
+              minRows={10}
+              maxRows={24}
+              showCopyButton={false}
             />
-          )}
-
-          <OutputSection
-            value={aiPrompt}
-            copied={aiPromptCopied}
-            onCopy={handleCopyAiPrompt}
-            label="AI Prompt Output"
-            minRows={10}
-            maxRows={24}
-            showCopyButton={false}
-          />
-        </Space>
+          </Space>
         </Flex>
       </Card>
     </FeatureCard>

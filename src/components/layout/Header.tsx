@@ -8,7 +8,7 @@ import {
   QuestionCircleOutlined,
 } from '@ant-design/icons';
 import { useAppStore } from '../../store';
-import { useBreadcrumb } from '../../hooks/useBreadcrumb';
+import { useBreadcrumb } from '../../hooks';
 
 const { Header: AntHeader } = Layout;
 

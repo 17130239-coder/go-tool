@@ -6,7 +6,7 @@ interface PageErrorProps {
   onRetry?: () => void;
 }
 
-export function PageError({ message, onRetry }: PageErrorProps) {
+export function PageError({ message = 'Failed to load page.', onRetry }: PageErrorProps) {
   const navigate = useNavigate();
 
   return (
@@ -15,7 +15,7 @@ export function PageError({ message, onRetry }: PageErrorProps) {
         <Result
           status="error"
           title="Something went wrong"
-          subTitle={message || 'Something went wrong'}
+          subTitle={message}
           extra={[
             onRetry && (
               <Button type="primary" key="retry" onClick={onRetry}>

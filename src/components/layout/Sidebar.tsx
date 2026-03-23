@@ -1,5 +1,7 @@
 import { StarFilled } from '@ant-design/icons';
 import { Layout, Menu, Space } from 'antd';
+import type { MenuProps } from 'antd';
+import { useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useResolvedTheme } from '../../hooks';
 import { useAppStore } from '../../store';
@@ -7,8 +9,52 @@ import { MENU_CONFIG } from '../../constants/menuConfig';
 import type { MenuItemConfig } from '../../constants/menuConfig';
 
 const { Sider } = Layout;
-import type { MenuProps } from 'antd';
 type ItemType = NonNullable<MenuProps['items']>[number];
+
+function filterMenuItems(
+  items: MenuItemConfig[],
+  favoritePathSet: Set<string>,
+  onNavigate: (path: string) => void,
+): ItemType[] {
+  const result: ItemType[] = [];
+
+  for (const item of items) {
+    if (item.type === 'group' || item.type === 'sub') {
+      const children = item.children
+        ? filterMenuItems(item.children, favoritePathSet, onNavigate)
+        : undefined;
+      // Don't show empty groups
+      if (children && children.length > 0) {
+        result.push({
+          key: item.key,
+          type: item.type === 'group' ? 'group' : undefined,
+          label: item.label,
+          icon: item.icon,
+          children,
+        });
+      }
+    } else {
+      const isFavorite = !!item.path && favoritePathSet.has(item.path);
+      result.push({
+        key: item.path || item.key,
+        label: isFavorite ? (
+          <Space size={6}>
+            <span>{item.label}</span>
+            <StarFilled style={{ color: '#faad14' }} />
+          </Space>
+        ) : item.label,
+        icon: item.icon,
+        onClick: () => {
+          if (item.path) {
+            onNavigate(item.path);
+          }
+        },
+      });
+    }
+  }
+
+  return result;
+}
 
 export function Sidebar() {
   const navigate = useNavigate();
@@ -16,52 +62,16 @@ export function Sidebar() {
 
   const collapsed = useAppStore((state) => state.sidebarCollapsed);
   const favoriteToolPaths = useAppStore((state) => state.favoriteToolPaths);
-  const favoritePathSet = new Set(favoriteToolPaths);
+  const favoritePathSet = useMemo(() => new Set(favoriteToolPaths), [favoriteToolPaths]);
   const { resolvedTheme } = useResolvedTheme();
 
   const logoSrc = resolvedTheme === 'dark' ? '/logo-dark.svg' : '/logo-light.svg';
   const logoMarkSrc = resolvedTheme === 'dark' ? '/favicon-dark.svg' : '/favicon-light.svg';
 
-  const filterMenu = (items: MenuItemConfig[]): ItemType[] => {
-    const result: ItemType[] = [];
-
-    for (const item of items) {
-      if (item.type === 'group' || item.type === 'sub') {
-        const children = item.children ? filterMenu(item.children) : undefined;
-        // Don't show empty groups
-        if (children && children.length > 0) {
-          result.push({
-            key: item.key,
-            type: item.type === 'group' ? 'group' : undefined,
-            label: item.label,
-            icon: item.icon,
-            children,
-          });
-        }
-      } else {
-        const isFavorite = !!item.path && favoritePathSet.has(item.path);
-        result.push({
-          key: item.path || item.key,
-          label: isFavorite ? (
-            <Space size={6}>
-              <span>{item.label}</span>
-              <StarFilled style={{ color: '#faad14' }} />
-            </Space>
-          ) : item.label,
-          icon: item.icon,
-          onClick: () => {
-            if (item.path) {
-              navigate(item.path);
-            }
-          },
-        });
-      }
-    }
-
-    return result;
-  };
-
-  const menuItems = filterMenu(MENU_CONFIG);
+  const menuItems = useMemo(
+    () => filterMenuItems(MENU_CONFIG, favoritePathSet, navigate),
+    [favoritePathSet, navigate],
+  );
 
   return (
     <Sider

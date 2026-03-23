@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 interface UseInputOutputReturn {
   input: string;
@@ -20,15 +20,15 @@ export function useInputOutput(initialInput = ''): UseInputOutputReturn {
   const [output, setOutput] = useState('');
   const [error, setError] = useState<string | null>(null);
 
-  const clear = () => {
+  const clear = useCallback(() => {
     setInput('');
     setOutput('');
     setError(null);
-  };
+  }, []);
 
-  const clearOutput = () => {
+  const clearOutput = useCallback(() => {
     setOutput('');
-  };
+  }, []);
 
   return {
     input,

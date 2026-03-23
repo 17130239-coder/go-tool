@@ -47,7 +47,7 @@ export function DashboardPage() {
     [recentToolUsage],
   );
 
-  const quickActions = TOOL_MENU_ITEMS.slice(0, 4);
+  const quickActions = TOOL_MENU_ITEMS.filter((t) => t.isTool).slice(0, 4);
 
   return (
     <FeatureCard>

@@ -1,12 +1,9 @@
 import { useMemo, useState } from 'react';
 import { Button, Card, Flex, InputNumber, Space, Statistic, Typography } from 'antd';
 import { FeatureCard, PageHeader, ErrorAlert } from '../../../components/shared';
+import { generateRandomInRange } from '../utils/randomNumber';
 
 const { Text } = Typography;
-
-function generateRandomInRange(min: number, max: number) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
 
 export function RandomNumberPage() {
   const [min, setMin] = useState<number>(0);

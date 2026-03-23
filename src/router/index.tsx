@@ -17,6 +17,7 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <MainLayout />,
+    errorElement: <PageError />,
     children: [
       {
         index: true,
@@ -24,6 +25,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'dashboard',
+        errorElement: <PageError />,
         lazy: async () => {
           const { DashboardPage } = await import('../features/dashboard');
           return { Component: DashboardPage };
@@ -31,6 +33,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'naming-converter',
+        errorElement: <PageError />,
         lazy: async () => {
           const { ConverterPage } = await import('../features/naming-converter');
           return { Component: ConverterPage };
@@ -38,6 +41,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'random-number',
+        errorElement: <PageError />,
         lazy: async () => {
           const { RandomNumberPage } = await import('../features/random-number');
           return { Component: RandomNumberPage };
@@ -45,6 +49,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'random-color',
+        errorElement: <PageError />,
         lazy: async () => {
           const { ColorConverterPage } = await import('../features/random-color');
           return { Component: ColorConverterPage };
@@ -52,6 +57,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'text-typing',
+        errorElement: <PageError />,
         lazy: async () => {
           const { TextTypingPage } = await import('../features/text-typing');
           return { Component: TextTypingPage };
@@ -59,6 +65,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'json-formatter',
+        errorElement: <PageError />,
         lazy: async () => {
           const { JsonFormatterPage } = await import('../features/json-formatter');
           return { Component: JsonFormatterPage };
@@ -66,6 +73,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'sql-formatter',
+        errorElement: <PageError />,
         lazy: async () => {
           const { SqlFormatterPage } = await import('../features/sql-formatter');
           return { Component: SqlFormatterPage };
@@ -73,6 +81,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'gross-net-salary',
+        errorElement: <PageError />,
         lazy: async () => {
           const { GrossNetSalaryPage } = await import('../features/gross-net-salary');
           return { Component: GrossNetSalaryPage };
