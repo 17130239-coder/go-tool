@@ -8,6 +8,7 @@ import {
   FileTextOutlined,
   DatabaseOutlined,
   CalculatorOutlined,
+  SettingOutlined,
 } from '@ant-design/icons';
 
 export interface MenuItemConfig {
@@ -108,6 +109,21 @@ export const MENU_CONFIG: MenuItemConfig[] = [
       },
     ],
   },
+  {
+    key: 'settings',
+    label: 'Settings',
+    type: 'group',
+    children: [
+      {
+        key: '/settings/sidebar',
+        label: 'Sidebar Settings',
+        icon: <SettingOutlined />,
+        path: '/settings/sidebar',
+        description: 'Configure tool visibility and ordering for sidebar links.',
+        keywords: ['settings', 'sidebar', 'order', 'visibility', 'hide', 'show'],
+      },
+    ],
+  },
 ];
 
 export interface NavigableMenuItem {
@@ -139,9 +155,69 @@ function flattenNavigableItems(items: MenuItemConfig[]): NavigableMenuItem[] {
   });
 }
 
+function collectToolConfigItems(items: MenuItemConfig[]): MenuItemConfig[] {
+  return items.flatMap((item) => {
+    const self = item.isTool && item.path ? [item] : [];
+    const children = item.children ? collectToolConfigItems(item.children) : [];
+    return [...self, ...children];
+  });
+}
+
 export const NAVIGABLE_MENU_ITEMS: NavigableMenuItem[] = flattenNavigableItems(MENU_CONFIG);
 export const TOOL_MENU_ITEMS: NavigableMenuItem[] = NAVIGABLE_MENU_ITEMS.filter((item) => item.isTool);
 export const TOOL_PATH_SET = new Set(TOOL_MENU_ITEMS.map((item) => item.path));
+export const TOOL_DEFAULT_ORDER_PATHS = TOOL_MENU_ITEMS.map((item) => item.path);
+
+const TOOL_CONFIG_ITEM_BY_PATH = new Map(
+  collectToolConfigItems(MENU_CONFIG).map((item) => [item.path, item] as const),
+);
+
+function sanitizeToolPaths(paths: string[]) {
+  const result: string[] = [];
+  const seen = new Set<string>();
+
+  for (const path of paths) {
+    if (!TOOL_PATH_SET.has(path) || seen.has(path)) {
+      continue;
+    }
+
+    seen.add(path);
+    result.push(path);
+  }
+
+  return result;
+}
+
+export function normalizeToolOrderPaths(paths: string[]) {
+  const normalized = sanitizeToolPaths(paths);
+  const missingDefaults = TOOL_DEFAULT_ORDER_PATHS.filter((path) => !normalized.includes(path));
+  return [...normalized, ...missingDefaults];
+}
+
+export function normalizeHiddenToolPaths(paths: string[]) {
+  return sanitizeToolPaths(paths);
+}
+
+export function buildSidebarMenuConfig(toolOrderPaths: string[], hiddenToolPaths: string[]) {
+  const orderedToolPaths = normalizeToolOrderPaths(toolOrderPaths);
+  const hiddenToolPathSet = new Set(normalizeHiddenToolPaths(hiddenToolPaths));
+
+  const orderedVisibleTools = orderedToolPaths
+    .filter((path) => !hiddenToolPathSet.has(path))
+    .map((path) => TOOL_CONFIG_ITEM_BY_PATH.get(path))
+    .filter((item): item is MenuItemConfig => !!item);
+
+  return MENU_CONFIG.map((item) => {
+    if (item.key !== 'tools' || !item.children) {
+      return item;
+    }
+
+    return {
+      ...item,
+      children: orderedVisibleTools,
+    };
+  });
+}
 
 export function findNavigableItemByPath(path: string) {
   return NAVIGABLE_MENU_ITEMS.find((item) => item.path === path);

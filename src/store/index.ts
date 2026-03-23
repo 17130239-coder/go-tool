@@ -1,6 +1,12 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+import {
+  TOOL_DEFAULT_ORDER_PATHS,
+  TOOL_PATH_SET,
+  normalizeHiddenToolPaths,
+  normalizeToolOrderPaths,
+} from '../constants/menuConfig';
 import type { ThemeMode, ToolUsageEntry } from '../types';
 
 interface AppState {
@@ -18,6 +24,13 @@ interface AppState {
   recentToolUsage: ToolUsageEntry[];
   toggleFavoriteTool: (path: string) => void;
   recordToolUsage: (path: string) => void;
+
+  // Sidebar tools customization
+  hiddenToolPaths: string[];
+  toolOrderPaths: string[];
+  toggleToolVisibility: (path: string) => void;
+  moveToolOrderPath: (path: string, direction: 'up' | 'down') => void;
+  resetSidebarToolPreferences: () => void;
 }
 
 export const useAppStore = create<AppState>()(
@@ -52,6 +65,54 @@ export const useAppStore = create<AppState>()(
             recentToolUsage: [nextUsage, ...filtered].slice(0, 12),
           };
         }),
+
+      // Sidebar tools customization
+      hiddenToolPaths: [],
+      toolOrderPaths: [...TOOL_DEFAULT_ORDER_PATHS],
+      toggleToolVisibility: (path) =>
+        set((state) => {
+          if (!TOOL_PATH_SET.has(path)) {
+            return state;
+          }
+
+          const nextHiddenPaths = state.hiddenToolPaths.includes(path)
+            ? state.hiddenToolPaths.filter((item) => item !== path)
+            : [...state.hiddenToolPaths, path];
+
+          return {
+            hiddenToolPaths: normalizeHiddenToolPaths(nextHiddenPaths),
+          };
+        }),
+      moveToolOrderPath: (path, direction) =>
+        set((state) => {
+          if (!TOOL_PATH_SET.has(path)) {
+            return state;
+          }
+
+          const ordered = normalizeToolOrderPaths(state.toolOrderPaths);
+          const currentIndex = ordered.indexOf(path);
+          if (currentIndex < 0) {
+            return state;
+          }
+
+          const targetIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
+          if (targetIndex < 0 || targetIndex >= ordered.length) {
+            return state;
+          }
+
+          const nextOrdered = [...ordered];
+          const [moved] = nextOrdered.splice(currentIndex, 1);
+          nextOrdered.splice(targetIndex, 0, moved);
+
+          return {
+            toolOrderPaths: nextOrdered,
+          };
+        }),
+      resetSidebarToolPreferences: () =>
+        set({
+          hiddenToolPaths: [],
+          toolOrderPaths: [...TOOL_DEFAULT_ORDER_PATHS],
+        }),
     }),
     {
       name: 'go-tool-storage',
@@ -60,6 +121,8 @@ export const useAppStore = create<AppState>()(
         sidebarCollapsed: state.sidebarCollapsed,
         favoriteToolPaths: state.favoriteToolPaths,
         recentToolUsage: state.recentToolUsage,
+        hiddenToolPaths: state.hiddenToolPaths,
+        toolOrderPaths: state.toolOrderPaths,
       }),
     },
   ),
