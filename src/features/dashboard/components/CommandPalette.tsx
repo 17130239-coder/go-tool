@@ -3,7 +3,7 @@ import { Button, Empty, Input, List, Modal, Space, Tag, Typography } from 'antd'
 import type { InputRef } from 'antd';
 import { SearchOutlined, StarFilled, StarOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import { NAVIGABLE_MENU_ITEMS } from '../../../constants/menuConfig';
+import { buildVisibleNavigableMenuItems } from '../../../constants/menuConfig';
 import { useAppStore } from '../../../store';
 
 const { Text } = Typography;
@@ -20,21 +20,28 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
   const inputRef = useRef<InputRef>(null);
 
   const favoriteToolPaths = useAppStore((state) => state.favoriteToolPaths);
+  const hiddenToolPaths = useAppStore((state) => state.hiddenToolPaths);
+  const toolOrderPaths = useAppStore((state) => state.toolOrderPaths);
   const toggleFavoriteTool = useAppStore((state) => state.toggleFavoriteTool);
+
+  const visibleMenuItems = useMemo(
+    () => buildVisibleNavigableMenuItems(toolOrderPaths, hiddenToolPaths),
+    [hiddenToolPaths, toolOrderPaths],
+  );
 
   const filteredItems = useMemo(() => {
     const normalized = query.trim().toLowerCase();
     if (!normalized) {
-      return NAVIGABLE_MENU_ITEMS;
+      return visibleMenuItems;
     }
 
-    return NAVIGABLE_MENU_ITEMS.filter((item) => {
+    return visibleMenuItems.filter((item) => {
       const haystacks = [item.label, item.description || '', ...(item.keywords || [])]
         .join(' ')
         .toLowerCase();
       return haystacks.includes(normalized);
     });
-  }, [query]);
+  }, [query, visibleMenuItems]);
 
   useEffect(() => {
     if (!open) {

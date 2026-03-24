@@ -1,5 +1,6 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { MainLayout } from '../components/layout/MainLayout';
+import { HiddenToolRouteGuard } from '../components/router/HiddenToolRouteGuard';
 import { PageError } from '../components/ui/PageError';
 import { Card, Empty, Flex } from 'antd';
 
@@ -36,7 +37,13 @@ export const router = createBrowserRouter([
         errorElement: <PageError />,
         lazy: async () => {
           const { ConverterPage } = await import('../features/naming-converter');
-          return { Component: ConverterPage };
+          return {
+            Component: () => (
+              <HiddenToolRouteGuard>
+                <ConverterPage />
+              </HiddenToolRouteGuard>
+            ),
+          };
         },
       },
       {
@@ -44,7 +51,13 @@ export const router = createBrowserRouter([
         errorElement: <PageError />,
         lazy: async () => {
           const { RandomNumberPage } = await import('../features/random-number');
-          return { Component: RandomNumberPage };
+          return {
+            Component: () => (
+              <HiddenToolRouteGuard>
+                <RandomNumberPage />
+              </HiddenToolRouteGuard>
+            ),
+          };
         },
       },
       {
@@ -52,7 +65,13 @@ export const router = createBrowserRouter([
         errorElement: <PageError />,
         lazy: async () => {
           const { ColorConverterPage } = await import('../features/random-color');
-          return { Component: ColorConverterPage };
+          return {
+            Component: () => (
+              <HiddenToolRouteGuard>
+                <ColorConverterPage />
+              </HiddenToolRouteGuard>
+            ),
+          };
         },
       },
       {
@@ -60,7 +79,13 @@ export const router = createBrowserRouter([
         errorElement: <PageError />,
         lazy: async () => {
           const { TextTypingPage } = await import('../features/text-typing');
-          return { Component: TextTypingPage };
+          return {
+            Component: () => (
+              <HiddenToolRouteGuard>
+                <TextTypingPage />
+              </HiddenToolRouteGuard>
+            ),
+          };
         },
       },
       {
@@ -68,7 +93,13 @@ export const router = createBrowserRouter([
         errorElement: <PageError />,
         lazy: async () => {
           const { JsonFormatterPage } = await import('../features/json-formatter');
-          return { Component: JsonFormatterPage };
+          return {
+            Component: () => (
+              <HiddenToolRouteGuard>
+                <JsonFormatterPage />
+              </HiddenToolRouteGuard>
+            ),
+          };
         },
       },
       {
@@ -76,7 +107,13 @@ export const router = createBrowserRouter([
         errorElement: <PageError />,
         lazy: async () => {
           const { SqlFormatterPage } = await import('../features/sql-formatter');
-          return { Component: SqlFormatterPage };
+          return {
+            Component: () => (
+              <HiddenToolRouteGuard>
+                <SqlFormatterPage />
+              </HiddenToolRouteGuard>
+            ),
+          };
         },
       },
       {
@@ -84,7 +121,13 @@ export const router = createBrowserRouter([
         errorElement: <PageError />,
         lazy: async () => {
           const { GrossNetSalaryPage } = await import('../features/gross-net-salary');
-          return { Component: GrossNetSalaryPage };
+          return {
+            Component: () => (
+              <HiddenToolRouteGuard>
+                <GrossNetSalaryPage />
+              </HiddenToolRouteGuard>
+            ),
+          };
         },
       },
       {

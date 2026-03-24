@@ -30,6 +30,7 @@ interface AppState {
   toolOrderPaths: string[];
   toggleToolVisibility: (path: string) => void;
   moveToolOrderPath: (path: string, direction: 'up' | 'down') => void;
+  setToolOrderPaths: (paths: string[]) => void;
   resetSidebarToolPreferences: () => void;
 }
 
@@ -107,6 +108,10 @@ export const useAppStore = create<AppState>()(
           return {
             toolOrderPaths: nextOrdered,
           };
+        }),
+      setToolOrderPaths: (paths) =>
+        set({
+          toolOrderPaths: normalizeToolOrderPaths(paths),
         }),
       resetSidebarToolPreferences: () =>
         set({
