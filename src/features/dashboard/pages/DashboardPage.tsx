@@ -3,7 +3,11 @@ import { Button, Card, Empty, Flex, List, Space, Tag, Typography } from 'antd';
 import { StarFilled, StarOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { FeatureCard, PageHeader, PageSectionTitle } from '../../../components/shared';
-import { TOOL_MENU_ITEMS, findNavigableItemByPath } from '../../../constants/menuConfig';
+import {
+  buildVisibleToolItems,
+  findNavigableItemByPath,
+  normalizeToolOrderPaths,
+} from '../../../constants/menuConfig';
 import { useAppStore } from '../../../store';
 
 const { Text } = Typography;
@@ -22,11 +26,21 @@ export function DashboardPage() {
 
   const favoriteToolPaths = useAppStore((state) => state.favoriteToolPaths);
   const recentToolUsage = useAppStore((state) => state.recentToolUsage);
+  const hiddenToolPaths = useAppStore((state) => state.hiddenToolPaths);
+  const toolOrderPaths = useAppStore((state) => state.toolOrderPaths);
   const toggleFavoriteTool = useAppStore((state) => state.toggleFavoriteTool);
 
+  const visibleTools = useMemo(
+    () => buildVisibleToolItems(toolOrderPaths, hiddenToolPaths),
+    [hiddenToolPaths, toolOrderPaths],
+  );
+
+  const visibleToolPathSet = useMemo(() => new Set(visibleTools.map((tool) => tool.path)), [visibleTools]);
+  const normalizedOrderPaths = useMemo(() => normalizeToolOrderPaths(toolOrderPaths), [toolOrderPaths]);
+
   const favoriteTools = useMemo(
-    () => TOOL_MENU_ITEMS.filter((tool) => favoriteToolPaths.includes(tool.path)),
-    [favoriteToolPaths],
+    () => visibleTools.filter((tool) => favoriteToolPaths.includes(tool.path)),
+    [favoriteToolPaths, visibleTools],
   );
 
   const recentTools = useMemo(
@@ -34,7 +48,7 @@ export function DashboardPage() {
       recentToolUsage
         .map((entry) => {
           const tool = findNavigableItemByPath(entry.path);
-          if (!tool || !tool.isTool) {
+          if (!tool || !tool.isTool || !visibleToolPathSet.has(tool.path)) {
             return null;
           }
 
@@ -43,11 +57,16 @@ export function DashboardPage() {
             usedAt: entry.usedAt,
           };
         })
-        .filter((item): item is NonNullable<typeof item> => !!item),
-    [recentToolUsage],
+        .filter((item): item is NonNullable<typeof item> => !!item)
+        .sort((a, b) => {
+          const indexA = normalizedOrderPaths.indexOf(a.path);
+          const indexB = normalizedOrderPaths.indexOf(b.path);
+          return indexA - indexB;
+        }),
+    [normalizedOrderPaths, recentToolUsage, visibleToolPathSet],
   );
 
-  const quickActions = TOOL_MENU_ITEMS.filter((t) => t.isTool).slice(0, 4);
+  const quickActions = visibleTools.slice(0, 4);
 
   return (
     <FeatureCard>

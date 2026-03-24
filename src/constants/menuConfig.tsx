@@ -167,6 +167,7 @@ export const NAVIGABLE_MENU_ITEMS: NavigableMenuItem[] = flattenNavigableItems(M
 export const TOOL_MENU_ITEMS: NavigableMenuItem[] = NAVIGABLE_MENU_ITEMS.filter((item) => item.isTool);
 export const TOOL_PATH_SET = new Set(TOOL_MENU_ITEMS.map((item) => item.path));
 export const TOOL_DEFAULT_ORDER_PATHS = TOOL_MENU_ITEMS.map((item) => item.path);
+const TOOL_ITEM_BY_PATH = new Map(TOOL_MENU_ITEMS.map((item) => [item.path, item] as const));
 
 const TOOL_CONFIG_ITEM_BY_PATH = new Map(
   collectToolConfigItems(MENU_CONFIG).map((item) => [item.path, item] as const),
@@ -217,6 +218,21 @@ export function buildSidebarMenuConfig(toolOrderPaths: string[], hiddenToolPaths
       children: orderedVisibleTools,
     };
   });
+}
+
+export function buildVisibleToolItems(toolOrderPaths: string[], hiddenToolPaths: string[]) {
+  const orderedToolPaths = normalizeToolOrderPaths(toolOrderPaths);
+  const hiddenToolPathSet = new Set(normalizeHiddenToolPaths(hiddenToolPaths));
+
+  return orderedToolPaths
+    .filter((path) => !hiddenToolPathSet.has(path))
+    .map((path) => TOOL_ITEM_BY_PATH.get(path))
+    .filter((item): item is NavigableMenuItem => !!item);
+}
+
+export function buildVisibleNavigableMenuItems(toolOrderPaths: string[], hiddenToolPaths: string[]) {
+  const customizedConfig = buildSidebarMenuConfig(toolOrderPaths, hiddenToolPaths);
+  return flattenNavigableItems(customizedConfig);
 }
 
 export function findNavigableItemByPath(path: string) {
