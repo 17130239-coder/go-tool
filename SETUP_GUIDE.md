@@ -1,6 +1,6 @@
 # Project Setup Guide
 
-A step-by-step guide to create a new project with the same architecture, toolchain, and conventions as this one.
+A step-by-step guide to scaffold a new React + TypeScript project with this architecture.
 
 ---
 
@@ -8,53 +8,34 @@ A step-by-step guide to create a new project with the same architecture, toolcha
 
 | Layer | Choice |
 |---|---|
-| Framework | React 19 |
-| Language | TypeScript 5.9 |
+| Framework | React 19 + TypeScript 5.9 |
 | Bundler | Vite 8 |
 | UI Library | Ant Design 6 |
 | Routing | React Router DOM 7 (lazy routes) |
-| State | Zustand 5 (persisted via `zustand/middleware`) |
+| State | Zustand 5 (persisted) |
 | Server State | TanStack Query 5 |
 | HTTP Client | Axios |
-| Drag & Drop | @dnd-kit |
-| CSS | Vanilla CSS + CSS Modules (`.module.css`) |
-| Package Manager | pnpm |
-| Linting | ESLint 9 (flat config) |
-| Formatting | Prettier 3 |
-| Git Hooks | Husky 9 + lint-staged |
-| Commits | Commitlint (Conventional Commits) |
+| CSS | Vanilla CSS + CSS Modules |
+| Linting | ESLint 9 (flat config) + Prettier 3 |
+| Git Hooks | Husky 9 + lint-staged + Commitlint |
 
 ---
 
-## Prerequisites
-
-```bash
-node --version    # >= 20
-pnpm --version    # >= 9
-git --version
-```
-
----
-
-## Step 1: Scaffold the Project
+## Step 1: Scaffold
 
 ```bash
 pnpm create vite@latest my-app -- --template react-ts
 cd my-app
 ```
 
-This generates: `index.html`, `vite.config.ts`, `tsconfig.json`, `tsconfig.app.json`, `tsconfig.node.json`, `package.json`, and the `src/` folder.
-
----
-
 ## Step 2: Install Dependencies
 
 ```bash
 # Runtime
-pnpm add react react-dom react-router-dom antd @ant-design/icons
+pnpm add react react-dom react-router-dom
+pnpm add antd @ant-design/icons
 pnpm add zustand @tanstack/react-query axios
-pnpm add @dnd-kit/core @dnd-kit/sortable @dnd-kit/utilities
-pnpm add clsx dayjs query-string sql-formatter
+pnpm add clsx dayjs
 
 # Dev
 pnpm add -D prettier eslint-plugin-import eslint-plugin-jsx-a11y
@@ -63,12 +44,9 @@ pnpm add -D husky lint-staged @commitlint/cli @commitlint/config-conventional
 pnpm add -D @types/node
 ```
 
----
+## Step 3: TypeScript Config
 
-## Step 3: Root Config Files
-
-### `tsconfig.json` (project references root)
-
+**`tsconfig.json`** (project references root):
 ```json
 {
   "files": [],
@@ -79,8 +57,7 @@ pnpm add -D @types/node
 }
 ```
 
-### `tsconfig.app.json` (application source)
-
+**`tsconfig.app.json`**:
 ```json
 {
   "compilerOptions": {
@@ -108,8 +85,7 @@ pnpm add -D @types/node
 }
 ```
 
-### `tsconfig.node.json` (Vite config / Node scripts)
-
+**`tsconfig.node.json`**:
 ```json
 {
   "compilerOptions": {
@@ -135,70 +111,9 @@ pnpm add -D @types/node
 }
 ```
 
-### `vite.config.ts`
+## Step 4: ESLint
 
-```ts
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-
-export default defineConfig({
-  plugins: [react()],
-})
-```
-
-### `index.html`
-
-```html
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon-light.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My App</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
-```
-
-### `.gitignore`
-
-```gitignore
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-
-node_modules
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-.vercel
-```
-
----
-
-## Step 4: Configure ESLint
-
-Replace `eslint.config.js`:
-
+**`eslint.config.js`**:
 ```js
 import js from '@eslint/js';
 import globals from 'globals';
@@ -232,12 +147,9 @@ export default defineConfig([
 ]);
 ```
 
----
+## Step 5: Prettier
 
-## Step 5: Configure Prettier
-
-Create `.prettierrc`:
-
+**`.prettierrc`**:
 ```json
 {
   "semi": true,
@@ -250,37 +162,21 @@ Create `.prettierrc`:
 }
 ```
 
----
-
-## Step 6: Configure Git Hooks
+## Step 6: Git Hooks
 
 ```bash
-git init
-pnpm exec husky init
+git init && pnpm exec husky init
 ```
 
-### `.husky/pre-commit`
+**`.husky/pre-commit`**: `pnpm exec lint-staged`
+**`.husky/commit-msg`**: `pnpm exec commitlint --edit $1`
 
-```sh
-pnpm exec lint-staged
-```
-
-### `.husky/commit-msg`
-
-```sh
-pnpm exec commitlint --edit $1
-```
-
-### `commitlint.config.cjs`
-
+**`commitlint.config.cjs`**:
 ```js
-module.exports = {
-  extends: ['@commitlint/config-conventional'],
-};
+module.exports = { extends: ['@commitlint/config-conventional'] };
 ```
 
-### `lint-staged` (inside `package.json`)
-
+Add to **`package.json`**:
 ```json
 "lint-staged": {
   "*.{ts,tsx}": ["eslint --fix", "prettier --write"],
@@ -288,9 +184,7 @@ module.exports = {
 }
 ```
 
----
-
-## Step 7: `package.json` Scripts
+## Step 7: Scripts
 
 ```json
 "scripts": {
@@ -307,98 +201,69 @@ module.exports = {
 
 ---
 
-## Step 8: Source Directory Structure
+## Source Structure
 
 ```
 src/
-├── api/                    # HTTP client setup
-│   └── axiosClient.ts      # Axios instance with interceptors
+├── api/                    # Axios client
 ├── assets/                 # Static images, SVGs
 ├── components/
-│   ├── layout/             # App shell: MainLayout, Sidebar, Header
-│   │   ├── MainLayout.tsx
-│   │   ├── Sidebar.tsx
-│   │   └── Header.tsx
-│   ├── router/             # Route-level components
-│   │   └── HiddenToolRouteGuard.tsx
+│   ├── layout/             # App shell (MainLayout, Sidebar, Header)
 │   ├── shared/             # Reusable UI (barrel-exported via index.ts)
-│   │   ├── index.ts        # ← barrel re-exports all shared components
-│   │   ├── FeatureCard.tsx
-│   │   ├── PageHeader.tsx
-│   │   ├── PageSectionTitle.tsx
-│   │   ├── ErrorAlert.tsx
-│   │   ├── CopyButton.tsx
-│   │   ├── ResultField.tsx
-│   │   ├── InputSection.tsx
-│   │   ├── OutputSection.tsx
-│   │   └── FormatterActions.tsx
-│   └── ui/                 # Low-level primitives
-│       ├── PageLoader.tsx
-│       ├── PageError.tsx
-│       └── PageEmpty.tsx
-├── constants/
-│   └── menuConfig.tsx       # Menu items, tool paths, navigation config
+│   └── ui/                 # Low-level primitives (PageLoader, PageError, PageEmpty)
+├── constants/              # App-wide constants, menu config
 ├── features/               # Feature modules (see convention below)
-│   └── formatter/          # Shared cross-feature types
-│       └── FormatterType.ts
-├── hooks/                  # Global shared hooks (barrel-exported)
-│   ├── index.ts            # ← barrel re-exports all hooks
-│   ├── useBreadcrumb.ts
-│   ├── useCopyToClipboard.ts
-│   ├── useInputOutput.ts
-│   ├── usePageTitle.ts
-│   └── useResolvedTheme.ts
-├── router/
-│   └── index.tsx           # createBrowserRouter with lazy routes
-├── store/
-│   └── index.ts            # Zustand store with persist middleware
-├── styles/
-│   └── spacing.css         # Utility CSS classes (m-*, p-*, w-full, etc.)
-├── types/
-│   └── index.ts            # Global TypeScript types (ThemeMode, etc.)
-├── App.tsx                 # Root component (ConfigProvider + QueryClient + Router)
+├── hooks/                  # Shared hooks (barrel-exported via index.ts)
+├── router/                 # createBrowserRouter with lazy routes
+├── store/                  # Zustand store with persist middleware
+├── styles/                 # Utility CSS (spacing helpers, etc.)
+├── types/                  # Global TypeScript types
+├── App.tsx                 # Root (ConfigProvider + QueryClient + Router)
 ├── App.css                 # Global app styles
-├── main.tsx                # Entry point (createRoot)
+├── main.tsx                # Entry point
 └── index.css               # CSS reset / base styles
 ```
 
-> **Barrel Export Pattern:**
-> - `src/hooks/index.ts` and `src/components/shared/index.ts` use `export * from './...'` to allow consumers to import from `'../../hooks'` or `'../../components/shared'` cleanly.
-> - Feature modules do **NOT** use barrel exports — always import the specific file directly.
+### Barrel Exports
+
+`hooks/index.ts` and `components/shared/index.ts` use `export * from './...'` for clean imports:
+```ts
+// src/hooks/index.ts
+export * from './useCopyToClipboard';
+export * from './usePageTitle';
+```
+
+> **Feature modules do NOT use barrel exports** — always import the specific file.
 
 ---
 
-## Step 9: Feature Module Convention
+## Feature Module Convention
 
-Each feature lives in `src/features/{feature-name}/` and follows strict naming:
+Each feature lives in `src/features/{feature-name}/`:
 
 ```
 src/features/my-feature/
-├── MyFeaturePage.tsx       # Main page component (named export)
-├── MyFeatureType.ts        # TypeScript interfaces and types
-├── MyFeatureConstant.ts    # Constants for this feature
+├── MyFeaturePage.tsx       # Page component (named export, lazy-loaded)
+├── MyFeatureType.ts        # Types and interfaces
+├── MyFeatureConstant.ts    # Constants
 ├── MyFeatureUtil.ts        # Utility functions and pure logic
-├── MyFeatureDoc.md         # Feature documentation
-├── MyFeature.module.css    # CSS Modules (optional)
-├── components/             # Feature-specific components (kept nested)
-│   └── MyComponent.tsx
-└── hooks/                  # Feature-specific hooks (kept nested)
-    └── useMyHook.ts
+├── MyFeatureDoc.md         # Documentation
+├── MyFeature.module.css    # Scoped styles (optional)
+├── components/             # Feature-specific components
+└── hooks/                  # Feature-specific hooks
 ```
 
-> **Rules:**
-> - **No `index.ts`** barrel files inside features — always import directly, e.g. `import { MyFeaturePage } from './MyFeaturePage'`.
-> - **Hooks and components** inside a feature stay in their respective `hooks/` and `components/` subdirectories.
-> - Only **one Page file** per feature — it is the lazy-loaded route entry point.
-> - Cross-feature shared types (e.g. `FormatterType.ts`) go in a dedicated shared feature under `src/features/formatter/`.
+**Rules:**
+- No `index.ts` barrel files inside features
+- Hooks and components stay nested in their subdirectories
+- One `Page` file per feature — the lazy-loaded route entry point
 
 ---
 
-## Step 10: Router Setup (Lazy Loading)
-
-Use `createBrowserRouter` with lazy-loaded per-route in `src/router/index.tsx`:
+## Router (Lazy Loading)
 
 ```tsx
+// src/router/index.tsx
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { MainLayout } from '../components/layout/MainLayout';
 import { PageError } from '../components/ui/PageError';
@@ -409,7 +274,7 @@ export const router = createBrowserRouter([
     element: <MainLayout />,
     errorElement: <PageError />,
     children: [
-      { index: true, element: <Navigate to="/dashboard" replace /> },
+      { index: true, element: <Navigate to="/my-feature" replace /> },
       {
         path: 'my-feature',
         errorElement: <PageError />,
@@ -425,11 +290,10 @@ export const router = createBrowserRouter([
 
 ---
 
-## Step 11: Global State with Zustand
-
-Create `src/store/index.ts`:
+## Global State (Zustand)
 
 ```ts
+// src/store/index.ts
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -449,7 +313,7 @@ export const useAppStore = create<AppState>()(
       toggleSidebar: () => set((s) => ({ sidebarCollapsed: !s.sidebarCollapsed })),
     }),
     {
-      name: 'my-app-storage',
+      name: 'app-storage',
       partialize: (state) => ({
         themeMode: state.themeMode,
         sidebarCollapsed: state.sidebarCollapsed,
@@ -461,9 +325,10 @@ export const useAppStore = create<AppState>()(
 
 ---
 
-## Step 12: Bootstrap `App.tsx`
+## App Entry Point
 
 ```tsx
+// src/App.tsx
 import { useEffect } from 'react';
 import { RouterProvider } from 'react-router-dom';
 import { ConfigProvider, theme } from 'antd';
@@ -494,59 +359,29 @@ export default function App() {
 
 ---
 
-## Step 13: CSS Strategy
+## Vercel Deployment (Optional)
 
-This project uses **vanilla CSS** with three layers:
-
-| Layer | Location | Usage |
-|---|---|---|
-| **Global styles** | `index.css`, `App.css` | Resets, CSS variables, global rules |
-| **Utility classes** | `styles/spacing.css` | Spacing helpers: `.m-8`, `.p-16`, `.mb-24`, `.w-full` |
-| **CSS Modules** | `{Feature}.module.css` | Feature-scoped styles via `import styles from './MyFeature.module.css'` |
-
-Import `spacing.css` in `index.css` or `App.css`:
-
-```css
-@import './styles/spacing.css';
-```
-
----
-
-## Step 14: Vercel Deployment (Optional)
-
-Create `vercel.json`:
-
+**`vercel.json`**:
 ```json
-{
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
-  ]
-}
+{ "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }] }
 ```
-
----
-
-## Commit Convention
-
-Follow [Conventional Commits](https://www.conventionalcommits.org/):
-
-```
-feat(feature): add new tool page
-fix(router): resolve lazy load error
-refactor(store): simplify state shape
-chore: update dependencies
-docs: add setup guide
-```
-
-**Types:** `feat`, `fix`, `refactor`, `chore`, `docs`, `style`, `test`, `perf`
 
 ---
 
 ## Adding a New Feature — Checklist
 
-1. Create `src/features/{feature-name}/` directory
-2. Add core files: `{Feature}Page.tsx`, `{Feature}Type.ts`, `{Feature}Constant.ts`, `{Feature}Util.ts`, `{Feature}Doc.md`
-3. Add optional: `{Feature}.module.css`, `components/`, `hooks/`
+1. Create `src/features/{feature-name}/`
+2. Add: `{Feature}Page.tsx`, `{Feature}Type.ts`, `{Feature}Constant.ts`, `{Feature}Util.ts`, `{Feature}Doc.md`
+3. Optionally add: `{Feature}.module.css`, `components/`, `hooks/`
 4. Register a lazy route in `src/router/index.tsx`
 5. Add a menu item in `src/constants/menuConfig.tsx`
-6. Run `pnpm typecheck && pnpm build` to verify
+6. Run `pnpm typecheck && pnpm build`
+
+## Commit Convention
+
+```
+feat(feature): add new page
+fix(router): resolve lazy load error
+refactor(store): simplify state
+chore: update dependencies
+```
