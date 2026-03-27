@@ -7,7 +7,7 @@ import {
   buildVisibleToolItems,
   findNavigableItemByPath,
   normalizeToolOrderPaths,
-} from '../../constants/menuConfig';
+} from '../../utils/menuUtil';
 import { useAppStore } from '../../store';
 
 const { Text } = Typography;

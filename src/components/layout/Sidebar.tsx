@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useResolvedTheme } from '../../hooks';
 import { useAppStore } from '../../store';
-import { buildSidebarMenuConfig } from '../../constants/menuConfig';
+import { buildSidebarMenuConfig } from '../../utils/menuUtil';
 import { APP_TITLE } from '../../constants/appConfig';
 import type { MenuItemConfig } from '../../constants/menuConfig';
 

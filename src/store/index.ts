@@ -4,9 +4,11 @@ import { persist } from 'zustand/middleware';
 import {
   TOOL_DEFAULT_ORDER_PATHS,
   TOOL_PATH_SET,
+} from '../constants/menuConfig';
+import {
   normalizeHiddenToolPaths,
   normalizeToolOrderPaths,
-} from '../constants/menuConfig';
+} from '../utils/menuUtil';
 
 export type ThemeMode = 'light' | 'dark' | 'system';
 

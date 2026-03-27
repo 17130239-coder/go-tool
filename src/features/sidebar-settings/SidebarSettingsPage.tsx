@@ -8,7 +8,8 @@ import type { TableColumnsType } from 'antd';
 import type { CSSProperties, HTMLAttributes } from 'react';
 import { useCallback, useMemo } from 'react';
 import { FeatureCard, PageHeader, PageSectionTitle } from '../../components/shared';
-import { TOOL_MENU_ITEMS, normalizeToolOrderPaths } from '../../constants/menuConfig';
+import { TOOL_MENU_ITEMS } from '../../constants/menuConfig';
+import { normalizeToolOrderPaths } from '../../utils/menuUtil';
 import { useAppStore } from '../../store';
 
 const { Text } = Typography;

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { findNavigableItemByPath } from '../constants/menuConfig';
+import { findNavigableItemByPath } from '../utils/menuUtil';
 import { APP_TITLE } from '../constants/appConfig';
 
 export function usePageTitle() {

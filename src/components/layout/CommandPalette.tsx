@@ -3,7 +3,7 @@ import { Button, Empty, Input, List, Modal, Space, Tag, Typography } from 'antd'
 import type { InputRef } from 'antd';
 import { SearchOutlined, StarFilled, StarOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import { buildVisibleNavigableMenuItems } from '../../constants/menuConfig';
+import { buildVisibleNavigableMenuItems } from '../../utils/menuUtil';
 import { useAppStore } from '../../store';
 
 const { Text } = Typography;

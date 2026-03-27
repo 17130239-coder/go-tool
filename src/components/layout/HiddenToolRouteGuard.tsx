@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { TOOL_PATH_SET, normalizeHiddenToolPaths } from '../../constants/menuConfig';
+import { TOOL_PATH_SET } from '../../constants/menuConfig';
+import { normalizeHiddenToolPaths } from '../../utils/menuUtil';
 import { useAppStore } from '../../store';
 
 interface HiddenToolRouteGuardProps {
