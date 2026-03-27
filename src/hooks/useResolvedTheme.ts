@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useAppStore } from '../store';
-import type { ThemeMode } from '../types';
+import type { ThemeMode } from '../store';
 
 const getSystemTheme = (): Exclude<ThemeMode, 'system'> =>
   window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';

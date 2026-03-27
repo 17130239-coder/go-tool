@@ -7,7 +7,13 @@ import {
   normalizeHiddenToolPaths,
   normalizeToolOrderPaths,
 } from '../constants/menuConfig';
-import type { ThemeMode, ToolUsageEntry } from '../types';
+
+export type ThemeMode = 'light' | 'dark' | 'system';
+
+export interface ToolUsageEntry {
+  path: string;
+  usedAt: number;
+}
 
 interface AppState {
   // Theme

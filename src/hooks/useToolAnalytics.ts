@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { TOOL_PATH_SET } from '../../../constants/menuConfig';
-import { useAppStore } from '../../../store';
+import { TOOL_PATH_SET } from '../constants/menuConfig';
+import { useAppStore } from '../store';
 
 export function useToolAnalytics() {
   const location = useLocation();

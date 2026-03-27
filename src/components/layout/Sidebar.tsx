@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useResolvedTheme } from '../../hooks';
 import { useAppStore } from '../../store';
 import { buildSidebarMenuConfig } from '../../constants/menuConfig';
+import { APP_TITLE } from '../../constants/appConfig';
 import type { MenuItemConfig } from '../../constants/menuConfig';
 
 const { Sider } = Layout;
@@ -112,7 +113,7 @@ export function Sidebar() {
       >
         <img
           src={collapsed ? logoMarkSrc : logoSrc}
-          alt="Go Tool"
+          alt={APP_TITLE}
           style={{
             display: 'block',
             height: collapsed ? 28 : 24,

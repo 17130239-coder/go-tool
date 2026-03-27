@@ -3,10 +3,9 @@ import { Outlet, useNavigation } from 'react-router-dom';
 import { Layout } from 'antd';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
-import { CommandPalette } from '../../features/dashboard/components/CommandPalette';
-import { KeyboardShortcutsModal } from '../../features/dashboard/components/KeyboardShortcutsModal';
-import { useToolAnalytics } from '../../features/dashboard/hooks/useToolAnalytics';
-import { usePageTitle } from '../../hooks';
+import { CommandPalette } from './CommandPalette';
+import { KeyboardShortcutsModal } from './KeyboardShortcutsModal';
+import { usePageTitle, useToolAnalytics } from '../../hooks';
 import { PageLoader } from '../ui/PageLoader';
 
 const { Content } = Layout;

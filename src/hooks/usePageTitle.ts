@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { findNavigableItemByPath } from '../constants/menuConfig';
-
-const APP_TITLE = 'Go Tool';
+import { APP_TITLE } from '../constants/appConfig';
 
 export function usePageTitle() {
   const location = useLocation();

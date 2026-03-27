@@ -1,6 +1,4 @@
 export * from './CopyButton';
-export * from './OutputSection';
-export * from './InputSection';
 export * from './FeatureCard';
 export * from './PageHeader';
 export * from './ErrorAlert';
