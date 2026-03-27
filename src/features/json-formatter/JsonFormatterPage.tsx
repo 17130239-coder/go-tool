@@ -9,7 +9,7 @@ import {
   OutputSection,
   FormatterActions,
 } from '../../components/shared';
-import { formatJSON, minifyJSON, validateJSON } from './JsonFormatterUtils';
+import { formatJSON, minifyJSON, validateJSON } from './JsonFormatterUtil';
 import type { IndentSize } from './JsonFormatterType';
 
 export function JsonFormatterPage() {

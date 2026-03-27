@@ -4,8 +4,3 @@ export type ConventionType =
   | 'snakeCase'
   | 'pascalCase'
   | 'constantCase';
-
-export interface ConvertResult {
-  type: ConventionType;
-  value: string;
-}

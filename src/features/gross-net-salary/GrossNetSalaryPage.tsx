@@ -20,7 +20,7 @@ import {
   VIETNAM_2026_DEFAULT_REGION_I_MINIMUM_WAGE,
   VIETNAM_2026_FAMILY_DEDUCTION,
 } from './GrossNetSalaryConstant';
-import { calculateGrossToNet, calculateNetToGross } from './GrossNetSalaryUtils';
+import { calculateGrossToNet, calculateNetToGross } from './GrossNetSalaryUtil';
 import type { SalaryCalculationResult, SalaryConversionMode } from './GrossNetSalaryType';
 import styles from './GrossNetSalary.module.css';
 

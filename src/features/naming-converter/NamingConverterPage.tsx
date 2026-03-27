@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Flex, Input } from 'antd';
 import { useCopyToClipboard } from '../../hooks';
 import { FeatureCard, PageHeader } from '../../components/shared';
-import { convertAll } from './NamingConverterUtils';
+import { convertAll } from './NamingConverterUtil';
 import { ResultRow } from './components/ResultRow';
 import type { ConventionType } from './NamingConverterType';
 

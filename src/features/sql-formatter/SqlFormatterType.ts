@@ -1,9 +1,8 @@
 export type {
-  SqlFormatterOptions as FormatterOptions,
-  FormatterResult,
   KeywordCase,
   SqlLanguage,
   IndentSize,
+  FormatterResult,
 } from '../formatter/FormatterType';
 
 export interface SqlAiPromptResult {

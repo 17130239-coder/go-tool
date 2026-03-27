@@ -8,8 +8,8 @@ import {
   ResultField,
   PageSectionTitle,
 } from '../../components/shared';
-import { convertColor, isValidColor } from './RandomColorUtils';
-import type { ColorFormats } from './RandomColorUtils';
+import { convertColor, isValidColor } from './RandomColorUtil';
+import type { ColorFormats } from './RandomColorUtil';
 
 export function ColorConverterPage() {
   const [input, setInput] = useState<string>('#3B82F6');

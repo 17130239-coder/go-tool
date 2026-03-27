@@ -11,9 +11,9 @@ import {
   FormatterActions,
   CopyButton,
 } from '../../components/shared';
-import { buildSqlAiPrompt } from './SqlFormatterUtils';
+import { buildSqlAiPrompt } from './SqlFormatterUtil';
 import type { KeywordCase, IndentSize, SqlLanguage } from './SqlFormatterType';
-import { formatSQL, minifySQL, validateSQL } from './SqlFormatterUtils';
+import { formatSQL, minifySQL, validateSQL } from './SqlFormatterUtil';
 
 const { Text } = Typography;
 
