@@ -5,8 +5,6 @@ import {
   BgColorsOutlined,
   NumberOutlined,
   EditOutlined,
-  FileTextOutlined,
-  DatabaseOutlined,
   CalculatorOutlined,
   SettingOutlined,
 } from '@ant-design/icons';
@@ -78,24 +76,6 @@ export const MENU_CONFIG: MenuItemConfig[] = [
         path: '/text-typing',
         description: 'Typing speed challenge with live WPM and accuracy.',
         keywords: ['typing', 'wpm', 'accuracy'],
-        isTool: true,
-      },
-      {
-        key: '/json-formatter',
-        label: 'JSON Formatter',
-        icon: <FileTextOutlined />,
-        path: '/json-formatter',
-        description: 'Validate, format, and minify JSON payloads.',
-        keywords: ['json', 'format', 'minify', 'beautify'],
-        isTool: true,
-      },
-      {
-        key: '/sql-formatter',
-        label: 'SQL Formatter',
-        icon: <DatabaseOutlined />,
-        path: '/sql-formatter',
-        description: 'Format and review SQL queries across dialects.',
-        keywords: ['sql', 'query', 'database', 'minify'],
         isTool: true,
       },
       {

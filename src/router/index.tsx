@@ -89,34 +89,6 @@ export const router = createBrowserRouter([
         },
       },
       {
-        path: 'json-formatter',
-        errorElement: <PageError />,
-        lazy: async () => {
-          const { JsonFormatterPage } = await import('../features/json-formatter/JsonFormatterPage');
-          return {
-            Component: () => (
-              <HiddenToolRouteGuard>
-                <JsonFormatterPage />
-              </HiddenToolRouteGuard>
-            ),
-          };
-        },
-      },
-      {
-        path: 'sql-formatter',
-        errorElement: <PageError />,
-        lazy: async () => {
-          const { SqlFormatterPage } = await import('../features/sql-formatter/SqlFormatterPage');
-          return {
-            Component: () => (
-              <HiddenToolRouteGuard>
-                <SqlFormatterPage />
-              </HiddenToolRouteGuard>
-            ),
-          };
-        },
-      },
-      {
         path: 'gross-net-salary',
         errorElement: <PageError />,
         lazy: async () => {
