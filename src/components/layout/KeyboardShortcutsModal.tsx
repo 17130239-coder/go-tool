@@ -1,4 +1,5 @@
 import { Modal, Space, Table, Typography } from 'antd';
+import { MODAL_WIDTH } from '../../constants/appConfig';
 
 const { Text } = Typography;
 
@@ -26,7 +27,7 @@ export function KeyboardShortcutsModal({ open, onClose }: KeyboardShortcutsModal
       onCancel={onClose}
       footer={null}
       title="Keyboard Shortcuts"
-      width={620}
+      width={MODAL_WIDTH.keyboardShortcuts}
       destroyOnClose
     >
       <Space direction="vertical" size="middle" style={{ width: '100%' }}>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Card, Flex, Input } from 'antd';
-import { useCopyToClipboard } from '../../hooks';
+import { useCopyWithFeedback } from '../../hooks';
 import {
   FeatureCard,
   PageHeader,
@@ -11,13 +11,14 @@ import {
 import { convertColor, isValidColor } from './RandomColorUtil';
 import type { ColorFormats } from './RandomColorUtil';
 
-export function ColorConverterPage() {
-  const [input, setInput] = useState<string>('#3B82F6');
-  const [converted, setConverted] = useState<ColorFormats | null>(() => convertColor('#3B82F6'));
-  const [error, setError] = useState<string | null>(null);
-  const [copiedFormat, setCopiedFormat] = useState<keyof ColorFormats | null>(null);
-  const { copy } = useCopyToClipboard();
+/** Default color shown on first render. */
+const DEFAULT_COLOR = '#3B82F6';
 
+export function RandomColorPage() {
+  const [input, setInput] = useState<string>(DEFAULT_COLOR);
+  const [converted, setConverted] = useState<ColorFormats | null>(() => convertColor(DEFAULT_COLOR));
+  const [error, setError] = useState<string | null>(null);
+  const { copiedKey, handleCopy } = useCopyWithFeedback<keyof ColorFormats>();
 
   const handleInputChange = (value: string) => {
     setInput(value);
@@ -35,14 +36,6 @@ export function ColorConverterPage() {
     } else {
       setConverted(null);
       setError('Invalid color format. Try: #FF5733, rgb(255, 87, 51), hsl(9, 100%, 60%)');
-    }
-  };
-
-  const handleCopy = async (format: keyof ColorFormats, value: string) => {
-    const result = await copy(value);
-    if (result.success) {
-      setCopiedFormat(format);
-      setTimeout(() => setCopiedFormat(null), 2000);
     }
   };
 
@@ -91,7 +84,7 @@ export function ColorConverterPage() {
                 key={format}
                 label={format}
                 value={value}
-                copied={copiedFormat === format}
+                copied={copiedKey === format}
                 onCopy={() => {
                   void handleCopy(format, value);
                 }}

@@ -108,7 +108,7 @@ export const MENU_CONFIG: MenuItemConfig[] = [
         isTool: true,
         lazyComponent: () =>
           import('../features/naming-converter/NamingConverterPage').then((m) => ({
-            default: m.ConverterPage,
+            default: m.NamingConverterPage,
           })),
       },
       {
@@ -134,7 +134,7 @@ export const MENU_CONFIG: MenuItemConfig[] = [
         isTool: true,
         lazyComponent: () =>
           import('../features/random-color/RandomColorPage').then((m) => ({
-            default: m.ColorConverterPage,
+            default: m.RandomColorPage,
           })),
       },
       {

@@ -51,48 +51,37 @@ interface TaxRow {
   taxAmount: number;
 }
 
-const breakdownColumns: ColumnsType<BreakdownRow> = [
-  {
-    title: 'Khoản mục',
-    dataIndex: 'label',
-    key: 'label',
-  },
-  {
-    title: 'Giá trị',
-    dataIndex: 'value',
-    key: 'value',
-    align: 'right',
-    render: (value: number, record) => (
-      <Text
-        strong={record.isSummary}
-        type={record.isNegative ? 'danger' : 'success'}
-        className={record.isSummary ? styles.summaryText : undefined}
-      >
-        {record.isNegative ? '-' : ''}
-        {formatVnd(value)}
-      </Text>
-    ),
-  },
-];
+/** Creates table columns for the salary breakdown tables. */
+function createBreakdownColumns(options?: { showSign?: boolean }): ColumnsType<BreakdownRow> {
+  const showSign = options?.showSign ?? false;
 
-const employerColumns: ColumnsType<BreakdownRow> = [
-  {
-    title: 'Khoản mục',
-    dataIndex: 'label',
-    key: 'label',
-  },
-  {
-    title: 'Giá trị',
-    dataIndex: 'value',
-    key: 'value',
-    align: 'right',
-    render: (value: number, record) => (
-      <Text strong={record.isSummary} className={record.isSummary ? styles.summaryText : undefined}>
-        {formatVnd(value)}
-      </Text>
-    ),
-  },
-];
+  return [
+    {
+      title: 'Khoản mục',
+      dataIndex: 'label',
+      key: 'label',
+    },
+    {
+      title: 'Giá trị',
+      dataIndex: 'value',
+      key: 'value',
+      align: 'right',
+      render: (value: number, record) => (
+        <Text
+          strong={record.isSummary}
+          type={showSign && record.isNegative ? 'danger' : showSign ? 'success' : undefined}
+          className={record.isSummary ? styles.summaryText : undefined}
+        >
+          {showSign && record.isNegative ? '-' : ''}
+          {formatVnd(value)}
+        </Text>
+      ),
+    },
+  ];
+}
+
+const breakdownColumns = createBreakdownColumns({ showSign: true });
+const employerColumns = createBreakdownColumns();
 
 const taxColumns: ColumnsType<TaxRow> = [
   {

@@ -9,6 +9,7 @@ import {
 } from '@ant-design/icons';
 import { useAppStore } from '../../store';
 import { useBreadcrumb } from '../../hooks';
+import { HEADER_HEIGHT } from '../../constants/appConfig';
 
 const { Header: AntHeader } = Layout;
 
@@ -47,7 +48,8 @@ export function Header({ onOpenCommandPalette, onOpenShortcuts }: HeaderProps) {
           type="text"
           icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           onClick={toggleSidebar}
-          style={{ fontSize: '16px', width: 64, height: 64, marginLeft: -24 }}
+          aria-label="Toggle sidebar"
+          style={{ fontSize: '16px', width: HEADER_HEIGHT, height: HEADER_HEIGHT, marginLeft: -24 }}
         />
         <Breadcrumb items={breadcrumbs.map((b) => ({ title: b.title }))} />
       </Space>
@@ -57,16 +59,16 @@ export function Header({ onOpenCommandPalette, onOpenShortcuts }: HeaderProps) {
           type="text"
           icon={<SearchOutlined />}
           onClick={onOpenCommandPalette}
-          title="Command Palette (Cmd/Ctrl+K)"
+          aria-label="Open command palette (Cmd/Ctrl+K)"
         />
         <Button
           type="text"
           icon={<QuestionCircleOutlined />}
           onClick={onOpenShortcuts}
-          title="Keyboard Shortcuts (?)"
+          aria-label="Keyboard shortcuts help"
         />
         <Dropdown menu={{ items: themeMenuItems }} placement="bottomRight" arrow>
-          <Button type="text" icon={<BgColorsOutlined />} />
+          <Button type="text" icon={<BgColorsOutlined />} aria-label="Change theme" />
         </Dropdown>
       </Space>
     </AntHeader>

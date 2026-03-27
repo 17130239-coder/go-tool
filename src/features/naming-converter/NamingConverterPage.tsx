@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Flex, Input } from 'antd';
-import { useCopyToClipboard } from '../../hooks';
+import { useCopyWithFeedback } from '../../hooks';
 import { FeatureCard, PageHeader } from '../../components/shared';
 import { convertAll } from './NamingConverterUtil';
 import { ResultRow } from './components/ResultRow';
@@ -14,25 +14,11 @@ const CONVENTION_KEYS: ConventionType[] = [
   'constantCase',
 ];
 
-export function ConverterPage() {
+export function NamingConverterPage() {
   const [input, setInput] = useState('');
-  const [copiedKey, setCopiedKey] = useState<ConventionType | null>(null);
-  const { copy } = useCopyToClipboard();
+  const { copiedKey, handleCopy } = useCopyWithFeedback<ConventionType>();
 
   const results = convertAll(input);
-
-  const handleCopy = async (key: ConventionType) => {
-    const value = results[key];
-    if (!value) {
-      return;
-    }
-
-    const result = await copy(value);
-    if (result.success) {
-      setCopiedKey(key);
-      setTimeout(() => setCopiedKey(null), 2000);
-    }
-  };
 
   return (
     <FeatureCard>
@@ -57,7 +43,7 @@ export function ConverterPage() {
             value={results[key]}
             copied={copiedKey === key}
             onCopy={() => {
-              void handleCopy(key);
+              void handleCopy(key, results[key]);
             }}
           />
         ))}

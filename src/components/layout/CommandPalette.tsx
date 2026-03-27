@@ -5,6 +5,7 @@ import { SearchOutlined, StarFilled, StarOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { buildVisibleNavigableMenuItems } from '../../utils/menuUtil';
 import { useAppStore } from '../../store';
+import { MODAL_WIDTH } from '../../constants/appConfig';
 
 const { Text } = Typography;
 
@@ -78,7 +79,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
       onCancel={handleClose}
       footer={null}
       title="Command Palette"
-      width={720}
+      width={MODAL_WIDTH.commandPalette}
       destroyOnClose
     >
       <Space direction="vertical" size="middle" style={{ width: '100%' }}>

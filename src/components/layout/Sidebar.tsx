@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useResolvedTheme } from '../../hooks';
 import { useAppStore } from '../../store';
 import { buildSidebarMenuConfig } from '../../utils/menuUtil';
-import { APP_TITLE } from '../../constants/appConfig';
+import { APP_TITLE, ASSETS, SIDEBAR_WIDTH, HEADER_HEIGHT } from '../../constants/appConfig';
 import type { MenuItemConfig } from '../../constants/menuConfig';
 
 const { Sider } = Layout;
@@ -41,7 +41,7 @@ function filterMenuItems(
         label: isFavorite ? (
           <Space size={6}>
             <span>{item.label}</span>
-            <StarFilled style={{ color: '#faad14' }} />
+            <StarFilled style={{ color: 'var(--ant-color-warning)' }} />
           </Space>
         ) : item.label,
         icon: item.icon,
@@ -68,8 +68,8 @@ export function Sidebar() {
   const favoritePathSet = useMemo(() => new Set(favoriteToolPaths), [favoriteToolPaths]);
   const { resolvedTheme } = useResolvedTheme();
 
-  const logoSrc = resolvedTheme === 'dark' ? '/logo-dark.svg' : '/logo-light.svg';
-  const logoMarkSrc = resolvedTheme === 'dark' ? '/favicon-dark.svg' : '/favicon-light.svg';
+  const logoSrc = ASSETS.logo[resolvedTheme];
+  const logoMarkSrc = ASSETS.logoMark[resolvedTheme];
 
   const sidebarMenuConfig = useMemo(
     () => buildSidebarMenuConfig(toolOrderPaths, hiddenToolPaths),
@@ -87,7 +87,7 @@ export function Sidebar() {
       collapsed={collapsed}
       breakpoint="lg"
       trigger={null}
-      width={260}
+      width={SIDEBAR_WIDTH}
       theme="light"
       style={{
         height: '100vh',
@@ -101,7 +101,7 @@ export function Sidebar() {
       <div
         className="logo"
         style={{
-          height: 64,
+          height: HEADER_HEIGHT,
           display: 'flex',
           alignItems: 'center',
           justifyContent: collapsed ? 'center' : 'flex-start',
