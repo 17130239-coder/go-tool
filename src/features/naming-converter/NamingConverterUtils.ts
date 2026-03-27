@@ -1,3 +1,4 @@
+
 /**
  * Removes Vietnamese diacritics and accents
  * e.g., 'tôi là một chu cá' -> 'toi la mot chu ca'

@@ -7,9 +7,9 @@ import { Button, Card, Space, Switch, Table, Tag, Typography } from 'antd';
 import type { TableColumnsType } from 'antd';
 import type { CSSProperties, HTMLAttributes } from 'react';
 import { useCallback, useMemo } from 'react';
-import { FeatureCard, PageHeader, PageSectionTitle } from '../../../components/shared';
-import { TOOL_MENU_ITEMS, normalizeToolOrderPaths } from '../../../constants/menuConfig';
-import { useAppStore } from '../../../store';
+import { FeatureCard, PageHeader, PageSectionTitle } from '../../components/shared';
+import { TOOL_MENU_ITEMS, normalizeToolOrderPaths } from '../../constants/menuConfig';
+import { useAppStore } from '../../store';
 
 const { Text } = Typography;
 

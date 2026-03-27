@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { Card, Flex, Input } from 'antd';
-import { useCopyToClipboard } from '../../../hooks';
+import { useCopyToClipboard } from '../../hooks';
 import {
   FeatureCard,
   PageHeader,
   ErrorAlert,
   ResultField,
   PageSectionTitle,
-} from '../../../components/shared';
-import { convertColor, isValidColor } from '../utils/colorConverter';
-import type { ColorFormats } from '../utils/colorConverter';
+} from '../../components/shared';
+import { convertColor, isValidColor } from './RandomColorUtils';
+import type { ColorFormats } from './RandomColorUtils';
 
 export function ColorConverterPage() {
   const [input, setInput] = useState<string>('#3B82F6');

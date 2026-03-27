@@ -2,13 +2,13 @@ import { useMemo } from 'react';
 import { Button, Card, Empty, Flex, List, Space, Tag, Typography } from 'antd';
 import { StarFilled, StarOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import { FeatureCard, PageHeader, PageSectionTitle } from '../../../components/shared';
+import { FeatureCard, PageHeader, PageSectionTitle } from '../../components/shared';
 import {
   buildVisibleToolItems,
   findNavigableItemByPath,
   normalizeToolOrderPaths,
-} from '../../../constants/menuConfig';
-import { useAppStore } from '../../../store';
+} from '../../constants/menuConfig';
+import { useAppStore } from '../../store';
 
 const { Text } = Typography;
 

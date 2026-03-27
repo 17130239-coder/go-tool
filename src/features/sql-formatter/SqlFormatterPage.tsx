@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Alert, Card, Divider, Flex, Radio, Select, Space, Typography } from 'antd';
-import { useInputOutput, useCopyToClipboard } from '../../../hooks';
+import { useInputOutput, useCopyToClipboard } from '../../hooks';
 import {
   FeatureCard,
   PageHeader,
@@ -10,10 +10,10 @@ import {
   OutputSection,
   FormatterActions,
   CopyButton,
-} from '../../../components/shared';
-import { buildSqlAiPrompt } from '../aiHelper';
-import type { KeywordCase, IndentSize, SqlLanguage } from '../types';
-import { formatSQL, minifySQL, validateSQL } from '../utils/sqlFormatter';
+} from '../../components/shared';
+import { buildSqlAiPrompt } from './SqlFormatterUtils';
+import type { KeywordCase, IndentSize, SqlLanguage } from './SqlFormatterType';
+import { formatSQL, minifySQL, validateSQL } from './SqlFormatterUtils';
 
 const { Text } = Typography;
 

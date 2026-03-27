@@ -1,4 +1,4 @@
-import type { TaxBracketDefinition } from './types';
+import type { TaxBracketDefinition } from './GrossNetSalaryType';
 
 export const VIETNAM_2026_BASE_SALARY = 2_340_000;
 

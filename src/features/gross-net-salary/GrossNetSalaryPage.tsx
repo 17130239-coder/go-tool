@@ -15,14 +15,14 @@ import {
   Typography,
 } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { ErrorAlert, FeatureCard, PageHeader, PageSectionTitle } from '../../../components/shared';
+import { ErrorAlert, FeatureCard, PageHeader, PageSectionTitle } from '../../components/shared';
 import {
   VIETNAM_2026_DEFAULT_REGION_I_MINIMUM_WAGE,
   VIETNAM_2026_FAMILY_DEDUCTION,
-} from '../constants';
-import { calculateGrossToNet, calculateNetToGross } from '../salaryCalculator';
-import type { SalaryCalculationResult, SalaryConversionMode } from '../types';
-import styles from '../GrossNetSalary.module.css';
+} from './GrossNetSalaryConstant';
+import { calculateGrossToNet, calculateNetToGross } from './GrossNetSalaryUtils';
+import type { SalaryCalculationResult, SalaryConversionMode } from './GrossNetSalaryType';
+import styles from './GrossNetSalary.module.css';
 
 const { Text } = Typography;
 

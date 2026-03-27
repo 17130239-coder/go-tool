@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Flex, Input } from 'antd';
-import { useCopyToClipboard } from '../../../hooks';
-import { FeatureCard, PageHeader } from '../../../components/shared';
-import { convertAll } from '../utils/stringConverter';
-import { ResultRow } from '../components/ResultRow';
-import type { ConventionType } from '../types';
+import { useCopyToClipboard } from '../../hooks';
+import { FeatureCard, PageHeader } from '../../components/shared';
+import { convertAll } from './NamingConverterUtils';
+import { ResultRow } from './components/ResultRow';
+import type { ConventionType } from './NamingConverterType';
 
 const CONVENTION_KEYS: ConventionType[] = [
   'camelCase',

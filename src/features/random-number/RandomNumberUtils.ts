@@ -1,3 +1,4 @@
+
 /**
  * Generates a random integer within an inclusive [min, max] range.
  */

@@ -28,7 +28,7 @@ export const router = createBrowserRouter([
         path: 'dashboard',
         errorElement: <PageError />,
         lazy: async () => {
-          const { DashboardPage } = await import('../features/dashboard');
+          const { DashboardPage } = await import('../features/dashboard/DashboardPage');
           return { Component: DashboardPage };
         },
       },
@@ -36,7 +36,7 @@ export const router = createBrowserRouter([
         path: 'naming-converter',
         errorElement: <PageError />,
         lazy: async () => {
-          const { ConverterPage } = await import('../features/naming-converter');
+          const { ConverterPage } = await import('../features/naming-converter/NamingConverterPage');
           return {
             Component: () => (
               <HiddenToolRouteGuard>
@@ -50,7 +50,7 @@ export const router = createBrowserRouter([
         path: 'random-number',
         errorElement: <PageError />,
         lazy: async () => {
-          const { RandomNumberPage } = await import('../features/random-number');
+          const { RandomNumberPage } = await import('../features/random-number/RandomNumberPage');
           return {
             Component: () => (
               <HiddenToolRouteGuard>
@@ -64,7 +64,7 @@ export const router = createBrowserRouter([
         path: 'random-color',
         errorElement: <PageError />,
         lazy: async () => {
-          const { ColorConverterPage } = await import('../features/random-color');
+          const { ColorConverterPage } = await import('../features/random-color/RandomColorPage');
           return {
             Component: () => (
               <HiddenToolRouteGuard>
@@ -78,7 +78,7 @@ export const router = createBrowserRouter([
         path: 'text-typing',
         errorElement: <PageError />,
         lazy: async () => {
-          const { TextTypingPage } = await import('../features/text-typing');
+          const { TextTypingPage } = await import('../features/text-typing/TextTypingPage');
           return {
             Component: () => (
               <HiddenToolRouteGuard>
@@ -92,7 +92,7 @@ export const router = createBrowserRouter([
         path: 'json-formatter',
         errorElement: <PageError />,
         lazy: async () => {
-          const { JsonFormatterPage } = await import('../features/json-formatter');
+          const { JsonFormatterPage } = await import('../features/json-formatter/JsonFormatterPage');
           return {
             Component: () => (
               <HiddenToolRouteGuard>
@@ -106,7 +106,7 @@ export const router = createBrowserRouter([
         path: 'sql-formatter',
         errorElement: <PageError />,
         lazy: async () => {
-          const { SqlFormatterPage } = await import('../features/sql-formatter');
+          const { SqlFormatterPage } = await import('../features/sql-formatter/SqlFormatterPage');
           return {
             Component: () => (
               <HiddenToolRouteGuard>
@@ -120,7 +120,7 @@ export const router = createBrowserRouter([
         path: 'gross-net-salary',
         errorElement: <PageError />,
         lazy: async () => {
-          const { GrossNetSalaryPage } = await import('../features/gross-net-salary');
+          const { GrossNetSalaryPage } = await import('../features/gross-net-salary/GrossNetSalaryPage');
           return {
             Component: () => (
               <HiddenToolRouteGuard>
@@ -134,7 +134,7 @@ export const router = createBrowserRouter([
         path: 'settings/sidebar',
         errorElement: <PageError />,
         lazy: async () => {
-          const { SidebarSettingsPage } = await import('../features/sidebar-settings');
+          const { SidebarSettingsPage } = await import('../features/sidebar-settings/SidebarSettingsPage');
           return { Component: SidebarSettingsPage };
         },
       },

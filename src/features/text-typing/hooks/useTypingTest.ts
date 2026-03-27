@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { DEFAULT_DICTIONARY, generateWords } from '../words';
-import type { GameStatus, ModeOption, TypingMetrics } from '../types';
+import { DEFAULT_DICTIONARY, generateWords } from '../TextTypingUtils';
+import type { GameStatus, ModeOption, TypingMetrics } from '../TextTypingType';
 
 const TIMER_INTERVAL_MS = 100;
 const DEFAULT_WORD_COUNT = 60;

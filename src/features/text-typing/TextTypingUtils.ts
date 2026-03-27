@@ -1,3 +1,4 @@
+
 export const DEFAULT_DICTIONARY = [
   'time',
   'people',

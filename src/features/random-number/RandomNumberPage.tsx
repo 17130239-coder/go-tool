@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Button, Card, Flex, InputNumber, Space, Statistic, Typography } from 'antd';
-import { FeatureCard, PageHeader, ErrorAlert } from '../../../components/shared';
-import { generateRandomInRange } from '../utils/randomNumber';
+import { FeatureCard, PageHeader, ErrorAlert } from '../../components/shared';
+import { generateRandomInRange } from './RandomNumberUtils';
 
 const { Text } = Typography;
 

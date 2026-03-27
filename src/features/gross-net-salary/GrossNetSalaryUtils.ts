@@ -7,7 +7,8 @@ import {
   VIETNAM_2026_SOCIAL_HEALTH_INSURANCE_CAP_MULTIPLIER,
   VIETNAM_2026_TAX_BRACKETS,
   VIETNAM_2026_UNEMPLOYMENT_INSURANCE_CAP_MULTIPLIER,
-} from './constants';
+} from './GrossNetSalaryConstant';
+
 import type {
   EmployeeInsuranceBreakdown,
   EmployerInsuranceBreakdown,
@@ -18,7 +19,7 @@ import type {
   SalaryCalculatorInput,
   TaxBracketDefinition,
   TaxBracketDetail,
-} from './types';
+} from './GrossNetSalaryType';
 
 interface InsuranceLinearSegment {
   key: string;

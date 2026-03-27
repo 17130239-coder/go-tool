@@ -2,4 +2,4 @@ export type {
   JsonFormatterOptions as FormatterOptions,
   FormatterResult,
   IndentSize,
-} from '../formatter/types';
+} from '../formatter/FormatterType';

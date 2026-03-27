@@ -1,6 +1,6 @@
 import { Card, Flex, Input, Typography } from 'antd';
 import { CopyButton } from '../../../components/shared';
-import type { ConventionType } from '../types';
+import type { ConventionType } from '../NamingConverterType';
 
 const { Text } = Typography;
 

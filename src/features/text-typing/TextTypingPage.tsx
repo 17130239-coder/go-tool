@@ -1,5 +1,5 @@
-import { FeatureCard, PageHeader } from '../../../components/shared';
-import { TypingTest } from '../components/TypingTest';
+import { FeatureCard, PageHeader } from '../../components/shared';
+import { TypingTest } from './components/TypingTest';
 
 export function TextTypingPage() {
   return (

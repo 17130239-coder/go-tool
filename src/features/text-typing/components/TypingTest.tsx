@@ -2,7 +2,7 @@ import { useLayoutEffect, useMemo, useRef } from 'react';
 import type { ReactNode } from 'react';
 import { Button, Card, Flex, Space, Statistic, Typography } from 'antd';
 import { useTypingTest } from '../hooks/useTypingTest';
-import type { ModeOption } from '../types';
+import type { ModeOption } from '../TextTypingType';
 import styles from '../TextTyping.module.css';
 
 const { Text, Title } = Typography;

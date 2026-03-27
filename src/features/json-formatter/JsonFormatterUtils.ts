@@ -1,4 +1,5 @@
-import type { JsonFormatterOptions, FormatterResult } from '../../formatter/types';
+import type { JsonFormatterOptions, FormatterResult } from '../formatter/FormatterType';
+
 
 /**
  * Validates and formats JSON with specified indentation
