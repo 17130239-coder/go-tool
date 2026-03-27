@@ -1,6 +1,21 @@
 # Project Setup Guide
 
-A step-by-step guide to scaffold a new React + TypeScript project with this architecture.
+A comprehensive guide to scaffold, develop, and maintain a React + TypeScript project with this architecture.
+
+---
+
+## Table of Contents
+
+1. [Tech Stack](#tech-stack)
+2. [Initial Setup](#initial-setup)
+3. [Source Structure](#source-structure)
+4. [Architecture Overview](#architecture-overview)
+5. [Feature Module Convention](#feature-module-convention)
+6. [Developing a New Feature](#developing-a-new-feature)
+7. [Maintaining an Existing Feature](#maintaining-an-existing-feature)
+8. [Git Workflow](#git-workflow)
+9. [Code Quality Workflow](#code-quality-workflow)
+10. [Deployment](#deployment)
 
 ---
 
@@ -12,7 +27,7 @@ A step-by-step guide to scaffold a new React + TypeScript project with this arch
 | Bundler | Vite 8 |
 | UI Library | Ant Design 6 |
 | Routing | React Router DOM 7 (lazy routes) |
-| State | Zustand 5 (persisted) |
+| State | Zustand 5 (persisted to localStorage) |
 | Server State | TanStack Query 5 |
 | HTTP Client | Axios |
 | CSS | Vanilla CSS + CSS Modules |
@@ -21,14 +36,16 @@ A step-by-step guide to scaffold a new React + TypeScript project with this arch
 
 ---
 
-## Step 1: Scaffold
+## Initial Setup
+
+### 1. Scaffold
 
 ```bash
 pnpm create vite@latest my-app -- --template react-ts
 cd my-app
 ```
 
-## Step 2: Install Dependencies
+### 2. Install Dependencies
 
 ```bash
 # Runtime
@@ -44,7 +61,7 @@ pnpm add -D husky lint-staged @commitlint/cli @commitlint/config-conventional
 pnpm add -D @types/node
 ```
 
-## Step 3: TypeScript Config
+### 3. TypeScript Config
 
 **`tsconfig.json`** (project references root):
 ```json
@@ -111,7 +128,7 @@ pnpm add -D @types/node
 }
 ```
 
-## Step 4: ESLint
+### 4. ESLint
 
 **`eslint.config.js`**:
 ```js
@@ -147,7 +164,7 @@ export default defineConfig([
 ]);
 ```
 
-## Step 5: Prettier
+### 5. Prettier
 
 **`.prettierrc`**:
 ```json
@@ -162,7 +179,7 @@ export default defineConfig([
 }
 ```
 
-## Step 6: Git Hooks
+### 6. Git Hooks
 
 ```bash
 git init && pnpm exec husky init
@@ -184,7 +201,7 @@ Add to **`package.json`**:
 }
 ```
 
-## Step 7: Scripts
+### 7. Scripts
 
 ```json
 "scripts": {
@@ -205,19 +222,18 @@ Add to **`package.json`**:
 
 ```
 src/
-├── api/                    # Axios client
 ├── assets/                 # Static images, SVGs
 ├── components/
-│   ├── layout/             # App shell (MainLayout, Sidebar, Header)
+│   ├── layout/             # App shell (MainLayout, Sidebar, Header, CommandPalette)
 │   ├── shared/             # Reusable UI (barrel-exported via index.ts)
 │   └── ui/                 # Low-level primitives (PageLoader, PageError, PageEmpty)
-├── constants/              # App-wide constants, menu config
+├── constants/              # App-wide constants and menu config (data only)
 ├── features/               # Feature modules (see convention below)
 ├── hooks/                  # Shared hooks (barrel-exported via index.ts)
-├── router/                 # createBrowserRouter with lazy routes
+├── router/                 # createBrowserRouter — routes auto-generated from config
 ├── store/                  # Zustand store with persist middleware
 ├── styles/                 # Utility CSS (spacing helpers, etc.)
-├── types/                  # Global TypeScript types
+├── utils/                  # Shared utility functions (menuUtil, etc.)
 ├── App.tsx                 # Root (ConfigProvider + QueryClient + Router)
 ├── App.css                 # Global app styles
 ├── main.tsx                # Entry point
@@ -233,7 +249,45 @@ export * from './useCopyToClipboard';
 export * from './usePageTitle';
 ```
 
-> **Feature modules do NOT use barrel exports** — always import the specific file.
+> **Feature modules do NOT use barrel exports** — always import the specific file directly.
+
+---
+
+## Architecture Overview
+
+### Data Flow: How a page becomes visible
+
+```
+  MENU_CONFIG (constants/menuConfig.tsx)
+       │
+       │  lazyComponent, path, label, icon, isTool
+       │
+       ├──▶ buildRoutes()  (utils/menuUtil.ts)  ──▶  React Router  ──▶  Lazy-loaded page
+       │
+       ├──▶ buildSidebarMenuConfig()  ──▶  Sidebar component
+       │
+       └──▶ buildVisibleNavigableMenuItems()  ──▶  Command Palette (Cmd+K)
+```
+
+**Single source of truth:** `MENU_CONFIG` is the only place where pages are defined.
+Adding a new entry there automatically creates the route, sidebar link, and command palette entry.
+
+### Key Files
+
+| File | Responsibility |
+|---|---|
+| `constants/menuConfig.tsx` | Page definitions (data + types) |
+| `utils/menuUtil.ts` | Functions that consume the config (routing, sidebar, search) |
+| `store/index.ts` | Global state (theme, sidebar, favorites, tool ordering) |
+| `router/index.tsx` | Router setup (calls `buildRoutes()`) |
+| `constants/appConfig.ts` | App-wide constants (app name, etc.) |
+
+### State Management Pattern
+
+- **Zustand** with `persist` middleware for global state
+- `partialize` limits which keys are saved to localStorage
+- Actions are never persisted — they are recreated by Zustand on load
+- Feature-level state stays in React hooks (no Zustand for local form state)
 
 ---
 
@@ -249,83 +303,243 @@ src/features/my-feature/
 ├── MyFeatureUtil.ts        # Utility functions and pure logic
 ├── MyFeatureDoc.md         # Documentation
 ├── MyFeature.module.css    # Scoped styles (optional)
-├── components/             # Feature-specific components
-└── hooks/                  # Feature-specific hooks
+├── components/             # Feature-specific components (optional)
+└── hooks/                  # Feature-specific hooks (optional)
 ```
 
-**Rules:**
-- No `index.ts` barrel files inside features
-- Hooks and components stay nested in their subdirectories
-- One `Page` file per feature — the lazy-loaded route entry point
+### Rules
+
+1. **No `index.ts` barrel files** inside features — always import specific files
+2. **One `Page` component per feature** — this is the lazy-loaded route entry point
+3. **Named exports** for everything — no `export default`
+4. **Hooks and components** stay in their subdirectories, not at the feature root
+5. **Core files at the root** — `Page`, `Type`, `Constant`, `Util`, `Doc`
 
 ---
 
-## Router (Lazy Loading)
+## Developing a New Feature
+
+Follow these steps whenever you add a new page or tool:
+
+### Step 1: Create the feature directory
+
+```bash
+mkdir -p src/features/my-feature
+```
+
+### Step 2: Create the core files
+
+| File | Content |
+|---|---|
+| `MyFeaturePage.tsx` | Page component with `export function MyFeaturePage()` |
+| `MyFeatureType.ts` | Types and interfaces |
+| `MyFeatureConstant.ts` | Constants (if needed) |
+| `MyFeatureUtil.ts` | Pure utility functions (if needed) |
+| `MyFeatureDoc.md` | Feature documentation |
+
+### Step 3: Register in `constants/menuConfig.tsx`
+
+Add a new entry to the appropriate group in `MENU_CONFIG`:
 
 ```tsx
-// src/router/index.tsx
-import { createBrowserRouter, Navigate } from 'react-router-dom';
-import { MainLayout } from '../components/layout/MainLayout';
-import { PageError } from '../components/ui/PageError';
+{
+  key: '/my-feature',
+  label: 'My Feature',
+  icon: <SomeOutlined />,
+  path: '/my-feature',
+  description: 'What this feature does.',
+  keywords: ['search', 'terms'],
+  isTool: true,  // set true if it should be hideable/reorderable
+  lazyComponent: () =>
+    import('../features/my-feature/MyFeaturePage').then((m) => ({
+      default: m.MyFeaturePage,
+    })),
+},
+```
 
-export const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <MainLayout />,
-    errorElement: <PageError />,
-    children: [
-      { index: true, element: <Navigate to="/my-feature" replace /> },
-      {
-        path: 'my-feature',
-        errorElement: <PageError />,
-        lazy: async () => {
-          const { MyFeaturePage } = await import('../features/my-feature/MyFeaturePage');
-          return { Component: MyFeaturePage };
-        },
-      },
-    ],
-  },
-]);
+**That's it.** The route, sidebar link, command palette searchability, page title, and tool analytics are all handled automatically.
+
+### Step 4: Verify
+
+```bash
+pnpm typecheck && pnpm build
+pnpm dev  # test in browser
+```
+
+### Step 5: Commit
+
+```bash
+git add -A
+git commit -m "feat(my-feature): add my feature page"
+git push origin main
 ```
 
 ---
 
-## Global State (Zustand)
+## Maintaining an Existing Feature
 
-```ts
-// src/store/index.ts
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+### Modifying a feature
 
-interface AppState {
-  themeMode: 'light' | 'dark' | 'system';
-  setThemeMode: (mode: AppState['themeMode']) => void;
-  sidebarCollapsed: boolean;
-  toggleSidebar: () => void;
-}
+1. Make changes to the feature files in `src/features/{feature-name}/`
+2. If changing the page component name, update the `lazyComponent` in `menuConfig.tsx`
+3. Run `pnpm typecheck` to catch type errors
+4. Run `pnpm build` to validate the production bundle
+5. Commit with a descriptive message: `fix(my-feature): resolve edge case`
 
-export const useAppStore = create<AppState>()(
-  persist(
-    (set) => ({
-      themeMode: 'system',
-      setThemeMode: (mode) => set({ themeMode: mode }),
-      sidebarCollapsed: false,
-      toggleSidebar: () => set((s) => ({ sidebarCollapsed: !s.sidebarCollapsed })),
-    }),
-    {
-      name: 'app-storage',
-      partialize: (state) => ({
-        themeMode: state.themeMode,
-        sidebarCollapsed: state.sidebarCollapsed,
-      }),
-    },
-  ),
-);
+### Removing a feature
+
+1. Delete the feature directory: `rm -rf src/features/{feature-name}/`
+2. Remove the entry from `MENU_CONFIG` in `constants/menuConfig.tsx`
+3. Remove any unused icon imports in `menuConfig.tsx`
+4. If the feature had shared dependencies (hooks, components), check for orphaned code:
+   ```bash
+   grep -rn "feature-name" src/
+   ```
+5. Run `pnpm typecheck && pnpm build`
+6. Commit: `refactor: remove my-feature`
+
+### Adding shared hooks or components
+
+- **Shared hooks** → `src/hooks/` + add to `hooks/index.ts` barrel
+- **Shared components** → `src/components/shared/` + add to `shared/index.ts` barrel
+- **Feature-specific** → `src/features/{feature-name}/hooks/` or `components/`
+- **Utility functions** → `src/utils/`
+
+---
+
+## Git Workflow
+
+### Branch Strategy
+
+| Branch | Purpose |
+|---|---|
+| `main` | Production-ready code, always deployable |
+| `feat/{name}` | New features (branch from `main`) |
+| `fix/{name}` | Bug fixes (branch from `main`) |
+| `refactor/{name}` | Code improvements (branch from `main`) |
+
+### Workflow
+
+```
+1. Create a branch
+   git checkout -b feat/my-feature
+
+2. Develop (small, focused commits)
+   git add -A
+   git commit -m "feat(my-feature): add page scaffold"
+   git commit -m "feat(my-feature): implement core logic"
+
+3. Verify before pushing
+   pnpm typecheck && pnpm build
+
+4. Push and create PR
+   git push origin feat/my-feature
+   # Create Pull Request on GitHub
+
+5. After review, merge to main
+   git checkout main
+   git pull origin main
+```
+
+### Commit Convention (Conventional Commits)
+
+Every commit message must follow this format:
+
+```
+<type>(<scope>): <description>
+```
+
+| Type | When to use |
+|---|---|
+| `feat` | New feature or page |
+| `fix` | Bug fix |
+| `refactor` | Code restructuring (no behaviour change) |
+| `docs` | Documentation only |
+| `style` | Formatting, whitespace (no logic change) |
+| `chore` | Tooling, dependencies, CI |
+| `perf` | Performance improvement |
+| `test` | Adding or fixing tests |
+
+**Examples:**
+```
+feat(random-color): add HSL color support
+fix(sidebar): resolve collapsed icon alignment
+refactor(store): extract theme logic to hook
+docs: update setup guide
+chore: upgrade antd to v6.2
+```
+
+### Pre-commit Hooks (Automatic)
+
+Husky + lint-staged run automatically on every commit:
+1. **ESLint** — auto-fixes lint issues on staged `.ts/.tsx` files
+2. **Prettier** — auto-formats staged files
+3. **Commitlint** — validates commit message format
+
+If any step fails, the commit is blocked until the issue is fixed.
+
+---
+
+## Code Quality Workflow
+
+### Before every commit
+
+These run automatically via Husky, but you can run them manually:
+
+```bash
+pnpm lint        # Check for lint errors
+pnpm lint:fix    # Auto-fix lint errors
+pnpm format      # Format all source files
+pnpm typecheck   # Type-check without emitting
+pnpm build       # Full production build (typecheck + bundle)
+```
+
+### Code review checklist
+
+When reviewing your own or others' code:
+
+- [ ] No `any` types (ESLint enforces this)
+- [ ] No `console.log` (only `console.warn` / `console.error` allowed)
+- [ ] No unused imports or variables (TypeScript strict mode)
+- [ ] Feature-specific code stays inside `src/features/`
+- [ ] Shared code lives in `hooks/`, `components/shared/`, or `utils/`
+- [ ] JSDoc on all exported functions and components
+- [ ] `pnpm typecheck && pnpm build` passes with zero errors
+
+### Keeping dependencies up to date
+
+```bash
+pnpm outdated           # Check for outdated packages
+pnpm update             # Update within semver ranges
+pnpm update --latest    # Update to latest (may have breaking changes)
+pnpm typecheck && pnpm build  # Always verify after updating
 ```
 
 ---
 
-## App Entry Point
+## Deployment
+
+### Vercel (Recommended)
+
+**`vercel.json`**:
+```json
+{ "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }] }
+```
+
+Push to `main` → Vercel auto-deploys.
+
+### Manual Build
+
+```bash
+pnpm build       # Output in dist/
+pnpm preview     # Preview the production build locally
+```
+
+The `dist/` folder can be deployed to any static hosting (Netlify, Cloudflare Pages, S3, etc.).
+
+---
+
+## App Entry Point Reference
 
 ```tsx
 // src/App.tsx
@@ -355,33 +569,4 @@ export default function App() {
     </ConfigProvider>
   );
 }
-```
-
----
-
-## Vercel Deployment (Optional)
-
-**`vercel.json`**:
-```json
-{ "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }] }
-```
-
----
-
-## Adding a New Feature — Checklist
-
-1. Create `src/features/{feature-name}/`
-2. Add: `{Feature}Page.tsx`, `{Feature}Type.ts`, `{Feature}Constant.ts`, `{Feature}Util.ts`, `{Feature}Doc.md`
-3. Optionally add: `{Feature}.module.css`, `components/`, `hooks/`
-4. Register a lazy route in `src/router/index.tsx`
-5. Add a menu item in `src/constants/menuConfig.tsx`
-6. Run `pnpm typecheck && pnpm build`
-
-## Commit Convention
-
-```
-feat(feature): add new page
-fix(router): resolve lazy load error
-refactor(store): simplify state
-chore: update dependencies
 ```
