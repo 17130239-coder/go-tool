@@ -1,3 +1,21 @@
+/**
+ * Menu configuration — the single source of truth for all pages in the app.
+ *
+ * HOW IT WORKS:
+ * 1. Every page (tool, dashboard, settings) is declared as a `MenuItemConfig` entry inside
+ *    `MENU_CONFIG`, complete with its path, label, icon, keywords, and a `lazyComponent`
+ *    pointing to the React page component.
+ * 2. Derived constants (`NAVIGABLE_MENU_ITEMS`, `TOOL_MENU_ITEMS`, `TOOL_PATH_SET`, etc.)
+ *    are computed once at module load from `MENU_CONFIG`.
+ * 3. Utility functions in `utils/menuUtil.ts` consume these constants to build sidebar menus,
+ *    generate routes, and look up items by path.
+ *
+ * ADDING A NEW FEATURE:
+ * Simply add a new entry to `MENU_CONFIG` with the required fields (path, label, icon,
+ * lazyComponent). Everything else (routing, sidebar, command palette, page title) picks it up
+ * automatically.
+ */
+
 import React from 'react';
 import {
   DashboardOutlined,
@@ -9,20 +27,38 @@ import {
   SettingOutlined,
 } from '@ant-design/icons';
 
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+/** Configuration for a single menu / page entry. */
 export interface MenuItemConfig {
+  /** Unique key used by Ant Design Menu and as a React key. */
   key: string;
+  /** Human-readable label shown in the sidebar and command palette. */
   label: string;
+  /** Optional Ant Design icon rendered beside the label. */
   icon?: React.ReactNode;
+  /** URL path (e.g. '/random-color'). Omit for non-navigable group headers. */
   path?: string;
+  /** 'group' = visual group header, 'sub' = collapsible sub-menu. */
   type?: 'group' | 'sub';
+  /** Short description shown in the command palette and dashboard. */
   description?: string;
+  /** Search keywords for the command palette fuzzy search. */
   keywords?: string[];
+  /** If `true`, this page is a "tool" that can be hidden/reordered via settings. */
   isTool?: boolean;
+  /** Nested children (groups → items). */
   children?: MenuItemConfig[];
-  /** Lazy import for the page component. Return `{ default: ComponentType }`. */
+  /**
+   * Lazy import function returning `{ default: ComponentType }`.
+   * Used by `buildRoutes()` to create lazy-loaded React Router routes.
+   */
   lazyComponent?: () => Promise<{ default: React.ComponentType }>;
 }
 
+/** Flattened, navigable version of a `MenuItemConfig` (always has a `path`). */
 export interface NavigableMenuItem {
   key: string;
   label: string;
@@ -32,6 +68,10 @@ export interface NavigableMenuItem {
   keywords?: string[];
   isTool: boolean;
 }
+
+// ---------------------------------------------------------------------------
+// Menu configuration
+// ---------------------------------------------------------------------------
 
 export const MENU_CONFIG: MenuItemConfig[] = [
   {
@@ -147,9 +187,10 @@ export const MENU_CONFIG: MenuItemConfig[] = [
 ];
 
 // ---------------------------------------------------------------------------
-// Derived constants (computed once from MENU_CONFIG)
+// Derived constants (computed once at module load)
 // ---------------------------------------------------------------------------
 
+/** Recursively flattens `MenuItemConfig[]` into navigable leaf items. */
 function flattenNavigableItems(items: MenuItemConfig[]): NavigableMenuItem[] {
   return items.flatMap((item) => {
     const childItems = item.children ? flattenNavigableItems(item.children) : [];
@@ -170,9 +211,17 @@ function flattenNavigableItems(items: MenuItemConfig[]): NavigableMenuItem[] {
   });
 }
 
-export const NAVIGABLE_MENU_ITEMS: NavigableMenuItem[] = flattenNavigableItems(MENU_CONFIG);
+/** All items that have a navigable `path`. */
+export const NAVIGABLE_MENU_ITEMS: NavigableMenuItem[] =
+  flattenNavigableItems(MENU_CONFIG);
+
+/** Subset of navigable items where `isTool` is true. */
 export const TOOL_MENU_ITEMS: NavigableMenuItem[] = NAVIGABLE_MENU_ITEMS.filter(
   (item) => item.isTool,
 );
+
+/** Fast lookup set for checking whether a path belongs to a tool. */
 export const TOOL_PATH_SET = new Set(TOOL_MENU_ITEMS.map((item) => item.path));
+
+/** Default ordering of tool paths (matches declaration order in MENU_CONFIG). */
 export const TOOL_DEFAULT_ORDER_PATHS = TOOL_MENU_ITEMS.map((item) => item.path);

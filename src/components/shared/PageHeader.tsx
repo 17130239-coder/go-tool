@@ -7,6 +7,7 @@ interface PageHeaderProps {
   description?: string;
 }
 
+/** Page-level header with a title and optional description. Used at the top of every feature page. */
 export function PageHeader({ title, description }: PageHeaderProps) {
   return (
     <Flex vertical gap={8}>

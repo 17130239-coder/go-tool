@@ -11,7 +11,14 @@ interface ResultFieldProps {
   labelWidth?: number;
 }
 
-export function ResultField({ label, value, copied, onCopy, labelWidth = 80 }: ResultFieldProps) {
+/** Labelled read-only input with a copy button. Used for displaying conversion results. */
+export function ResultField({
+  label,
+  value,
+  copied,
+  onCopy,
+  labelWidth = 80,
+}: ResultFieldProps) {
   return (
     <Space
       align="center"
@@ -19,7 +26,10 @@ export function ResultField({ label, value, copied, onCopy, labelWidth = 80 }: R
       wrap
       size="middle"
     >
-      <Text type="secondary" style={{ minWidth: labelWidth, textTransform: 'uppercase' }}>
+      <Text
+        type="secondary"
+        style={{ minWidth: labelWidth, textTransform: 'uppercase' }}
+      >
         {label}
       </Text>
       <Space style={{ flex: 1 }} size="small">

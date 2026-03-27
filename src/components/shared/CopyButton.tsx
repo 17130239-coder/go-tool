@@ -8,6 +8,7 @@ interface CopyButtonProps {
   disabled?: boolean;
 }
 
+/** Button that shows "Copy" / "Copied!" with a clipboard icon. */
 export function CopyButton({ copied, onCopy, size = 'small', disabled }: CopyButtonProps) {
   return (
     <Button

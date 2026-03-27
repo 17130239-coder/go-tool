@@ -1,3 +1,15 @@
+/**
+ * Application shell layout.
+ *
+ * Renders the sidebar, header, and main content area.
+ * Handles global keyboard shortcuts:
+ *  - `Cmd/Ctrl + K` → open command palette
+ *  - `?`            → open keyboard shortcuts modal
+ *
+ * Shows a `<PageLoader>` spinner during lazy route transitions to prevent
+ * blank content flashes.
+ */
+
 import { useCallback, useEffect, useState } from 'react';
 import { Outlet, useNavigation } from 'react-router-dom';
 import { Layout } from 'antd';
@@ -16,35 +28,28 @@ export function MainLayout() {
   const navigation = useNavigation();
   const isNavigating = navigation.state === 'loading';
 
+  // Sync document.title with the current route
   usePageTitle();
+
+  // Record tool visits for "Recently Used" on the dashboard
   useToolAnalytics();
 
-  const openCommandPalette = useCallback(() => {
-    setCommandPaletteOpen(true);
-  }, []);
+  const openCommandPalette = useCallback(() => setCommandPaletteOpen(true), []);
+  const closeCommandPalette = useCallback(() => setCommandPaletteOpen(false), []);
+  const openShortcuts = useCallback(() => setShortcutsOpen(true), []);
+  const closeShortcuts = useCallback(() => setShortcutsOpen(false), []);
 
-  const closeCommandPalette = useCallback(() => {
-    setCommandPaletteOpen(false);
-  }, []);
-
-  const openShortcuts = useCallback(() => {
-    setShortcutsOpen(true);
-  }, []);
-
-  const closeShortcuts = useCallback(() => {
-    setShortcutsOpen(false);
-  }, []);
-
+  // Global keyboard shortcut listener
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      const isCommandK = (event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k';
-      if (isCommandK) {
+      // Cmd/Ctrl + K → open command palette
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
         event.preventDefault();
         setCommandPaletteOpen(true);
       }
 
-      const isQuestionMark = event.key === '?' && !event.ctrlKey && !event.metaKey && !event.altKey;
-      if (isQuestionMark) {
+      // ? → open keyboard shortcuts help (only without modifiers)
+      if (event.key === '?' && !event.ctrlKey && !event.metaKey && !event.altKey) {
         event.preventDefault();
         setShortcutsOpen(true);
       }
@@ -58,7 +63,10 @@ export function MainLayout() {
     <Layout style={{ minHeight: '100vh' }}>
       <Sidebar />
       <Layout>
-        <Header onOpenCommandPalette={openCommandPalette} onOpenShortcuts={openShortcuts} />
+        <Header
+          onOpenCommandPalette={openCommandPalette}
+          onOpenShortcuts={openShortcuts}
+        />
         <Content
           style={{
             margin: '24px 16px',
@@ -67,7 +75,6 @@ export function MainLayout() {
             overflow: 'auto',
           }}
         >
-          {/* Prevent blank content during route transitions before the next page finishes loading. */}
           {isNavigating ? (
             <PageLoader />
           ) : (
@@ -77,6 +84,7 @@ export function MainLayout() {
           )}
         </Content>
       </Layout>
+
       <CommandPalette open={commandPaletteOpen} onClose={closeCommandPalette} />
       <KeyboardShortcutsModal open={shortcutsOpen} onClose={closeShortcuts} />
     </Layout>

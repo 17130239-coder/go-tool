@@ -5,11 +5,14 @@ interface PageEmptyProps {
   children?: React.ReactNode;
 }
 
+/** Full-page empty state. Shown when a page has no data to display. */
 export function PageEmpty({ description, children }: PageEmptyProps) {
   return (
     <Card>
       <Flex justify="center" className="py-32">
-        <Empty description={description || 'No data to display'}>{children}</Empty>
+        <Empty description={description || 'No data to display'}>
+          {children}
+        </Empty>
       </Flex>
     </Card>
   );

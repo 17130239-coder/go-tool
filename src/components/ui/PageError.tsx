@@ -6,7 +6,11 @@ interface PageErrorProps {
   onRetry?: () => void;
 }
 
-export function PageError({ message = 'Failed to load page.', onRetry }: PageErrorProps) {
+/** Full-page error state with optional retry and back buttons. Used as `errorElement` in routes. */
+export function PageError({
+  message = 'Failed to load page.',
+  onRetry,
+}: PageErrorProps) {
   const navigate = useNavigate();
 
   return (

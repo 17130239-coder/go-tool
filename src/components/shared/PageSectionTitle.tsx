@@ -6,6 +6,7 @@ interface PageSectionTitleProps {
   children: string;
 }
 
+/** Bold section title used inside cards to label groups of content. */
 export function PageSectionTitle({ children }: PageSectionTitleProps) {
   return (
     <Flex>

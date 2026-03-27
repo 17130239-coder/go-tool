@@ -1,5 +1,6 @@
 import { Card, Flex, Spin } from 'antd';
 
+/** Full-page loading spinner. Shown during lazy route transitions. */
 export function PageLoader() {
   return (
     <Card>
