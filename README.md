@@ -288,7 +288,9 @@ Husky + lint-staged run on every commit:
 { "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }] }
 ```
 
-Push to `main` → auto-deploys.
+After merge to `main`:
+- `CI` workflow runs checks (`pnpm lint --quiet`, `pnpm typecheck`, `pnpm build`)
+- `CD (Vercel)` deploys to production **only after CI succeeds** on `main`
 
 ### Manual
 
@@ -297,3 +299,19 @@ pnpm build    # Output in dist/
 ```
 
 The `dist/` folder is a static SPA — deploy to any static host (Netlify, Cloudflare Pages, S3, etc.).
+
+### GitHub Actions setup
+
+Workflows in this repo:
+- `.github/workflows/ci.yml`
+- `.github/workflows/cd-vercel.yml`
+
+Required repository secrets for CD:
+- `VERCEL_TOKEN`
+- `VERCEL_ORG_ID`
+- `VERCEL_PROJECT_ID`
+
+Recommended branch protection for `main`:
+- Require a pull request before merging
+- Require status checks to pass
+- Select `CI / Lint, Typecheck, Build`
